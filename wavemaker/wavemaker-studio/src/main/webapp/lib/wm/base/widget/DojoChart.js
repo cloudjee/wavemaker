@@ -64,7 +64,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	magnify:null,
 	aniTooltip:null,
 	addSilverlight:false,
-	
+
 	init: function() {
 		if (this.showAddSilverlight())
 			return;
@@ -147,7 +147,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	    //dojo.place(this.legendDiv, this.domNode, "first");
 	    this.domNode.appendChild(this.legendDiv);
             try {
-		if (this.xAxis.match(/,/) || this.yAxis.match(/,/)) {
+		if (!wm.isMobile && (this.xAxis.match(/,/) || this.yAxis.match(/,/))) {
 		    this.legend = new dojox.charting.widget.SelectableLegend({chart: this.dojoObj, horizontal:!this.verticalLegend}, this.legendDiv);
 		} else {
 		    this.legend = new dojox.charting.widget.Legend({chart: this.dojoObj, horizontal:!this.verticalLegend}, this.legendDiv);
@@ -163,7 +163,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 			s.left = Math.max(0, this.getContentBounds().w-parseInt(this.legendWidth)) + "px";
 			s.width = this.legendWidth;
 			s.top = "0px";
-		    } 
+		    }
 		}
 		while(this.domNode.childNodes[1].childNodes.length > 1) {
 		    dojo.destroy(this.domNode.childNodes[1].childNodes[0]);
@@ -205,10 +205,10 @@ dojo.declare("wm.DojoChart", wm.Control, {
 		if (!this.dojoObj)
 			return;
 		try{this.dojoObj.render();}catch(e){/*do nothing since some object might now have render method*/}
-		this.createLegend();	    
+		this.createLegend();
 	},
 	connectDojoEvents: function(){
-		this.dojoObj.connectToPlot("default", dojo.hitch(this, 'dojoChartEvent'));		
+		this.dojoObj.connectToPlot("default", dojo.hitch(this, 'dojoChartEvent'));
 	},
 	getDataSet: function() {
 		return this.variable;
@@ -217,7 +217,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	    this.dataSet = this.variable = inValue;
 	    if(!this.dojoObj && (!this.variable || !this.variable.getData()))
 			return;
-			
+
 		var thisObj = this;
 /*
 		if (this.isTimeXAxis && this.dojoObj)
@@ -241,7 +241,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 						columnData.shift();
 					}
 				}
-				
+
 				if (this.chartColor instanceof Array)
 					var color = this.chartColor[idx];
 				if (color && color != '' && this.chartType != 'Pie')
@@ -254,7 +254,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 			} catch(e){
 				console.info('Error while making chartdata', e);
 			}
- 
+
 		}, this);
 	},
 	getChartDataSet: function(){
@@ -275,8 +275,8 @@ dojo.declare("wm.DojoChart", wm.Control, {
 				if (i >= this.defaultXY.length)
 					return;
 				ds[i][axis] = this.defaultXY[i][axis];
-			}, this);      
-    }   
+			}, this);
+    }
 
 		return ds;
 	},
@@ -286,7 +286,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 		  var ds = this.defaultXY;
 		else
 		  var ds = this.getChartDataSet();
-		
+
 		var x = this.xAxis;
 		dojo.forEach(ds, function(obj,idx){
 		    var originalLabel = obj[x];
@@ -333,7 +333,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 
 			data.push(obj);
 		}, this);
-		
+
 		return data;
 	},
 	getPieDataSet: function(columnName){
@@ -343,7 +343,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 			else
 				return this.defaultXY;
 		}
-		
+
 		if (this.variable == null || this.variable == '')
 		{
 			return [];
@@ -371,11 +371,11 @@ dojo.declare("wm.DojoChart", wm.Control, {
 						obj.color = dataObj[this.chartColor];
 					}
 				}
-				
+
 				data[data.length] = obj;
 			}
 		}
-		
+
 		return data;
 	},
 	addXAxis: function(){
@@ -451,7 +451,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 					fontPropExists = true;
 				}
 			}
-			
+
 			if (fontPropExists)
 			{
 				var fontPropStr = '';
@@ -469,7 +469,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 				return results;
 			}
 		}
-		
+
 		return null;
 	},
 	addSeries: function(){
@@ -489,7 +489,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 				seriesName += ' '+counter;
 				counter++;
 			}
-			
+
 			if (thisObj.chartType != 'Pie' && thisObj.chartColor instanceof Array)
 			{
 				var color = thisObj.chartColor[idx];
@@ -502,8 +502,8 @@ dojo.declare("wm.DojoChart", wm.Control, {
 			{
 				thisObj.dojoObj.addSeries(seriesName, columnData);
 			}
-			
-			thisObj.addedSeries[thisObj.addedSeries.length] = seriesName; 
+
+			thisObj.addedSeries[thisObj.addedSeries.length] = seriesName;
 		});
 	},
 	incrementSeries: function(){
@@ -514,7 +514,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	updateSeries: function(seriesName, inData){
 		try{
 			this.dojoObj.updateSeries(seriesName, inData);
-			this.dojoObj.render();		
+			this.dojoObj.render();
 		}catch(e){
 			console.info('error while updating series for ', this.declaredClass);
 		}
@@ -544,7 +544,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 		{
 			switch (propArray[1])
 			{
-				case 'FontFamily': 
+				case 'FontFamily':
 					return {propName: 'family', propValue: propArray[2]};
 				case 'FontSizePx':
 					return {propName: 'size', propValue: propArray[2]};
@@ -554,7 +554,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 					return {propName: 'weight', propValue: propArray[2]};
 			}
 		}
-		
+
 		return null;
 	},
 	updateChartXY: function(){
@@ -566,7 +566,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 		{
 			this.addXAxis();
 		}
-		
+
 		this.addSeries();
 	},
 	addAnimation:function(){
@@ -578,7 +578,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 			if (this.magnify)
 				this.magnify.destroy();
 		}
-		
+
 		if (this.enableAnimation)
 		{
 			var dc = dojox.charting;
@@ -620,12 +620,12 @@ dojo.declare("wm.DojoChart", wm.Control, {
 		if (labels.length < 1) {
 			var value = 1;
 		} else {
-			var value = labels[labels.length -1].value + 1; 
+			var value = labels[labels.length -1].value + 1;
 			while (labels.length > this.maxTimePoints) {
 				labels.shift();
 			}
 		}
-		
+
 		labels.push({value: value, text: text});
 		xAxis.labels = labels;
 		this.dojoObj.addAxis("x", xAxis);
@@ -669,7 +669,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 		var item = this.variable.getItem(idx);
 		if (item != null)
 			dataObj = item.data;
-		
+
 		if (type == 'onclick')
 			dojo.hitch(this, 'onClick')(e, dataObj);
 		else if (type == 'onmouseover')
