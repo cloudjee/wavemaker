@@ -1072,7 +1072,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
 	generatePortMappingBox: function() {
 		if (this.deploymentList.selectedItem.getValue("dataValue.deploymentType") === this.CF_DEPLOY ||
-			!studio.application.isSecurityEnabled) {
+			!studio.application.isSSLUsed) {
 			if (this.currentPortMappingBox) this.currentPortMappingBox.hide();
 			return null;
 		}

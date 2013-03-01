@@ -361,16 +361,18 @@ public class SecurityXmlSupport {
             objs.remove(mappings);
         }
 
-        Http.PortMappings.PortMapping newMapping = new Http.PortMappings.PortMapping();
-        newMapping.setHttp(httpPort);
-        newMapping.setHttps(httpsPort);
+        if(!httpPort.equals("0") && !httpsPort.equals("0")){
+        	Http.PortMappings.PortMapping newMapping = new Http.PortMappings.PortMapping();
+        	newMapping.setHttp(httpPort);
+        	newMapping.setHttps(httpsPort);
 
-        List<Http.PortMappings.PortMapping> portMappings;
+        	List<Http.PortMappings.PortMapping> portMappings;
 
-        mappings = new Http.PortMappings();
-        portMappings = mappings.getPortMapping();
-        portMappings.add(newMapping);
-        objs.add(0, mappings);
+        	mappings = new Http.PortMappings();
+        	portMappings = mappings.getPortMapping();
+        	portMappings.add(newMapping);
+        	objs.add(0, mappings);
+        }
     }
 
     static Http.PortMappings.PortMapping getPortMapping(Beans beans, String httpPort) {
