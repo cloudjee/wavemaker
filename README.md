@@ -74,12 +74,6 @@ The installer package built will be dependent on your operating system.  The fol
 * Linux (Centos or Ubuntu)
 * Windows
 
-Building the windows installer requires zip file of the jdk to be redistributed be available. This zip file can not be in the public repository and must be provided.
-Set BUILD_JDK_ZIP to the folder containing the zip file.
-e.g. set BUILD_JDK_ZIP=c:\downloads
-The file should be named 'jdk1.6.0_24.zip' and include the folder jdk-1.6.0_24 at the top level of the archive.
-
-
 Importing into Eclipse/STS
 --------------------------
 To develop WaveMaker using Eclipse or STS run the following from the root directory:
