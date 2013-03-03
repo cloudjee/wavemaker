@@ -44,7 +44,8 @@ dojo.registerModulePath("wm.packages", wm.libPath + "/wm/common/packages");
 dojo.registerModulePath("wm.language", wm.libPath + "/wm/language");
 dojo.registerModulePath("language", window.location.pathname.replace(/[^\/]*$/,"language"));
 
-
+wm.isMobile = false; // needed for running studio in IE 10 on touch screen
+wm.device = "desktop";
 wm.locale = {};
 dojo.requireLocalization("wm.language", "components");
 wm.locale.phrases = dojo.i18n.getLocalization("wm.language", "components");
