@@ -243,7 +243,7 @@ dojo.declare("wm.ToolButton", [wm.Control, wm.TouchMixinOptional], {
 			}
 		}
 	},
-	renrenderBounds: function() {
+    renderBounds: function() {
         this.inherited(arguments);
         if(dojo.isIE && dojo.isIE < 9) {
             if(this.btnNode.firstChild && this.btnNode.firstChild.style) {
@@ -254,8 +254,23 @@ dojo.declare("wm.ToolButton", [wm.Control, wm.TouchMixinOptional], {
             } else {
                 this.btnNode.style.padding = this.padding == "1" ? "2" : "1";
                 wm.job(this.getRuntimeId() + ".IEButtonTrick", 5, dojo.hitch(this, function() {
-                    this.btnNode.style.padding = this.paddingExtents.t + "px " + this.paddingExtents.r + "px " + this.paddingExtents.b + "px "  + this.paddingExtents.l + "px";
+                    this.btnNode.style.padding = this.paddingExtents.t + "px " + this.paddingExtents.r + "px " + this.paddingExtents.b + "px \
+" + this.paddingExtents.l + "px";
                 }));
             }
         }
     },
+    destroy: function() {
+		if (this.btnNode) {
+			dojo.destroy(this.btnNode);
+			this.btnNode = null;
+		}
+
+		if (this.domNode) {
+			dojo.destroy(this.domNode);
+			this.domNode = null;
+		}
+
+		this.inherited(arguments);
+	}
+});
