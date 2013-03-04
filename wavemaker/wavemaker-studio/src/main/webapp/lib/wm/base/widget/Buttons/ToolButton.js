@@ -243,15 +243,23 @@ dojo.declare("wm.ToolButton", [wm.Control, wm.TouchMixinOptional], {
 			}
 		}
 	},
-	renderBounds: function() {
-		this.inherited(arguments);
-		if (dojo.isIE && dojo.isIE < 9 && this.btnNode && this.btnNode.firstChild && this.btnNode.firstChild.tagName) {
-			this.btnNode.firstChild.style.padding = "1px";
-			wm.job(this.getRuntimeId() + ".IEButtonTrick", 5, dojo.hitch(this, function() {
-				this.btnNode.firstChild.style.padding = "0px";
-			}));
-		}
-	},
+    renderBounds: function() {
+        this.inherited(arguments);
+        if(dojo.isIE && dojo.isIE < 9) {
+            if(this.btnNode.firstChild && this.btnNode.firstChild.style) {
+                this.btnNode.firstChild.style.padding = "1px";
+                wm.job(this.getRuntimeId() + ".IEButtonTrick", 5, dojo.hitch(this, function() {
+                    this.btnNode.firstChild.style.padding = "0px";
+                }));
+            } else {
+                this.btnNode.style.padding = this.padding == "1" ? "2" : "1";
+                wm.job(this.getRuntimeId() + ".IEButtonTrick", 5, dojo.hitch(this, function() {
+                    this.btnNode.style.padding = this.paddingExtents.t + "px " + this.paddingExtents.r + "px " + this.paddingExtents.b + "px "  + this.paddingExtents.l + "px";
+                }));
+            }
+        }
+    },
+
 
 
 	destroy: function() {
