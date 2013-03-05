@@ -122,6 +122,26 @@ public class RuntimeService {
     }
 
     public TypedServiceReturn update(String serviceName, String typeName, @JSONParameterTypeField(typeParameter = 1) Object objectToUpdate)
+	throws Exception {
+		return update(serviceName, typeName, objectToUpdate, 2);
+	}
+
+    /**
+     * Alternative form of update for use from Java Service
+     * Fails in horrific
+     * Example usage:
+     *  runtimeSvc = (RuntimeService)RuntimeAccess.getInstance().getServiceBean("runtimeService");
+     *  runtimeSvc.update("custpurchaseDB", "com.custpurchasedb.data.Customer",customer, 0);
+     * 
+     * @param serviceName The service name e.g. custpurchaseDB
+     * @param typeName The type being updated e.g. com.custpurchasedb.data.Customer
+     * @param objectToUpdate The object to be updated e.g. an instance of Customer
+     * @param index Index to  use shiftDeseralizedProperties. Set to 0 for most cases
+     * @return
+     * @throws Exception
+     */
+    
+	public TypedServiceReturn update(String serviceName, String typeName, @JSONParameterTypeField(typeParameter = 1) Object objectToUpdate, int index)
         throws Exception {
 
         ServiceWire sw = getServiceWire(serviceName, typeName);
@@ -131,7 +151,7 @@ public class RuntimeService {
         if (sw.isLiveDataService()) {
             // remove serviceName and typeName from
             // deserialized properties list
-            shiftDeserializedProperties(2);
+            shiftDeserializedProperties(index);
 
             ParsedServiceArguments psa = new ParsedServiceArguments();
             psa.setArguments(new Object[] { objectToUpdate });
