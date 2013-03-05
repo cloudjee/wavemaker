@@ -515,7 +515,11 @@ dojo.declare("wm.Variable", wm.Component, {
             // if we are updating, o's listeners will be notified by us
             // o doesn't need to message them directly
             if (this._updating) o._updating++;
+            if (this.isList && v instanceof wm.Variable && !v.isList) {
+                this.setIsList(false);
+            }
             o.setData(v);
+
             if (this._updating) o._updating--;
             return;
         }
