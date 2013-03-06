@@ -244,43 +244,48 @@ wm.Component.extend({
             o.push(s);
         }
         // <indent>name: [ type, {props}, {events}, {children} ]
-            var name = this.name.match(/[^a-zA-Z0-9_]/) ? "\"" + this.name + "\"" : this.name;
+        var name = this.name.match(/[^a-zA-Z0-9_]/) ? "\"" + this.name + "\"" : this.name;
         return [inIndent, name, ': [', o.join(', '), ']'].join('');
         //return sourcer_component(this, inIndent);
     },
-        getDocumentationHash: function() {
+    getDocumentationHash: function() {
         var hash = {};
-        if (this.documentation) hash[this.name] = this.documentation;
-        for (var i in this.components) {
-        var tmp = this.components[i].getDocumentationHash();
-        if (!wm.isEmpty(tmp)) dojo.mixin(hash,tmp);
+        if(this.documentation) hash[this.name] = this.documentation;
+        for(var i in this.components) {
+            var tmp = this.components[i].getDocumentationHash();
+            if(!wm.isEmpty(tmp)) dojo.mixin(hash, tmp);
         }
-        if (this._metaData)
-        hash.__metaData = this._metaData;
+        if(this._metaData) hash.__metaData = this._metaData;
         return hash;
     },
     //=======================================================
     // Other...
     //=======================================================
-        set_name: function(inName, skipValidNameTest) {
-        var o = this.name, n = inName;
-        if (n == o || !n)
-            return;
+    set_name: function(inName, skipValidNameTest) {
+        var o = this.name,
+            n = inName;
+        if(n == o || !n) return;
         //
         /* skip Used when generating wm.XhrDefintion and wm.TypeDefinition where names like "vmware.com.testService" are not actually valid js names */
-        if (!skipValidNameTest) {
-        n = wm.getValidJsName(n);
+        if(!skipValidNameTest) {
+            try {
+                n = wm.getValidJsName(n);
+            } catch(e) {
+                app.toastError(inName + " is not a valid javascript name");
+                throw e;
+            }
         }
         //
         // ensure name is unique
         var un = this.owner.getUniqueName(n);
-        if (n != un)
-            return n;
+        if(n != un) return n;
         //
-        var oldRtId = this.getRuntimeId(), oldId = this.getId();
+        var oldRtId = this.getRuntimeId(),
+            oldId = this.getId();
         this.renameFunctionEvents(n);
         this.setName(n);
-        var rtId = this.getRuntimeId(), id = this.getId();
+        var rtId = this.getRuntimeId(),
+            id = this.getId();
         //
         dojo.publish("wmwidget-rename", [o, n, this]);
         // messages for id and runtimeId change
