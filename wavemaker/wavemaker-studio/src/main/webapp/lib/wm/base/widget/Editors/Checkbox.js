@@ -27,6 +27,7 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
     dataType: "boolean", /* TODO: WARNING, this may cause upgrade problems changing this from string to boolean */
     startChecked: false,
     checkedValue: true,
+    fixedEditorWidth: wm.isMobile ? 32 : 16,
     touchStart: function() {
         if (this._disabled) return;
         this._touched = true;
@@ -87,15 +88,14 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
     },
     // checkbox cannot be sized, but should be adjusted in container
     sizeEditor: function() {
-        if (this._cupdating)
-        return;
+        if (this._cupdating) return;
         this.inherited(arguments);
         var node = this.editorNode;
         var size = wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop" ? 32 : 16;
         node.style.width = size + "px";
         node.style.height =  size + "px";
-            var height = parseInt(node.style.lineHeight);
-            node.style.marginTop = (Math.floor(height-size)/2) + "px";
+        var height = parseInt(node.style.lineHeight);
+        node.style.marginTop = (Math.floor(height-size)/2) + "px";
     },
 
     styleEditor: function() {

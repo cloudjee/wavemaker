@@ -374,15 +374,21 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
                 editorWidth = w;
                 editorHeight = h;
             } else if (position == "left" || position == "right") {
-                var tmpWidth = (this.captionSize.match(/px/)) ? parseInt(this.captionSize) : Math.floor(parseInt(this.captionSize) * w / 100);
-                var minEditorWidth = this.minEditorWidth || (wm.isMobile ? 32 : 16);
-                if (w - tmpWidth < (this.minEditorWidth || minEditorWidth)) {
-                    editorWidth = this.minEditorWidth || minEditorWidth;
+                if (this.fixedEditorWidth && position == "right") {
+                    editorWidth = this.fixedEditorWidth;
                     labelWidth = w - editorWidth - (this.helpText ? helpIconSize + helpIconMargin : 0);
                     allocateHelpIconSpace = false;
                 } else {
-                    labelWidth = tmpWidth;
-                    editorWidth = w - labelWidth;
+                    var minEditorWidth = this.minEditorWidth || wm.isMobile ? 32 : 16;
+                    var tmpWidth = (this.captionSize.match(/px/)) ? parseInt(this.captionSize) : Math.floor(parseInt(this.captionSize) * w / 100);
+                    if (w - tmpWidth < (minEditorWidth || 0)) {
+                        editorWidth = minEditorWidth;
+                        labelWidth = w - editorWidth - (this.helpText ? helpIconSize + helpIconMargin : 0);
+                        allocateHelpIconSpace = false;
+                    } else {
+                        labelWidth = tmpWidth;
+                        editorWidth = w - labelWidth;
+                    }
                 }
                 //          if (labelWidth) editorWidth -=  18; // TODO: number 18 is a random number that worked out in FF, but needs testing elsewhere
                 labelHeight = (height) ? height : "";
