@@ -35,6 +35,7 @@ dojo.declare("wm.AceEditor", wm.Control, {
     fontFace: "Monaco, Lucida Console, monospace",
     dataValue: "dojo.declare('myclass', null, {\n});",
     tabSize: 4,
+    showGutter: true,
 
     // wm.Control props
     width: "100%",
@@ -49,7 +50,7 @@ dojo.declare("wm.AceEditor", wm.Control, {
             var script = document.createElement("script");
             var prefix = this.libPrefix;
             if (prefix.indexOf("lib/") == 0) {
-            prefix = dojo.moduleUrl("lib").path + prefix.substring(4);
+                prefix = dojo.moduleUrl("lib").path + prefix.substring(4);
             }
             script.src = prefix + ((djConfig.isDebug || dojo.isIE == 8) ? "ace-uncompressed.js" : "ace.js");
             head.appendChild(script);
@@ -75,6 +76,7 @@ dojo.declare("wm.AceEditor", wm.Control, {
             this._editor.getSession().on('changeSelection', dojo.hitch(this, "_changeSelection"));
             this._editor.getSession().on('changeCursor', dojo.hitch(this, "_changeCursor"));
             this.setTheme(this.theme);
+            this.setShowGutter(this.showGutter);
             if (this.dataValue)
                 this.setDataValue(this.dataValue);
             this.connect(dojo.query("textarea",this.domNode)[0], "oncontextmenu", this, "_onContextMenu");
@@ -121,6 +123,11 @@ dojo.declare("wm.AceEditor", wm.Control, {
     setTheme: function(inTheme) {
         if (this._editor)
             this._editor.setTheme("ace/theme/" + inTheme);
+    },
+    setShowGutter: function(inValue) {
+        if (this._editor) {
+            this._editor.renderer.setShowGutter(inValue);
+        }
     },
     renderBounds: function() {
         this.inherited(arguments);
@@ -183,7 +190,7 @@ dojo.declare("wm.AceEditor", wm.Control, {
             this._editor.getSelection().setSelectionRange({start: {row: startRow, column: startColumn},
                                    end: {row: endRow, column: endColumn}});
     },
-    setCursorPosition: function(row, column) {    
+    setCursorPosition: function(row, column) {
         if (this._editor) {
             this._editor.getSelection().clearSelection();
             this._editor.moveCursorTo(row,column);

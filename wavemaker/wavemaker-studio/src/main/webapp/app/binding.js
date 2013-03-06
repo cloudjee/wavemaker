@@ -398,7 +398,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
                 }]
             }],
             expressionLayer: ["wm.Layer", {border: 0, caption: "expression"}, {}, {
-                expressionEditor: ["wm.LargeTextArea", {padding: 0, width: "100%", height: "100px"}],
+                expressionEditor: ["wm.AceEditor", {showGutter: false, syntax: "javascript", padding: 0, width: "100%", height: "100px"}],
                 exprSplitter: ["wm.Splitter", {}],
                 expressionBuilderPanel: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "top", horizontalAlign: "left"}, {}, {
                 expressionButtons: ["wm.Panel", {height: "25px", width: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
@@ -411,7 +411,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
                 }]
             }],
             displayExpressionLayer: ["wm.Layer", {border: 0, caption: "expression"}, {}, {
-                displayExpressionEditor: ["wm.LargeTextArea", {padding: 0, width: "100%", height: "100px"}],
+                displayExpressionEditor: ["wm.AceEditor", {showGutter: false, syntax: "javascript",padding: 0, width: "100%", height: "100px"}],
                 displayExprSplitter: ["wm.Splitter", {}],
                 displayExpressionBuilderPanel: ["wm.Panel", {height: "100%", width: "100%", verticalAlign: "top", horizontalAlign: "left"}, {}, {
                 displayExpressionButtons: ["wm.Panel", {height: "25px", width: "100%", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
