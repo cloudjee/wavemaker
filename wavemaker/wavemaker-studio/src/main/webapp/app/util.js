@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 dojo.provide("wm.studio.app.util");
 
 //===========================================================================
@@ -135,7 +135,7 @@ wm.listComponentIds = function(inOwners, inClass, inStrict) {
 wm.openUrl = function(inUrl, inTitle, inWindowName, inWindowOptions) {
     var w = window.open(inUrl, inWindowName, inWindowOptions);
     if (dojo.isChrome) {
-        wm.job(inWindowName, 200, function() {
+        wm.job(inWindowName, 1000, function() {
             if (w.closed) wm.openUrlDialog(inUrl,inTitle,inWindowName+1);
             if (w.document && w.document.body && w.outerWidth == 0) {
                 wm.openUrlDialog(inUrl,inTitle,inWindowName+1);
@@ -149,28 +149,28 @@ wm.openUrl = function(inUrl, inTitle, inWindowName, inWindowOptions) {
 wm.openUrlDialog = function(inUrl, inTitle, inWindowName) {
     var d = wm.openUrl.dialog;
     if (!d) {
-    d = wm.openUrl.dialog = new wm.Dialog({_classes: {domNode: ["studiodialog"]},
-                           title: studio.getDictionaryItem("POPUP_BLOCKER_TITLE"),
-                           owner: studio, 
-                           width: 320, 
-                           height: 110,
-                           modal: false,
-                           useContainerWidget: true});
-    var container = d.containerWidget;
-    new wm.Label({parent: container,
-              width: "100%",
-              height: "100%",
-              owner: d,
-              caption: studio.getDictionaryItem("POPUP_BLOCKER_MESSAGE"), 
-              singleLine: false,
-              align: "center"});
-    new wm.Label({
-        parent: container,
-        owner: d,
-        caption: studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"),
-        width: "100%",
-        align: "center"
-    });
+        d = wm.openUrl.dialog = new wm.Dialog({_classes: {domNode: ["studiodialog"]},
+                               title: studio.getDictionaryItem("POPUP_BLOCKER_TITLE"),
+                               owner: studio,
+                               width: 320,
+                               height: 110,
+                               modal: false,
+                               useContainerWidget: true});
+        var container = d.containerWidget;
+        new wm.Label({parent: container,
+                  width: "100%",
+                  height: "100%",
+                  owner: d,
+                  caption: studio.getDictionaryItem("POPUP_BLOCKER_MESSAGE"),
+                  singleLine: false,
+                  align: "center"});
+        new wm.Label({
+            parent: container,
+            owner: d,
+            caption: studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"),
+            width: "100%",
+            align: "center"
+        });
     }
     var link = d.containerWidget.c$[1];
     link.setLink(inUrl);
@@ -232,5 +232,4 @@ wm.getEditorClassName = function(type){
 	type = 'Text';
     return 'wm.'+type;
 }
-    
-    
+
