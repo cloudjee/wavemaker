@@ -1055,13 +1055,13 @@ dojo.declare("wm.studio.Project", null, {
     // Right now, the documentation files are our only place for storing project meta data... stuff that should be widget level properties,
     // but which should not show up at runtime.  So we need a quick way to change them and save them
     setMetaDataFlag: function(key,value) {
-    if (!studio.application._metaData)
-        studio.application._metaData = {};
-    if (studio.application._metaData[key] != value) {
-        studio.application._metaData[key] = value;
-        var appdocumentation = studio.application.getDocumentationHash();
-        this.saveProjectData(this.projectName + ".documentation.json", dojo.toJson(appdocumentation, true));
-    }
+        if (!studio.application._metaData)
+            studio.application._metaData = {};
+        if (studio.application._metaData[key] != value) {
+            studio.application._metaData[key] = value;
+            var appdocumentation = studio.application.getDocumentationHash();
+            this.saveProjectData(this.projectName + ".documentation.json", dojo.toJson(appdocumentation, true));
+        }
     },
     generateApplicationSource: function() {
 /*
