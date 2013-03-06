@@ -779,6 +779,19 @@ dojo.declare("Studio", wm.Page, {
         }
         this._runRequested = false;
         this.updateStateWhileDeploying(true);
+
+        this.clearOldJavaErrors();
+    },
+    clearOldJavaErrors: function() {
+        var components = studio.application.getServerComponents()
+        dojo.forEach(components, function(c) {
+            var treeNode = c._studioTreeNode;
+            if (treeNode && dojo.hasClass(treeNode.domNode, "Error")) {
+                dojo.removeClass(treeNode.domNode, "Error");
+                this.project.setMetaDataFlag("service_invalid_" + c.getRuntimeId(), false);
+            }
+        }, this);
+        dojo.query(".Error", studio.tree.domNode).forEach(function(inNode) {dojo.removeClass(inNode, "Error");});
     },
     allowDisablingOfServiceItems: true,
     updateStateWhileDeploying: function(isDeployed) { /* Only if there is an app open */

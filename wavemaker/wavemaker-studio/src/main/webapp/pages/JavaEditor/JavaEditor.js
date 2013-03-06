@@ -73,8 +73,8 @@ dojo.declare("JavaEditor", wm.Page, {
     },
     onSaveSuccess: function() {
         studio.project.setMetaDataFlag("service_invalid_" + this.javaService.getRuntimeId(), false);
-
-        dojo.removeClass(this.javaService._studioTreeNode.domNode, "Error");
+        var node = this.getStudioTreeNode();
+        dojo.removeClass(node.domNode, "Error");
         this._cachedData = this.javaCodeEditor.getText();
         this.setDirty();
         this.saveComplete();
@@ -82,9 +82,15 @@ dojo.declare("JavaEditor", wm.Page, {
     onSaveError: function() {
         studio.endWait();
         studio.project.setMetaDataFlag("service_invalid_" + this.javaService.getRuntimeId(), true);
-
-        dojo.addClass(this.javaService._studioTreeNode.domNode, "Error");
+        var node = this.getStudioTreeNode();
+        dojo.addClass(node.domNode, "Error");
         this.saveComplete();
+    },
+    getStudioTreeNode: function() {
+        return studio.tree.findNodeByCallback(dojo.hitch(this, function(inNode) {
+            return inNode.component instanceof wm.JavaService && inNode.component.name == this.javaService.name;
+        }))
+
     },
     getProgressIncrement: function() {
         return 20; // saving java services is very slow...  1 tick is very fast; this is 20 times slower than that
