@@ -2272,7 +2272,15 @@ dojo.declare("Studio", wm.Page, {
         this.addPatchDialog.show();
     },
 
-
+    togglePropertyDialogDock: function() {
+        if (this.PIContents.docked) {
+            this.PIContents.setShowing(true);
+            this.PIContents.setDocked(false);
+        } else {
+            this.PIContents.setShowing(true);
+            this.PIContents.setDocked(true,this.PIPanel);
+        }
+    },
     dockPropertyPanel: function() {
         if (!this.PIContents.isDestroyed && !this.PIContents._destroying) {
             this.PIContents.setShowing(true);

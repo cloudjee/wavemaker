@@ -16,7 +16,7 @@ Studio.widgets = {
     loadingDialog: ["wm.LoadingDialog", {_classes: {domNode: ["studiodialog"]}}],
     themeListType: ["wm.TypeDefinition", {}, {}, {
         themeListTypeField1: ["wm.TypeDefinitionField", {fieldName: "name", type: "String"}],
-        themeListTypeField2: ["wm.TypeDefinitionField", {fieldName: "dataValue", type: "String"}],        
+        themeListTypeField2: ["wm.TypeDefinitionField", {fieldName: "dataValue", type: "String"}],
         themeListTypeField3: ["wm.TypeDefinitionField", {fieldName: "designer", type: "String"}]
     }],
     themesListVar: ["wm.Variable", {type: "themeListType"}],
@@ -200,7 +200,7 @@ height: "29px", width: "420px",
 								   onClick: "uploadStudioPatches"},
 								  {"defaultLabel": "Import Partner Services...",
 								    idInPage: "partnerServicesItem",
-								   onClick: "importPartnerService"}							   
+								   onClick: "importPartnerService"}
 							      ]
 							     }
 							 ]},
@@ -482,7 +482,7 @@ height: "29px", width: "420px",
 					}],
 			    splitter3b: ["wm.Splitter", {_classes: {domNode: ["StudioSplitter"]},border: "", minimum:200,maximum: 500}, {}],
 			    PIPanel: ["wm.Panel", { height: "100%", width: "250px", border: "0", padding: "0", layoutKind: "top-to-bottom", dockRight:true, border: "1,0,0,1", borderColor: "#959DAB" }, {}, {
-				PIContents: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog","Docked", "StudioDarkPanel"]},width: "100%", height: "100%", _dockData: {border:"3", edge: "r", w: 400,title: "Property Panel"}, border: "0", margin: "0", containerWidget:"inspector",modal:false,docked: true, minHeight: "300", noTopBottomDocking: true, noLeftRightDocking: false}, {onClose: "dockPropertyPanel"}, {
+				PIContents: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog","Docked", "StudioDarkPanel"]},width: "100%", height: "100%", _dockData: {border:"3", edge: "r", w: 400,title: "Property Panel"}, border: "0", margin: "0", containerWidget:"inspector",modal:false,docked: true, minHeight: "300", noTopBottomDocking: true, noLeftRightDocking: false, titlebarButtons: "Studio-inspectorDialogToggle", noMinify: 1, noMaxify:1}, {onClose: "dockPropertyPanel", onMiscButtonClick: "togglePropertyDialogDock"}, {
 				    inspectorToolbarOuter: ["wm.Panel", {_classes: {domNode: ["StudioToolBar"]}, width:"100%", height: "60px", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "top",padding:"3,0,2,0"},{},{
 					inspectorToolbar2: ["wm.Panel", {width: "100%", height: "22px", layoutKind: "left-to-right", horizontalAlign: "left", verticalAlign: "top",padding:"0"},{},{
 					    propertySearchBar: ["wm.Text", {_classes: {domNode:["StudioEditor"]},resetButton: true, width: "100%", changeOnKey: true, emptyValue: "emptyString", placeHolder: "Find Property"},{onchange: "inspector.propertySearch"}],
@@ -633,7 +633,7 @@ height: "29px", width: "420px",
 					    }],
                         themeLayer: ["wm.Layer", {_classes: {domNode: []}, caption: "Themes", width: "100%", height: "100%"}, {}, {
                             themeTabs: ["wm.studio.TabLayers", {_classes: {domNode: ["StudioTabs", "StudioDarkLayers", "StudioDarkerLayers"]}}, {}, {
-                                widgetThemeLayer: ["wm.Layer", {_classes: {domNode: []}, caption: "Theme Designer", width: "100%", height: "100%"}, {}, {                        
+                                widgetThemeLayer: ["wm.Layer", {_classes: {domNode: []}, caption: "Theme Designer", width: "100%", height: "100%"}, {}, {
                                     themesPage: ["wm.PageContainer", {deferLoad: true, loadParentFirst: true,
                                                                       pageName: "WidgetThemerPage"}]
                                 }],
