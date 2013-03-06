@@ -1108,8 +1108,9 @@ dojo.declare("DataObjectsEditor", wm.Page, {
             studio.updateServices();// this will update the database widgets in the palette, and remove the entity from the services tree
         this.saveComplete();
     },
-    deleteEntityFailed: function() {
+    deleteEntityFailed: function(inError) {
         studio.endWait();
+        app.alert(inError);
     },
     applyGridEdits: function() {
         this.columnList.dijit.edit.apply();
