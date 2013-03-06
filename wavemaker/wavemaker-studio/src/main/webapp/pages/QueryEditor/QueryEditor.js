@@ -616,11 +616,50 @@ dojo.declare("QueryEditor", wm.Page, {
     updateInputList: function(inText) {
         var oldData = this.queryInputsList._data;
         var currentParams = {};
+
+        var inSingleQuote = false;
+        var inDoubleQuote = false;
+        var inMatch = false;
+        var inEscape = false;
+        var matches = [];
+        var currentMatch = "";
+
+        for (var i = 0; i < inText.length; i++) {
+            var c = inText.charAt(i);
+            if (c == "\\") {
+                inEscape = true;
+            } else if (inEscape) {
+                inEscape = false;
+            } else if (c == ":") {
+                if (!inSingleQuote && !inDoubleQuote) {
+                    inMatch = true;
+                }
+            } else if (c == "'") {
+                inSingleQuote = !inSingleQuote;
+            } else if (c == '"') {
+                inDoubleQuote = !inDoubleQuote;
+            } else if (inMatch) {
+                if (c.match(/[a-zA-Z0-9_]/)) {
+                    currentMatch += c;
+                } else {
+                    if (currentMatch) {
+                        matches.push(currentMatch);
+                    }
+                    currentMatch = "";
+                    inMatch = false;
+                }
+            }
+        }
+        if (currentMatch) matches.push(currentMatch);
+        for(var i = 0; i < matches.length; i++) {
+            currentParams[matches[i]] = true;
+        }
+         /*
         var matches = inText.match(/:\w+/g);
         if(!matches) matches = [];
         for(var i = 0; i < matches.length; i++) {
             currentParams[matches[i].substring(1)] = true;
-        }
+        }*/
 
         for(var j = oldData.length - 1; j >= 0; j--) {
             if(!currentParams[oldData[j].name]) {
