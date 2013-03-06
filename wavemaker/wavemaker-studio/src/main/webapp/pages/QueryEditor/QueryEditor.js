@@ -614,37 +614,38 @@ dojo.declare("QueryEditor", wm.Page, {
 		this.bindTypeInput.endEditUpdate();
 	},
     updateInputList: function(inText) {
-	var oldData = this.queryInputsList._data;
-	var currentParams = {};
-	var matches = inText.match(/:\w+/g);
-	if (!matches)
-	    matches = [];
-	for (var i = 0; i < matches.length; i++) {
-	    currentParams[matches[i].substring(1)] = true;
-	}
+        var oldData = this.queryInputsList._data;
+        var currentParams = {};
+        var matches = inText.match(/:\w+/g);
+        if(!matches) matches = [];
+        for(var i = 0; i < matches.length; i++) {
+            currentParams[matches[i].substring(1)] = true;
+        }
 
-	for (var j = oldData.length-1; j >= 0; j--) {
-	    if (!currentParams[oldData[j].name]) {
-		wm.Array.removeElementAt(oldData,j);
-	    }
-	}
+        for(var j = oldData.length - 1; j >= 0; j--) {
+            if(!currentParams[oldData[j].name]) {
+                wm.Array.removeElementAt(oldData, j);
+            }
+        }
 
-	for (var name in currentParams) {
-	    var found = false;
-	    for (var i = 0; i < oldData.length; i++) {
-		if (oldData[i].name == name) {
-		    found = true;
-		    break;
-		}
-	    }
-	    if (!found) {
-		oldData.push({"name": name,
-			      type: "Integer",
-			      list: false});
-	    }
-	}
-	this.queryInputsList.renderData(dojo.clone(oldData));
-	//this.queryInputsList._render();
+        for(var name in currentParams) {
+            var found = false;
+            for(var i = 0; i < oldData.length; i++) {
+                if(oldData[i].name == name) {
+                    found = true;
+                    break;
+                }
+            }
+            if(!found) {
+                oldData.push({
+                    "name": name,
+                    type: "Integer",
+                    list: false
+                });
+            }
+        }
+        this.queryInputsList.renderData(dojo.clone(oldData));
+        //this.queryInputsList._render();
     },
 	addBindParam: function(inSender) {
 		if (this.bindNameInput.getDataValue() == "") {
