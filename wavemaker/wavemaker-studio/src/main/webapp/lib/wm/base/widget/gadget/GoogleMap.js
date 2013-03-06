@@ -12,7 +12,7 @@
  *  limitations under the License.
  */
 
-/* TODO: 
+/* TODO:
  *  - Make the geocode incrementer bindable to a progress bar
  *  - document values for the icon property for each item "orange" and "orange1" or a path to a custom image
  *  1. FusionTables integration
@@ -30,7 +30,7 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
     latitude: 37.789607,
     longitude: -122.39984,
 
-    
+
     zoom: 17,
     mapType: "ROADMAP", // ROADMAP, SATELLITE, HYBRID, TERRAIN
     dataSet: "",
@@ -111,38 +111,36 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 	});
     },
     setLongitude: function(inVal) {
-	this.longitude = inVal;
-	wm.onidle(this, function() {
-	    if (this._map)
-		this._map.setCenter(new google.maps.LatLng(this.latitude, this.longitude));
-	});
+        this.longitude = inVal;
+        wm.onidle(this, function() {
+            if(this._map) this._map.setCenter(new google.maps.LatLng(this.latitude, this.longitude));
+        });
     },
     fitToMarkers: function() {
-	var minLat = 10000000;
-	var minLon = 10000000;
-	var maxLat = -1000000;
-	var maxLon = -1000000;
-	if (!this.dataSet) return;
-	var count = this.dataSet.getCount();
-	if (count == 0) return;
-	for (var i = 0; i < count; i++) {
-	    var item = this.dataSet.getItem(i);
-	    var lat = item.getValue(this.latitudeField);
-	    var lon = item.getValue(this.longitudeField);
-	    if (lat < minLat) minLat = lat;
-	    if (lat > maxLat) maxLat = lat;
-	    if (lon < minLon) minLon = lon;
-	    if (lon > maxLon) maxLon = lon;
-	}
+        var minLat = 10000000;
+        var minLon = 10000000;
+        var maxLat = -1000000;
+        var maxLon = -1000000;
+        if(!this.dataSet) return;
+        var count = this.dataSet.getCount();
+        if(count == 0) return;
+        for(var i = 0; i < count; i++) {
+            var item = this.dataSet.getItem(i);
+            var lat = item.getValue(this.latitudeField);
+            var lon = item.getValue(this.longitudeField);
+            if(lat < minLat) minLat = lat;
+            if(lat > maxLat) maxLat = lat;
+            if(lon < minLon) minLon = lon;
+            if(lon > maxLon) maxLon = lon;
+        }
 
-	var maxPos = new google.maps.LatLng(maxLat, maxLon);
-	var minPos = new google.maps.LatLng(minLat, minLon);
-	this._map.fitBounds(new google.maps.LatLngBounds(minPos, maxPos));
+        var maxPos = new google.maps.LatLng(maxLat, maxLon );
+        var minPos = new google.maps.LatLng(minLat , minLon );
+        this._map.fitBounds(new google.maps.LatLngBounds(minPos, maxPos));
     },
     setMapType: function(inVal) {
-	this.mapType = inVal;
-	if (this._map)
-	    this._map.setMapTypeId(google.maps.MapTypeId[this.mapType]);
+        this.mapType = inVal;
+        if(this._map) this._map.setMapTypeId(google.maps.MapTypeId[this.mapType]);
     },
 
 	setDataSet: function(inDataSet) {
@@ -170,7 +168,7 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
     	if (this._geocoding) return;
     	this._geocoding = true;
     	this.onIncrementGeocodeCount(this._dataToGeocode.length, this.dataSet.getCount());
-        this._geocode(this._dataToGeocode.shift(), this._dataToGeocode.length ? dojo.hitch(this, "geocodeNext") : dojo.hitch(this, "onGeocodeComplete"));    
+        this._geocode(this._dataToGeocode.shift(), this._dataToGeocode.length ? dojo.hitch(this, "geocodeNext") : dojo.hitch(this, "onGeocodeComplete"));
     },
 
     /* This is called before each geocode attempt; lets you update a progress bar; TODO: Make this bindable to a progressbar */
@@ -178,7 +176,7 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 
     /* Called after ALL addresses in the dataSet that needed to be geocoded have been geocoded */
     onGeocodeComplete: function() {},
-    
+
     /* Called for each successful geocode of each individual address in the dataset; will be called many times; if updating a wm.Variable with the results,
      * you should precede your updates with this.variable.beginUpdate/endUpdate so that the map isn't repeatedly regenerated/regeocoded
      */
@@ -218,7 +216,7 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
         });
     },
     generateMarkers: function() {
-            
+
     	//var data = this.dataSet.getData();
     	var count = this.dataSet.getCount();
     	if (count) {
@@ -234,14 +232,16 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
     },
     generateMarker: function(item) {
         var d = item.getData();
+        d._index = item._index;
 		var lat = d[this.latitudeField];
 		var lon = d[this.longitudeField];
 	var address = d[this.addressField];
 		var title = d[this.titleField];
 		var desc = d[this.descriptionField];
 		var icon = d[this.iconField];
-	if (address && !lat && !lon) {
-	    this._dataToGeocode.push(item);
+
+	if (!lat && !lon) {
+        if (address) this._dataToGeocode.push(item);
 	    return;
 	}
 	switch(icon) {
@@ -279,11 +279,11 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 
 		var marker = new google.maps.Marker({
 		    icon: icon,
-		    position: new google.maps.LatLng(lat,lon), 
+		    position: new google.maps.LatLng(lat,lon),
 		    map: this._map,
 		    title: title});
 		this._markers.push(marker);
-		google.maps.event.addListener(marker, 'click', 
+		google.maps.event.addListener(marker, 'click',
 					      dojo.hitch(this, function() {
 						  if (desc) {
 						      this._infoWindow.setContent("<h3>" + title + "</h3>" + desc);
