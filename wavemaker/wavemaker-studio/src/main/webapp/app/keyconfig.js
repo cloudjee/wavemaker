@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 dojo.provide("wm.studio.app.keyconfig");
 
 wm.studioConfig = wm.studioConfig || {};
@@ -29,7 +29,7 @@ wm.studioConfig.hotkeyMap = [
 	{key: "B", action: "toggleLayoutClick" },
 	{key: "Z", action: "undoClick" },
 	{key: "M", action: "navGotoPaletteModelClick", always: true },
-	{key: "S", action: "saveProjectClick", always: true, idleDelay: true },
+	{key: "S", action: "saveProjectKeypress", always: true, idleDelay: true },
 	{key: "R", action: "runProjectClick", always: true, idleDelay: true}
 ];
 

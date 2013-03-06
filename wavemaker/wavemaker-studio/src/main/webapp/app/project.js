@@ -1845,6 +1845,15 @@ Studio.extend({
     welcomeOpenClick: function() {
         this.projects.activate();
     },
+
+    // Save key handled by resources page if its showing
+    saveProjectKeypress: function() {
+        if (studio.resourcesPage.isAncestorHidden()) {
+            this.saveProjectClick();
+        } else {
+            studio.resourcesPage.page.saveKeypress();
+        }
+    },
     saveProjectClick: function() {
         this.saveAll(studio.project);
         //this.waitForCallback(bundleDialog.M_SavingProject + this.project.projectName, dojo.hitch(this.project, "saveProject", false, true));

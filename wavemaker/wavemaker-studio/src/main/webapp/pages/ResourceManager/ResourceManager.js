@@ -461,6 +461,12 @@ dojo.declare("ResourceManager", wm.Page, {
         this.resourcesToggle.setClicked(false);
         this.projectToggle.setClicked(false);
     },
+    saveKeypress: function() {
+        var p = this.editorTabs.getActiveLayer();
+        if (p) p = p.c$[0];
+        if (p) p = p.page;
+        if (p) p.saveTextEditor();
+    },
   _end: 0
 });
 
@@ -797,7 +803,7 @@ wm.FolderResourceItem.extend({
                 newFile = new wm.JSResourceItem({
                     itemName: inName
                 });
-            
+
                 break;
             case "css":
                 newFile = new wm.CSSResourceItem({

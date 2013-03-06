@@ -21,11 +21,16 @@ dojo.declare("ResourceEditor", wm.Page, {
     i18n: true,
     item: null,
     start: function() {
-
+        this.connect(studio.project, "saveComplete", this, "onProjectSaved");
     },
     setItem: function(inItem) {
         this.item = inItem;
-        this._fullPath = this.item.getFilePath();
+
+        // If we are reverting the file, keep the old path; getFilePath may fail because
+        // the tree node may no longer exist by the time we do a revert
+        if (!this._fullPath) {
+            this._fullPath = this.item.getFilePath();
+        }
         if (this.item instanceof wm.ImageResourceItem) {
             this.editor.hide();
             this.picture.show();
@@ -154,6 +159,24 @@ dojo.declare("ResourceEditor", wm.Page, {
         studio.project.openApplication();
         tmp.destroy();
         studio.refreshWidgetsTree();
+    },
+
+    // The project has been saved, some of the files being edited may now be out of sync with whats on the server
+    // Rather than let the user clobber their just-saved changes, refresh the editors with the current file content
+    onProjectSaved: function() {
+        var inPath = this._fullPath;
+        if (inPath.match(/\/pages\//)) {
+            inPath = inPath.replace(/.*?\/pages\//, "");
+            var matches = inPath.match(/^[^\/]*/);
+            var pageName = matches ? matches[0] : null; // should never be null;
+        }
+        /* Refresh all components so that page containers are updated */
+        if (pageName == studio.project.pageName ||
+            inPath == "/webapproot/" + studio.project.projectName + ".js" ||
+            inPath == "/webapproot/" + studio.project.projectName + ".css") {
+            this.refreshScriptClick();
+        }
+
     },
     onCommonChange: function(inPath, inContents) {
 
