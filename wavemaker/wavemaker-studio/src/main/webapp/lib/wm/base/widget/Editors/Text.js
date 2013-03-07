@@ -106,6 +106,13 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
         */
     // requireScheduled is for internal use only; call this without parameters
     // requireScheduled means that if autoResize is called, and scheduled has already been set to false, then we no longer need to perform this scheduled resize.
+
+    _onShowParent: function() {
+        if (this._needsAutoSize) {
+            wm.job(this.getRuntimeId() + ".autoSize", 1, dojo.hitch(this, "doAutoSize"));
+            this.scheduleAutoSize();
+        }
+    },
     doAutoSize: function(setSize, force) {
         if (!this.readonly) return;
 
