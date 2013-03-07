@@ -1328,6 +1328,8 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
     },
     // expression builder
     addValueToExpressionEditor: function(inValue, inEditor) {
+        inEditor.replaceSelectedText(inValue);
+        /*
         var
             v = inValue,
             start = inEditor.editor.focusNode.selectionStart,
@@ -1335,9 +1337,9 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
             e = inEditor.getDataValue() || "";
             inEditor.setDataValue(e.slice(0, start) + v + e.slice(end));
         try {
-        inEditor.focus();
-        inEditor.editor.focusNode.selectionStart = start + v.length;
-        } catch(e) {}
+            inEditor.focus();
+            inEditor.editor.focusNode.selectionStart = start + v.length;
+        } catch(e) {}*/
     },
     expressionNodeSelected: function(inNode) {
         if (inNode.isProperty && inNode.source) {
