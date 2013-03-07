@@ -42,10 +42,10 @@ wm.Object.extendSchema(wm.Date, {
     maximum: {group: "editor", subgroup: "validation", order: 3, doc: 1, bindTarget: true, editor: "wm.Date"},
 
     useLocalTime: {group: "editor", subgroup: "value", order: 21, advanced: 1},
-    
+
     datePattern:{group: "editor", subgroup: "display", order: 4},
-    
-    
+
+
     formatLength: {ignore:1},
 
     /* Ignored Group */
@@ -91,6 +91,9 @@ wm.Object.extendSchema(wm.DateTime, {
     dateMode: {group: "editor", subgroup: "value", order: 20,options:["Date and Time", "Date", "Time"]},
     useLocalTime: {group: "editor", subgroup: "value", order: 21, advanced: 1},
 
+   /* STYLE GROUP */
+    editorSpacing: {group: "style", order: 2},
+
     selectOnClick: {ignore: 1},
     placeHolder: {ignore: 1}
 });
@@ -112,7 +115,10 @@ wm.DateTime.extend({
         }
         return this.inherited(arguments);
     },
-
+    set_editorSpacing: function(inValue) {
+        this.editorSpacing = inValue;
+        this.createEditor();
+    },
     set_use24Time: function(inValue) {
         this.use24Time = inValue;
         this.createEditor();

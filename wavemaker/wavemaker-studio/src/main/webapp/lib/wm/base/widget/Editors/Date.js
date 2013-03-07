@@ -300,7 +300,7 @@ dojo.declare("wm.DateTime", wm.Date, {
     use24Time: false,
     formatLength: "short",
     dateMode: "Date and Time",
-
+    editorSpacing: "2",
     _createEditor: function(inNode, inProps) {
         this.containerWidget = new wm.Container({
             width: "100%",
@@ -321,6 +321,7 @@ dojo.declare("wm.DateTime", wm.Date, {
             width: "100%",
             height: "100%",
             padding: "0",
+            margin: this.dateMode == "Date and Time" ? "0," + this.editorSpacing + ",0,0" : "0",
             openOnClick: this.openOnClick,
             useLocalTime: this.useLocalTime,
             formatLength: this.formatLength,
