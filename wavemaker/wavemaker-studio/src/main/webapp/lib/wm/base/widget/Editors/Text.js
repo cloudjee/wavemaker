@@ -110,7 +110,6 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
     _onShowParent: function() {
         if (this._needsAutoSize) {
             wm.job(this.getRuntimeId() + ".autoSize", 1, dojo.hitch(this, "doAutoSize"));
-            this.scheduleAutoSize();
         }
     },
     doAutoSize: function(setSize, force) {
