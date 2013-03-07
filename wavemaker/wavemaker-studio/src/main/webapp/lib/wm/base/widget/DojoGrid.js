@@ -2469,7 +2469,7 @@ dojo.declare("wm.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
         var formatterProps = column.formatterProps;
         var useLocalTime = formatterProps && formatterProps.useLocalTime;
         var value = this.getValue(inRowIndex);
-        if (!useLocalTime) {
+        if (!useLocalTime && value) {
             value.setHours(0,
                            -60 * wm.timezoneOffset + 6, /* See WM-4490 to understand this calculation */
                            0);
