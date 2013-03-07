@@ -993,6 +993,7 @@ dojo.declare("wm.Variable", wm.Component, {
 
         for (var key in inSample) {
             var matchStart = true;
+            var matchEnd = true;
             var a = inItem.getValue(key);
             var b = inSample[key];
             if (typeof b == "function") {
@@ -1080,18 +1081,32 @@ dojo.declare("wm.Variable", wm.Component, {
             if (dojo.isString(a) && dojo.isString(b)) {
                 if (b.charAt(b.length - 1) == w) {
                     b = b.slice(0, -1);
-                } else {
-                    matchStart = false;
+                    matchEnd = false;
                 }
                 a = a.toLowerCase();
                 b = b.toLowerCase();
 
                 var matchIndex = a.indexOf(b);
-                if (matchIndex == -1 || matchIndex > 0 && matchStart || !matchStart && a != b) {
-                    if (!invert) return false;
-                } else if (invert) {
-                    return false;
+                var isMatch = true;
+                // No match at all
+                if (matchIndex == -1) {
+                    isMatch = false;
                 }
+                // Need to match both start and end, and the strings are not equal
+                else if (matchStart && matchEnd && a != b) {
+                    isMatch = false;
+                }
+                // Need to match the start, end is "*", and matchIndex starts is not zero then it fails
+                else if (matchStart && !matchEnd && matchIndex > 0) {
+                    isMatch = false;
+                }
+                // Need to match the end, but not the start, then matchIndex can be anything, but the
+                // ends must be equivalent
+                else if (!matchStart && matchEnd && a.lastIndexOf(b) + b.length != a.length) {
+                    isMatch = false;
+                }
+                if (invert) isMatch = !isMatch;
+                if (!isMatch) return false;
             } else if (a !== b) {
                 if (invert) continue;
                 else return false;
