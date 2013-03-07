@@ -44,6 +44,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     columns:null,
     selectFirstRow: false,
     caseSensitiveSort:true,
+    sortingEnabled: true,
     classNames: "wmdojogrid GridListStyle",
     requiredLibs: ["dojox.grid.DataGrid",
            "dojox.grid.cells.dijit",
@@ -983,48 +984,56 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     addDojoProps: function(inProps) {
     },
     renderDojoObj: function() {
-      if (this._cupdating)
-            return;
-        if (this.dojoObj != null){
+        if(this._cupdating) return;
+        if(this.dojoObj != null) {
             this.dojoObj.destroy();
             this.dojoObj = null;
         }
 
-        if (!this.variable && (!this.columns || !this.columns.length))
-        return;
-
-        if (this.isAncestorHidden() && !this._renderHiddenGrid) {
-        this._renderDojoObjSkipped = true;
-        return;
+        if(!this.variable && (!this.columns || !this.columns.length)) {
+            return;
         }
-            this._renderDojoObjSkipped = false;
+        if(this.isAncestorHidden() && !this._renderHiddenGrid) {
+            this._renderDojoObjSkipped = true;
+            return;
+        }
+        this._renderDojoObjSkipped = false;
         this.rendering = true;
-            if (this._resetStore) {
+        if(this._resetStore) {
             this.setDojoStore();
             delete this._resetStore;
         }
         var structure = this.getStructure();
-        if (structure[0].length == 0)
-            structure = {};
-        var props = {escapeHTMLInData:false, structure:structure, store:this.store, singleClickEdit: this.singleClickEdit, columnReordering:true, queryOptions: this.queryOptions, query: this.query || {}, updateDelay: 0};
+        if(structure[0].length == 0) structure = {};
+        var props = {
+            escapeHTMLInData: false,
+            structure: structure,
+            store: this.store,
+            singleClickEdit: this.singleClickEdit,
+            columnReordering: true,
+            queryOptions: this.queryOptions,
+            query: this.query || {},
+            updateDelay: 0
+        };
         this.addDojoProps(props);
-        this.dojoObj = new dojox.grid.DataGrid(props,dojo.create('div', {style:'width:100%;height:100%'}, this.domNode));
-
-        if (this._disabled) this.dojoObj.set("disabled",true);
+        this.dojoObj = new dojox.grid.DataGrid(props, dojo.create('div', {
+            style: 'width:100%;height:100%'
+        }, this.domNode));
+        this.dojoObj.canSort = dojo.hitch(this, "canSort");
+        if(this._disabled) this.dojoObj.set("disabled", true);
         this.connectDojoEvents();
         this.setSelectionMode(this.selectionMode);
         this.dojoRenderer();
-        if (this._lastSortFieldName && this.resortOnDataUpdate) {
+        if(this._lastSortFieldName && this.resortOnDataUpdate) {
             this.setSortField(this._lastSortFieldName, this._lastSortAsc);
         }
 
         var selectedData = this.selectedItem.getData();
         var isSelectedDataArray = dojo.isArray(selectedData);
-        if ( isSelectedDataArray && selectedData.length || !isSelectedDataArray && selectedData || this.selectFirstRow)
-            this.selectItemOnGrid(this.selectedItem);
+        if(isSelectedDataArray && selectedData.length || !isSelectedDataArray && selectedData || this.selectFirstRow) this.selectItemOnGrid(this.selectedItem);
 
         this.onRenderData();
-/*
+        /*
             if (this.isDesignLoaded()) {
                 var scrollNode = this.dojoObj.scroller.contentNodes[0].parentNode;
 
@@ -1051,10 +1060,13 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         }
         */
 
-    var _this = this;
-    setTimeout(function(){
-               _this.rendering = false;
+        var _this = this;
+        setTimeout(function() {
+            _this.rendering = false;
         }, 0)
+    },
+    canSort: function() {
+        return this.dojoObj && !this.dojoObj.isLoading && this.sortingEnabled;
     },
     dojoRenderer: function() {
         if (!this.dojoObj) return;

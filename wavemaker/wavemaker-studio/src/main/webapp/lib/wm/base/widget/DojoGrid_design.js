@@ -201,7 +201,7 @@ wm.DojoGrid.extend({
 wm.Object.extendSchema(wm.DojoGrid, {
     /* widgetName group */
     dataSet:           {group: "widgetName", subgroup: "data", order: 1, requiredGroup: 1, bindTarget: 1, isList: true, simpleBindTarget: true, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
-    columns:       {group: "widgetName", subgroup: "data", order:5, shortname: "Edit Columns", requiredGroup: 1, contextMenu: true, operation: "editColumns", nonlocalizable: true},
+    columns:           {group: "widgetName", subgroup: "data", order:5, shortname: "Edit Columns", requiredGroup: 1, contextMenu: true, operation: "editColumns", nonlocalizable: true},
     deleteColumn:      {group: "widgetName", subgroup: "behavior",  order: 10, advanced:1},
     deleteConfirm:     {group: "widgetName", subgroup: "confirmation", order: 10, advanced:1},
     caseSensitiveSort: {group: "widgetName", subgroup: "behavior", order: 40, advanced:1},
@@ -213,6 +213,7 @@ wm.Object.extendSchema(wm.DojoGrid, {
     /* Behaviors */
     primaryKeyFields:      {group: "widgetName", subgroup: "behavior",  order: 20, advanced:1, editor: "wm.prop.FieldList"},
     resortOnDataUpdate: {group: "widgetName", subgroup: "behavior", order: 19, advanced: 1, type: "boolean"},
+    sortingEnabled: {group: "widgetName", subgroup: "behavior", order: 25, advanced: 1, type: "boolean"},
 
     /* Display group; layout subgroup */
     //noHeader: {group: "display", subgroup: "layout", order: 50, advanced:1},
