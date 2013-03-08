@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 
 dojo.provide("wm.studio.pages.ExportProjectPage.ExportProjectPage");
 
@@ -25,21 +25,21 @@ dojo.declare("ExportProjectPage", wm.Page, {
 	   if (String(studio.application.theme).match(/^common\./)) {
 	       items.push({name: "Theme: " + studio.application.theme.replace(/^.*\./,""), dataValue: {type: "theme", path: studio.application.theme.replace(/^.*\./,"")}});
 	   }
-	   
+
 	   if (studio.application.phoneTheme != studio.application.theme && String(studio.application.phoneTheme).match(/^common\./)) {
 	       items.push({name: "Theme: " + studio.application.phoneTheme, dataValue: {type: "theme", path: studio.application.phoneTheme.replace(/^.*\./,"")}});
-	   }	   
+	   }
 
-	   if (studio.application.tabletTheme != studio.application.theme && 
-	       studio.application.phoneTheme != studio.application.tabletTheme && 
+	   if (studio.application.tabletTheme != studio.application.theme &&
+	       studio.application.phoneTheme != studio.application.tabletTheme &&
 	       String(studio.application.tabletTheme).match(/^common\./)) {
 	       items.push({name: "Theme: " + studio.application.tabletTheme, dataValue: {type: "theme", path: studio.application.tabletTheme.replace(/^.*\./,"")}});
-	   }	   
+	   }
 
        if (__packageRegistry && __packageRegistry.length) {
             dojo.forEach(__packageRegistry, function(module) {
-                items.push({name: module[1], dataValue: {type: "component", path: module[2].replace(/\./g,"/")}});            
-            }, this);       
+                items.push({name: module[1], dataValue: {type: "component", path: module[2].replace(/\./g,"/")}});
+            }, this);
        }
        this.variable.setData(items);
        this.includeList.setShowing(items.length > 0);
@@ -47,8 +47,7 @@ dojo.declare("ExportProjectPage", wm.Page, {
        studio.studioService.requestSync("getPreferences", null, dojo.hitch(this, "getPreferencesCallBack"));
     },
     getPreferencesCallBack: function(inResult) {
-    debugger;
-        this.currentWaveMakerHome = inResult['wavemakerHome'];    
+        this.currentWaveMakerHome = inResult['wavemakerHome'];
     },
     cancelClick: function() {
         this.owner.owner.hide();
@@ -66,9 +65,9 @@ dojo.declare("ExportProjectPage", wm.Page, {
                 case "component":
                     components.push(value.path);
                     break;
-            }        
+            }
         });
-        
+
         var templateJson = "";
         if (this.templateExportCheckbox.getChecked()) {
             templateJson = dojo.toJson({name: this.templateName.getDataValue(),
@@ -76,28 +75,28 @@ dojo.declare("ExportProjectPage", wm.Page, {
                                         theme: this.themeSelect.getDataValue(),
                                         thumbnail: this.templateThumbnail.getDataValue()},true);
         }
-        
+
         var zipName = dojo.trim(this.zipNameEditor.getDataValue());
         if (!zipName.match(/\.zip$/)) zipName += ".zip";
-        
-  	    studio.beginWait("Building ZIP File...");	    
+
+  	    studio.beginWait("Building ZIP File...");
    	    studio.deploymentService.requestAsync("exportMultiFile", [
-   	        zipName, // argument 1: zip file name 
+   	        zipName, // argument 1: zip file name
    	        !this.templateExportCheckbox.getChecked(), // argument 2: include the project for a project export
    	        this.templateExportCheckbox.getChecked(), // argument 3: build as a project template; ignored if building a project export
             templateJson, // argument 4: Pass in a template.json file contents if we are generating a project template
             themes, // array of theme paths to include
             components // array of components to include
-   	        ], dojo.hitch(this, "exportClickCallback"), dojo.hitch(this, "exportClickError"));        
+   	        ], dojo.hitch(this, "exportClickCallback"), dojo.hitch(this, "exportClickError"));
     },
     exportClickCallback: function(inResponse) {
         studio.endWait("Building ZIP File...");
         if (studio.isCloud()) {
-            app.alert(studio.getDictionaryItem("ALERT_BUILDING_ZIP_CLOUD_SUCCESS", 
+            app.alert(studio.getDictionaryItem("ALERT_BUILDING_ZIP_CLOUD_SUCCESS",
                                                 {inResponse: inResponse}));
-        
+
         } else {
-            app.alert(studio.getDictionaryItem("ALERT_BUILDING_ZIP_SUCCESS", 
+            app.alert(studio.getDictionaryItem("ALERT_BUILDING_ZIP_SUCCESS",
                                                 {inResponse: inResponse,
                                                  projectPath: this.currentWaveMakerHome + "/Projects/" + studio.project.projectName}));
         }
@@ -116,7 +115,7 @@ dojo.declare("ExportProjectPage", wm.Page, {
         app.alertDialog.connectOnce(app.alertDialog, "onClose", function() {
             b.destroy();
         });
-        //this.downloadInIFrame("services/deploymentService.download?method=downloadProjectZip");                                                                                                          
+        //this.downloadInIFrame("services/deploymentService.download?method=downloadProjectZip");
 
         studio.application.incSubversionNumber();
         var src = studio.project.generateApplicationSource();
@@ -126,6 +125,6 @@ dojo.declare("ExportProjectPage", wm.Page, {
     exportClickError: function(inError) {
         studio.endWait();
         app.alert(studio.getDictionaryItem("ALERT_BUILDING_ZIP_FAILED", {error: inError.message}));
-    },    
+    },
     _end: 0
 });
