@@ -186,7 +186,14 @@ wm.getComponentStructure = function(inType) {
     } else {
         for (var i = 0; i < requireList.length; i++) {
             var relpath = dojo._getModuleSymbols(requireList[i]).join("/") + ".js";
-            var uri = ((relpath.charAt(0) == "/" || relpath.match(/^\w+:/)) ? "" : dojo.baseUrl) + relpath;
+            var uri;
+            // If its a phonegap request to common/packages, then don't prefix dojo.baseUrl; common folder
+            // has been copied into the project's webapp folder.
+            if (wm.isPhonegap && requireList[i].indexOf("wm.packages.") == 0) {
+                uri = relpath;
+            } else {
+                uri  = ((relpath.charAt(0) == "/" || relpath.match(/^\w+:/)) ? "" : dojo.baseUrl) + relpath;
+            }
             while (uri.match(/[^\/]\/\.\.\//)) {
                 uri = uri.replace(/[^\/]*\/\.\.\/+/, "");
             }
@@ -235,7 +242,7 @@ wm.addFrameworkFix("wm.DojoGrid", ['build.Gzipped.wm_dojo_grid'], function() {
       ...
    })
 });
-   
+
 // So why not just do wm.PageContainer.extend without wm.addFrameworkFix?  Because for a phonegap
 // build, wm.PageContainer isn't defined until after the patches have loaded.  Use null or [] for
 // the second parameter so that it gets added to the phonegap's fix list

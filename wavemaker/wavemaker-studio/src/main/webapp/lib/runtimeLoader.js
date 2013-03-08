@@ -40,7 +40,7 @@ try
 	dojo.registerModulePath("lib", wm.libPath);
 	wm.registerPaths(
 		["wm", wm.libPath + "/wm"],
-		["wm.packages", wm.libPath + "/wm/common/packages"],
+		["wm.packages", !wm.isPhonegap ? wm.libPath + "/wm/common/packages" : "common/packages", wm.isPhonegap],
 		["common", wm.libPath + "/wm/common"],
 	    ["github", wm.libPath + "/github"],
 	    ["wm.modules", wm.basePath + "modules/ep"],
