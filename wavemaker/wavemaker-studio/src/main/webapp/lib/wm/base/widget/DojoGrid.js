@@ -299,7 +299,6 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         this.cancelEdit();
     },
     cellEditted: function(inValue, inRowIndex, inFieldName) { /* Sometimes the grid cancels editing in a wierd state */
-        debugger;
         if (inValue && typeof inValue == "object" && inValue instanceof Date === false && this.dojoObj.edit.info.cell.widget.store) {
             /* We need to work with an object that lacks the wm.DojoStoreId because we're using dojo.toJson for comparing values */
             inValue = this.itemToJSONObject(this.dojoObj.edit.info.cell.widget.store, inValue)
