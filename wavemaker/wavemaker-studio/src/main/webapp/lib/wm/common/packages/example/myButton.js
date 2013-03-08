@@ -20,7 +20,7 @@ Note: CSS classes are the preferred and more efficient way to change domNode sty
 
 */
 dojo.provide("wm.packages.example.myButton");
-dojo.require("wm.base.widget.Button"); 
+wm.getComponentStructure("wm.Button"); 
 
 dojo.declare("wm.example.myButton", wm.Button, {
 	  caption: "Click Me",
