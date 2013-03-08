@@ -34,7 +34,7 @@ dojo.declare("ImportWebService", wm.Page, {
 		this.wsdlPathTypeInput.setValue("displayValue", this.IMPORT_TYPE_URL);
 	},
 	reset: function() {
-		this.typeInput.setValue("displayValue", this.this.TYPE_REST_BUILDER);
+		this.typeInput.setValue("displayValue", this.TYPE_REST_BUILDER);
 		this.wsdlPathTypeInput.setValue("displayValue", this.IMPORT_TYPE_URL);
 		this.wsdlUrlInput.clear();
 	        if (this.wsdlFileInput.fileNode)
