@@ -168,7 +168,7 @@ public class PhoneGapService {
 	private void setupPhonegapProjectFiles(final Folder phoneGapWebFolder, Folder phoneGapLibFolder) {
 		this.fileSystem.getStudioWebAppRootFolder().getFolder("lib").copyContentsTo(phoneGapLibFolder);
 		this.projectManager.getCurrentProject().getRootFolder().getFolder("webapproot/pages").copyContentsTo(phoneGapWebFolder.getFolder("pages"));
-		this.fileSystem.getCommonFolder().copyContentsTo(phoneGapWebFolder.getFolder("common"));
+
 		Folder sourceFolder = this.projectManager.getCurrentProject().getWebAppRootFolder();
 		for (String filename : new String[] { "config.js", "boot.js" }) {
 			File sourceFile = sourceFolder.getFile(filename);
@@ -265,6 +265,10 @@ public class PhoneGapService {
 
 		// Combine boot.js and config.js
 		phoneGapFolder.getFile("config.js").getContent().write(combineBootAndConfig(url, useProxy));
+
+		Folder commonFolder = phoneGapFolder.getFolder("common");
+		commonFolder.createIfMissing();
+		this.fileSystem.getCommonFolder().copyContentsTo(commonFolder);
 
 		Folder themesFolder = phoneGapFolder.getFolder("themes");
 		themesFolder.createIfMissing();
