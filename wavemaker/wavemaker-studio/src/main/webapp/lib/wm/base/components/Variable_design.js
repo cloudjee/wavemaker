@@ -94,7 +94,7 @@ wm.Variable.extend({
     	props.queriedItems.type = this.type;
     	props.queriedItems.isList = true;
     	props.queriedItems.bindSource = this.isList;
-    	if (!this.queryVar) this.createQueryVar();
+    	if (!this._query) this.createQueryVar();
     	return props;
     },
     editJson: function() {
