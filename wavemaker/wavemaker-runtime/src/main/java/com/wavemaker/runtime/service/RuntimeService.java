@@ -121,11 +121,6 @@ public class RuntimeService {
         }
     }
 
-    public TypedServiceReturn update(String serviceName, String typeName, @JSONParameterTypeField(typeParameter = 1) Object objectToUpdate)
-	throws Exception {
-		return update(serviceName, typeName, objectToUpdate, 2);
-	}
-
     /**
      * Alternative form of update for use from Java Service
      * Fails in horrific
@@ -160,6 +155,11 @@ public class RuntimeService {
             throw new NotYetImplementedException();
         }
     }
+
+    public TypedServiceReturn update(String serviceName, String typeName, @JSONParameterTypeField(typeParameter = 1) Object objectToUpdate)
+	throws Exception {
+		return update(serviceName, typeName, objectToUpdate, 2);
+	}
 
     public TypedServiceReturn insert(String serviceName, String typeName, @JSONParameterTypeField(typeParameter = 1) Object objectToInsert)
         throws Exception {
