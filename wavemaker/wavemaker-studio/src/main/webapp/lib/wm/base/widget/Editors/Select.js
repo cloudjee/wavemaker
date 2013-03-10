@@ -31,6 +31,7 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
     hasDownArrow: true,
     restrictValues: true,
     _selectedData: null,
+    displayMenuExpression: "",
     init: function() {
         if(wm.isMobile) {
             this.manageHistory = true;
@@ -49,10 +50,14 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
         if(this.dataSet) {
             var count = this.dataSet.getCount();
             for(var i = 0; i < count; i++) {
+                var v = this.dataSet.getItem(i);
                 var item = {
                     id: i,
-                    name: this._getDisplayData(this.dataSet.getItem(i))
+                    name: this._getDisplayData(v)
                 };
+                if (this.displayMenuExpression) {
+                    item.menuField = wm.expression.getValue(this.displayMenuExpression, v,this.owner)
+                }
                 if(this.indentField) {
                     item.indent = Boolean(this.dataSet.getItem(i).getValue(this.indentField));
                 }
@@ -77,6 +82,8 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
             autoComplete: this.autoComplete,
             hasDownArrow: this.hasDownArrow,
             searchAttr: "name",
+            labelAttr: this.displayMenuExpression ? "menuField" : null,
+            labelType: this.displayMenuExpression ? "html" : "text",
             pageSize: this.pageSize ? this.pageSize : Infinity // dijit requires 1 higher or it will still print the "more" link
         }, inProps || {});
     },
@@ -757,9 +764,9 @@ dojo.declare(
         this.listSet.setDataSet(null);
         this.dropDown.setShowing(true);
 
-        if (this.owner.displayExpression) {
+        if (this.owner.displayExpression || this.owner.displayMenuExpression) {
             this.listSet.setDisplayField("");
-            this.listSet.setDisplayExpression(this.owner.displayExpression);
+            this.listSet.setDisplayExpression(this.owner.displayMenuExpression || this.owner.displayExpression);
         } else {
             this.listSet.setDisplayExpression("");
             this.listSet.setDisplayField(this.owner.displayField);

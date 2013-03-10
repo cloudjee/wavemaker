@@ -34,13 +34,16 @@ wm.SelectMenu.extend({
 
 wm.Object.extendSchema(wm.SelectMenu, {
     /* DISPLAY GROUP; help subgroup */
-    placeHolder: {group: "editor text", subgroup: "help"}, 
+    placeHolder: {group: "editor text", subgroup: "help"},
 
     /* DISPLAY GROUP; visual subgroup */
     hasDownArrow: {group: "editor",subgroup: "layout", order: 26, advanced:1},
 
     /* Events group */
     onEnterKeyPress: {ignore: 0},
+
+
+    displayMenuExpression: {group: "editor", subgroup: "dataSet",order: 21, displayExpression: "displayMenuExpression", displayExpressionDataSet: "dataSet", advanced:1},
 
 
     /* Editor group; validation subgroup */
@@ -88,7 +91,7 @@ wm.Object.extendSchema(wm.Lookup, {
 wm.Lookup.extend({
 	afterPaletteDrop: function() {
 	    this.inherited(arguments);
-	    var ff = this.getUniqueFormField();	    
+	    var ff = this.getUniqueFormField();
 	    if (ff && ff != '') {
 		this.set_formField(ff);
 	    }
@@ -104,7 +107,7 @@ wm.Lookup.extend({
 				if (!lf.isFormFieldInForm(arr[i]))
 					return arr[i];
 			}
-			
+
 			return arr[1];
 	},
 	getSchemaOptions: function(inSchema) {
@@ -132,7 +135,7 @@ wm.Lookup.extend({
 	    if (inFieldName) {
 		this.formField = inFieldName;
 		if (this.autoDataSet && this.formField)
-		    this.createDataSet();	    
+		    this.createDataSet();
 		this.inherited(arguments);
 		if (this.formField && this.formField != formFieldWas) {
 		    this._setDisplayField();
