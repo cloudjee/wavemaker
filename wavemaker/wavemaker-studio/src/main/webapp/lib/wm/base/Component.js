@@ -907,6 +907,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
                     try {
                         self[inName].apply(self, self._eventArgs(this, args));
                     } catch (e) {
+                        if (e instanceof Error && e.message == "Abort" || e.toString() == "Abort") throw e;
                         var errorMessage = "Error in " + self.toString() + "." + inName + ": " + e.message;
                         if (djConfig.isDebug) {
                             app.toastError(errorMessage);
@@ -1004,6 +1005,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
                             try {
                                 c[m].apply(c, self._eventArgs(this, args));
                             } catch (e) {
+                                if (e instanceof Error && e.message == "Abort" || e.toString() == "Abort") throw e;
                                 var errorMessage = "Error in " + self.toString() + "." + m + ": " + e.message;
                                 if (djConfig.isDebug) {
                                     app.toastError(errorMessage);
