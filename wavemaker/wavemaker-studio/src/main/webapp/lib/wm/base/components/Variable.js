@@ -837,15 +837,16 @@ dojo.declare("wm.Variable", wm.Component, {
     },
     query: function(inSample, updateQueriedItems) {
         if (!this.isList) return;
+        if (!inSample) inSample = {};
         var maxResults = inSample._maxResults || 0;
         delete inSample._maxResults;
 
         var count = this.getCount();
         var result = [];
         if (inSample instanceof wm.Variable) {
-            inSample = inSample.getData();
+            inSample = inSample.getData() || {};
         }
-        if (!inSample) inSample = {};
+
         for (var i = 0; i < count; i++) {
             var item = this.getItem(i);
             if (this._queryItem(item, inSample, i)) {
