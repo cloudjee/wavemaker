@@ -23,8 +23,8 @@ dojo.require("dijit.form.ComboBox");
 //===========================================================================
 dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
     indentField: "",
-        placeHolder: "",
-        _storeNameField: "_selectMenuName",
+    placeHolder: "",
+    _storeNameField: "_selectMenuName",
     pageSize: 20,
     allowNone: false,
     autoComplete: true,
@@ -32,33 +32,38 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
     restrictValues: true,
     _selectedData: null,
     init: function() {
-        if (wm.isMobile) {
-        this.manageHistory = true;
+        if(wm.isMobile) {
+            this.manageHistory = true;
         }
         this.inherited(arguments);
     },
     handleBack: function(inOptions) {
-    this.editor.closeDropDown();
-    this.editor.dropDown.hide();
-    return true;
+        this.editor.closeDropDown();
+        this.editor.dropDown.hide();
+        return true;
     },
-        // STORE ACCESS
+    // STORE ACCESS
     generateStore: function() {
-        if (wm.isMobile) return;
+        if(wm.isMobile) return;
         var data = [];
-        if (this.dataSet) {
-        var count = this.dataSet.getCount();
-        for (var i = 0; i < count; i++) {
-            var item = {id: i,
-                name: this._getDisplayData(this.dataSet.getItem(i))};
-            if (this.indentField) {
-            item.indent = Boolean(this.dataSet.getItem(i).getValue(this.indentField));
+        if(this.dataSet) {
+            var count = this.dataSet.getCount();
+            for(var i = 0; i < count; i++) {
+                var item = {
+                    id: i,
+                    name: this._getDisplayData(this.dataSet.getItem(i))
+                };
+                if(this.indentField) {
+                    item.indent = Boolean(this.dataSet.getItem(i).getValue(this.indentField));
+                }
+                data.push(item);
             }
-            data.push(item);
         }
-        }
-        if (this.allowNone) {
-        data.unshift({id: -1, name: ""});
+        if(this.allowNone) {
+            data.unshift({
+                id: -1,
+                name: ""
+            });
         }
 
         return new wm.base.data.SimpleStore(data, "name", this);
@@ -66,7 +71,7 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
     getEditorProps: function(inNode, inProps) {
         var store = this.generateStore();
         return dojo.mixin(this.inherited(arguments), {
-                placeHolder: this.placeHolder,
+            placeHolder: this.placeHolder,
             required: this.required,
             store: store,
             autoComplete: this.autoComplete,
@@ -78,402 +83,42 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 
     _createEditor: function(inNode, inProps) {
         var e;
-        if (wm.isMobile) {
-        e = new wm.dijit.form.ComboBox(this.getEditorProps(inNode, inProps));
-        e.owner = this;
-        dojo.attr(e.focusNode, "readonly", true);
-        //this.connect(e.domNode, "ontouchstart", this, "showPopup");
-        } else if (this.restrictValues) {
-        e =  new dijit.form.FilteringSelect(this.getEditorProps(inNode, inProps));
+        if(wm.isMobile) {
+            e = new wm.dijit.form.ComboBox(this.getEditorProps(inNode, inProps));
+            e.owner = this;
+            dojo.attr(e.focusNode, "readonly", true);
+            //this.connect(e.domNode, "ontouchstart", this, "showPopup");
+        } else if(this.restrictValues) {
+            e = new dijit.form.FilteringSelect(this.getEditorProps(inNode, inProps));
         } else {
-        e = new dijit.form.ComboBox(this.getEditorProps(inNode, inProps));
+            e = new dijit.form.ComboBox(this.getEditorProps(inNode, inProps));
         }
         return e;
     },
     showPopup: function() {
-        if (this.editor) {
+        if(this.editor) {
             this.editor.openDropDown();
         }
     },
     setPlaceHolder: function(inPlaceHolder) {
         this.placeHolder = inPlaceHolder;
-        if (this.editor)
-            this.editor.attr("placeHolder", inPlaceHolder);
+        if(this.editor) this.editor.attr("placeHolder", inPlaceHolder);
     },
     setRestrictValues: function(inValue) {
         var dataval = this.getEditorValue();
         var oldval = this.restrictValues;
         this.restrictValues = inValue;
-        if (this.editor && oldval != inValue) {
-        this.createEditor();
-        this.setEditorValue(dataval);
+        if(this.editor && oldval != inValue) {
+            this.createEditor();
+            this.setEditorValue(dataval);
         }
     },
-/*
-    sizeEditor: function() {
-        if (this._cupdating)
-            return;
-        this.inherited(arguments);
 
-        var h = this._editorHeight;
-        if (this.editor.containerNode) {
-        var s = this.editor.containerNode ? this.editor.containerNode.parentNode.style : this.editor.domNode.style;
-        s.display = "block";
-        s.lineHeight = s.height = h + "px";
-        s.width = (this._editorWidth-24) + "px";
-        var arrow = dojo.query(".dijitArrowButtonInner", this.domNode)[0];
-        arrow.parentNode.style.position = "relative";
-        arrow.parentNode.style.width = "24px";
-        arrow.style.position = "absolute";
-        arrow.style.top = "0px";
-        arrow.parentNode.style.border = "0";
-        arrow.style.height = (dojo.isIE ? h : (h+1)) + "px";
-        arrow.style.width = "22px";
-        arrow.style.margin = "0";
-        arrow.style.border = "solid 1px " + this.borderColor;
-        arrow.style.borderLeft = "solid 1px #999";
-        }
-
-    },
-*/
-    // name, value (where value may be an object)
-        // STORE ACCESS (DONE)
-/*
-    getStoreItem: function(inValue, inStoreField) {
-        if (!this.hasValues())
-        return;
-        var result;
-        var onItem = function(item) {
-        result = item;
-        };
-        var query = {};
-        query[inStoreField] = inValue;
-        this.editor.store.fetch({query: query, queryOptions: {exactMatch: true}, count: 1, onItem: onItem});
-        // NOTE: callback will be called synchronously
-        // because items are loaded so we can directly return result.
-        return result;
-    },
-    */
-/*
-    setInitialValue: function() {
-        this.beginEditUpdate();
-        this.selectedItem.setType(this.dataSet instanceof wm.Variable ? this.dataSet.type : "AnyData");
-            var dataValue = this.dataValue;
-            var displayValue = this.displayValue;
-        if (this.dataValue !== null && wm.propertyIsChanged(dataValue, "dataValue", wm._BaseEditor))
-            this.setEditorValue(dataValue)
-        else
-            this.setDisplayValue(displayValue);
-        this.endEditUpdate();
-
-
-        / * WM-2515; setInitialValue is also called each time the editor is recreated -- such as when it gets a new dataSet;
-         *          fire an onChange if we have a displayValue after setting initialValue as this counts as a change in value
-         *          from before it was recreated.
-         * /
-        if (!this._cupdating) {
-            var displayValue = this.getDisplayValue();
-        if (displayValue != this.displayValue)
-            this.changed();
-        }
-    },
-         */
-    // our dijit doesn't have a displayValue v. editorvalue distinction
-    // we're using displayValue for what the dijit calls its value.
-        // STORE ACCESS (DONE)
-/*
-    setDisplayValue: function(inValue) {
-        var i = this.getStoreItem(inValue, this._storeNameField);
-        if (i !== undefined) {
-            this._setEditorValue(this.editor.store.getValue(i, this._storeNameField))
-        } else if (!this.restrictValues) {
-                    this.editor.set("value", inValue);
-            this.editor._lastValueReported = inValue;
-                } else {
-            this.clear();
-                }
-    },
-    */
-    // setting value based on dataField or dataObj; inValue can be either one.  If its a literal, we
-    // find the data entry with that literal as its dataValue; if inValue is a wm.Variable, we compare the name fields.
-    // If inValue is a hash, we assume it is a data object recognizable to the store; turn it into a wm.Variable
-    // and compare its name field to whats in the store.
-    // we'll do a lookup by
-        // STORE ACCESS (DONE EXCEPT RESTRICT VALUES)
-/*
-    setEditorValue: function(inValue) {
-        if (!this.dataSet || this.dataSet.getCount() == 0) {
-        if (typeof inValue == "object" && this.dataField == this._allFields) {
-            this.displayValue = this._getDisplayData(inValue);
-            this.dataValue = inValue;
-            this._setEditorValue(this.displayValue, inValue);
-        } else if (this.displayField == this.dataField && !this.displayExpression) {
-            this.dataValue = this.displayValue = inValue;
-            this._setEditorValue(inValue);
-        } else {
-            this.dataValue = inValue;
-        }
-        this.updateReadonlyValue();
-        return;
-        }
-
-        this._inSetEditor = true;
-        try {
-        // if the user has selected "all fields", then how and what do we compare inValue to?
-        // Answer: if we don't have a unique identifier from the user, then we compare on the displayname.
-        var lookupFieldName = this._dataField;
-        // STEP 1: Get the data out of the datastore based on inValue
-        var i;
-        // Optimization: if we're setting a wm.Variable or hash
-        // get store item via name not value (should be faster searching data)
-        if (inValue !== null && dojo.isObject(inValue)) {
-            if (this.isAllDataFields()) {
-            var v = this._getDisplayData(inValue);
-            //i = this.getStoreItem(v, this._displayField);
-            i = this.getStoreItem(v, this._storeNameField);
-            } else if (wm.isInstanceType(inValue, wm.Variable)) {
-            var v = inValue;
-            var lookupVal = v.getValue(lookupFieldName);
-            i = this.getStoreItem(lookupVal, lookupFieldName);
-            if (!i && !this.restrictValues)
-                i = lookupVal || inValue;
-            } else {
-            i = inValue;
-            }
-        } else {
-            i = this.getStoreItem(inValue,  lookupFieldName);
-            if (!i && !this.restrictValues)
-                i = inValue;
-        }
-
-        // STEP 2: Set the value to the datastore item; if no datastore item then either clear (restricted values) or set the inValue text as the value (TODO: what if inValue is a wm.Variable?)
-        if (i !== undefined && i !== null && dojo.isObject(i)) {
-            // why can't we just set the value to i??? Optimization??
-            this._setEditorValue(i[this._storeNameField] || i[this.displayField || this._displayField]);
-            // allow any value not in store is treated as a clear
-        } else {
-            if (this.restrictValues)
-                this.clear();
-            else if (this.editor) {
-            this.editor.set("value",i);
-            this.editor._lastValueReported = i;
-            }
-        }
-        this.updateReadonlyValue();
-        } catch(e){
-        } finally {
-        delete this._inSetEditor;
-        this.changed();
-        }
-    },
-    */
-    // Optimization: fast setting of select using internal dijit functionality
-    // avoids re-getting items from store
-/*
-       _setEditorValue: function(inDisplayValue, optionalDataObjValue) {
-        if (!this.editor) return;
-        inDisplayValue = String(inDisplayValue);
-        var e = this.editor;
-        delete this._isValid;
-       if (!e) {
-           this.displayValue = inDisplayValue;
-           return;
-       }
-        e._isvalid=true;
-
-            if (!this.dataSet || this.dataSet.getCount() == 0) {
-            var item = optionalDataObjValue || {}
-            item[this._storeNameField] = inDisplayValue;
-
-            this.editor.store.data.push(item);
-            var addedItem = true;
-        }
-
-        if (this.restrictValues)
-            e.set('displayedValue', inDisplayValue, this._inSetEditor ? false : !this._updating);
-        else
-            e.set('value', inDisplayValue, this._inSetEditor ? false : !this._updating);
-            this.editor._lastValueReported = inDisplayValue;
-       if (addedItem)
-           this.editor.store.data.pop();
-    },
-    */
-
-/*
-        // STORE ACCESS (DONE?)
-    getEditorValue: function(getFullDataObj) {
-        var v;
-        if (this.editor && this.hasValues()) {
-            var displayed = this.editor.get('displayedValue');
-            var v = displayed && this.getStoreItem(displayed, this._storeNameField);
-        }
-
-            if (v && !(getFullDataObj || this.isAllDataFields()))
-        v = v[this.dataField];
-
-/ *
-        if (!this.restrictValues && displayed && !v)
-            return displayed;
-            * /
-        return (v || v === 0) ? v : this.makeEmptyValue();
-    },
-    */
-/*
-    _getFirstDataField: function() {
-        if (!this.dataSet)
-            return;
-        var schema = this.dataSet._dataSchema;
-        for (var i in schema) {
-            var ti = schema[i];
-            if (!ti.isList && !wm.typeManager.isStructuredType(ti.type)) {
-                return i;
-            }
-        }
-    },
-    _initDataProps: function() {
-        if (this.dataSet) {
-            var ff = this._getFirstDataField();
-            this._displayField = this.displayField || ff || "name";
-            this._dataField = this.dataField || ff || ("dataValue" in this.dataSet._dataSchema ? "dataValue" : "value");
-        } else if (this.options) {
-            this._displayField = this._dataField = "name";
-        }
-    },
-    _getOptionsData: function() {
-        var data = [];
-        if (!this.options) return data;
-        for (var i=0, opts = this.options.split(','), l=opts.length, d; i<l; i++) {
-            d = dojo.string.trim(opts[i]);
-            if (d != "")
-                data[i] = {name: d, dataValue: d };
-        }
-        return data;
-    },
-
-    _getDisplayData: function(inObj) {
-            var inVariable;
-            if (wm.isInstanceType(inObj, wm.Variable))
-                inVariable = inObj;
-            else {
-                inVariable = new wm.Variable({_temporaryComponent: true});
-        if (this.dataSet)
-                    inVariable.setType(this.dataSet.type);
-                inVariable.setData(inObj);
-                inVariable.data[this._storeNameField]  = String(this._getDisplayData(inVariable));
-            }
-        var de = this.displayExpression, v = inVariable;
-        var result = de ? wm.expression.getValue(de, v) : inVariable.getValue(this._displayField);
-            if (this.displayType && this.displayType != 'Text')
-                result = this.formatData(result);
-            return result === undefined || result === null ? "" : String(result);
-    },
-    */
     _onSetEditorValueFailed: function(inValue) {
-    if (!this.restrictValues)
-        this.editor.set("displayedValue", inValue);
+        if (!this.restrictValues)
+            this.editor.set("displayedValue", inValue);
     },
 
-
-/*
-    _getDataByValue: function(inObj) {
-            var inVariable;
-            if (wm.isInstanceType(inObj, wm.Variable))
-                inVariable = inObj;
-            else {
-                inVariable = new wm.Variable();
-                inVariable.setType(this.dataSet.type);
-                inVariable.setData(inObj);
-            }
-        var de = this.displayExpression, v = inVariable;
-        return String(de ? wm.expression.getValue(de, v) : inVariable.getValue(this._dataField));
-    },
-        */
-/*
-    _getDataSetData: function() {
-        //var time = (new Date()).getTime();
-        var dataSet = this.dataSet;
-        var data = [];
-
-        // argh, copy data from variable
-        for (var i=0, c=dataSet.getCount(), v; i < c && (v = dataSet.getItem(i)); i++) {
-                var d = v.getData();
-        if (d) {
-                    d[this._storeNameField]  = String(this._getDisplayData(v));
-            data.push(d);
-        }
-            }
-
-
-        //console.log("getDataSetData", (new Date()).getTime() - time);
-        return data;
-    },
-    _getData: function() {
-        var data = [];
-        if (this.dataSet) {
-            data = this._getDataSetData();
-        } else if (this.options) {
-            this.setOptionsVariable();
-            data = this._getDataSetData();
-            //data = this._getOptionsData();
-        }
-        if (this.allowNone) {
-            //var o = {name: "", value: null};
-                        var o = {};
-                        o[this._storeNameField] = "";
-            data.unshift(o);
-        }
-
-        return data;
-    },
-    setDataSet: function(inDataSet) {
-        var oldValue = this.dataValue;
-
-        var ds = this.dataSet = inDataSet;
-        // no data to render
-        if (!ds || !ds.data || !ds.data.list)
-            return;
-        if (!this.editor) {
-        this.createEditor();
-        } else {
-        this.editor.store = this.generateStore();
-        }
-            if (inDataSet && inDataSet.type && inDataSet.type != "any" && inDataSet.type != this.selectedItem.type)
-                this.selectedItem.setType(inDataSet.type);
-        try {
-        / * If this is design time and we've cleared the dataSet, clear the fields as well * /
-        if (this._isDesignLoaded && !inDataSet && !this._cupdating) {
-            this.dataField = this.displayField = "";
-        }
-        } catch(e) {}
-        if (oldValue)
-        this.setEditorValue(oldValue);
-    },
-    setOptionsVariable: function() {
-        var opts = this._getOptionsData();
-
-        var ds = this.dataSet = new wm.Variable({name: "optionsVar",
-                             owner: this,
-                             type: "StringData"});
-        ds.setData(opts);
-        this.displayField = "dataValue";
-        this.dataField    = "dataValue";
-    },
-    setOptions: function(inOptions) {
-        this.options = inOptions;
-        this.setOptionsVariable();
-        var wasUpdating = this._cupdating;
-        this._cupdating = true;
-        this.createEditor();
-        if (!wasUpdating) {
-            this._cupdating = false;
-            this.render();
-        }
-    },
-
-    isReady: function() {
-        return this.inherited(arguments) && this.hasValues();
-    },
-    */
     setDataSet: function(inDataSet, noSetEditorValue) {
         this._inSetDataSet = true;
         this.inherited(arguments);
@@ -1005,7 +650,7 @@ if (!wm.isMobile) {
 dojo.declare(
     "wm.dijit.form.ComboBox",
     [dijit.form.ValidationTextBox, dijit._HasDropDown],
-    {
+{
     baseClass: "dijitTextBox dijitComboBox",
     popupClass: "wm.ListSet",
     forceWidth: false, // Force the popup to use its own width and not match the editor width
