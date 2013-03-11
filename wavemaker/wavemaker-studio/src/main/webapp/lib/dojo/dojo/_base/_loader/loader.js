@@ -16,7 +16,6 @@
 			dojo: 	{	name: "dojo", value: "." },
 			// dojox: 	{	name: "dojox", value: "../dojox" },
 			// dijit: 	{	name: "dijit", value: "../dijit" },
-			doh: 	{	name: "doh", value: "../util/doh" },
 			tests: 	{	name: "tests", value: "tests" }
 		},
 
