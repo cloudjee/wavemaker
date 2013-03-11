@@ -189,7 +189,7 @@ wm.getComponentStructure = function(inType) {
             var uri;
             // If its a phonegap request to common/packages, then don't prefix dojo.baseUrl; common folder
             // has been copied into the project's webapp folder.
-            if (wm.isPhonegap && requireList[i].indexOf("wm.packages.") == 0) {
+            if (wm.isPhonegap && requireList[i].match(/^(wm|common)\.packages\./)) {
                 uri = relpath;
             } else {
                 uri  = ((relpath.charAt(0) == "/" || relpath.match(/^\w+:/)) ? "" : dojo.baseUrl) + relpath;
