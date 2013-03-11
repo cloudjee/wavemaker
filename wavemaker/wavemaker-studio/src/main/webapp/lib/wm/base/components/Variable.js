@@ -829,7 +829,7 @@ dojo.declare("wm.Variable", wm.Component, {
     setQuery: function(query) {
         if (!this._query) this.createQueryVar();
         this._query.setData(query);
-        if (query) {
+        if (!this._query.isEmpty()) {
             return this.query(this._query.getData(), true);
         } else {
             this.getQueriedItems().setDataSet(this);
