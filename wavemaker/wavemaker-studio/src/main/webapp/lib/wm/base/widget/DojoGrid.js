@@ -1273,7 +1273,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     makeSortingInsensitive: function() {
         this.store.comparatorMap = {};
         dojo.forEach(this.columns, function(col) {
-            if (col.displayType == 'Text') this.store.comparatorMap[col.field] = dojo.hitch(this, 'sortNoCase');
+            if (col.displayType == 'Text' || col.displayType == "String") this.store.comparatorMap[col.field] = dojo.hitch(this, 'sortNoCase');
         }, this);
     },
     sortNoCase: function(a, b) {
