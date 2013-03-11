@@ -307,7 +307,7 @@ dojo.declare("wm.Variable", wm.Component, {
         if (this.isList) {
             this.valueChanged("count", this.getCount());
         }
-        if (this.queriedItems) {
+        if (!this.isUpdating() && this.queriedItems) {
             this.setQuery(this._query);
         }
         this.updatePermanentMemory();
