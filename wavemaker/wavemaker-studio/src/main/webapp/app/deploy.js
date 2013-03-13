@@ -121,7 +121,7 @@ Studio.extend({
 	// Export
 	//=====================================================================
 	exportClick: function(inSender) {
-        this.showProjectExportDialog();   
+        this.showProjectExportDialog();
 	},
 	showProjectExportDialog: function() {
 	   var d = this.getProjectExportDialog();
@@ -205,7 +205,7 @@ Studio.extend({
 	  return this.importFileDialog;
     },
     */
-    
+
     /* Replaced with importMultiple
     importClick: function(inSender) {
         var f = dojo.hitch(this, function() {
@@ -277,7 +277,7 @@ Studio.extend({
 	//=====================================================================
 	undeployComponent: function(inName, inNamespace, inDisplayName, inGroup, inRemoveSource) {
 		var klass = inNamespace + "." + inName;
-        var module = "common.package." + klass;
+        var module = "common.packages." + klass;
 		studio.deploymentService.requestAsync("undeployClientComponent",
 			[inName, inNamespace, inRemoveSource],
 			dojo.hitch(this, "undeployComponentCallback", module, inDisplayName, inGroup),
@@ -287,7 +287,10 @@ Studio.extend({
         if(inResponse == true) {
             studio.palette.removeItem(inGroup, inDisplayName);
             wm.fire(studio.inspector, "reinspect");
-            wm.Array.removeElement(__packageRegistry, inModule);
+            var altModule = inModule + "." + inModule.substring(inModule.lastIndexOf(".") + 1);
+            for (var i = __packageRegistry.length-1; i >= 0; i--) {
+                if (__packageRegistry[i][3] == inModule || __packageRegistry[i][3] == altModule) wm.Array.removeElementAt(__packageRegistry, i);
+            }
             app.toastSuccess(this.getDictionaryItem("ALERT_UNDEPLOY_COMPONENT_SUCCESS"));
         } else {
             app.alert(this.getDictionaryItem("ALERT_UNDEPLOY_COMPONENT_FAILED"));
@@ -298,7 +301,7 @@ Studio.extend({
 	    app.alert(this.getDictionaryItem("ALERT_UNDEPLOY_COMPONENT_FAILED2", {error: inError}));
 
 	},
-	
+
 	/* Now handled by importMultiple
 	importComponent: function() {
 		var d = this.getImportProjectDialog();
@@ -340,7 +343,7 @@ Studio.extend({
 	    d.page.setService("deploymentService", "uploadClientComponent");
 	    d.show();
 	},
-    */	
+    */
 	/* Now handled by importMultiple
 	importTemplate: function() {
 		var d = this.getImportProjectDialog();
@@ -359,11 +362,11 @@ Studio.extend({
 	},
 	*/
 	importMultiple: function() {
-		var d = this.getImportProjectDialog();	    
+		var d = this.getImportProjectDialog();
         d.page.setService("deploymentService", "testMultiFile");
 	    d.show();
-	},	
-	
+	},
+
     /* Methods added here are new for the 6.4 deployment dialog */
     newDeployClick: function() {
         this.project.saveProject(true);
