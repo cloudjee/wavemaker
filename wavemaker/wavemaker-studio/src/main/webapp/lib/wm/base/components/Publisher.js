@@ -219,7 +219,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
         });
 
         var pageComponents = studio.page.writeComponents(sourcer_tab);
-        componentArray = pageComponents.concat(componentArray);
+        componentArray = componentArray.concat(pageComponents);
 
         var root = studio.page.root;
         var rootWidgets = root.writeComponents(sourcer_tab);
@@ -231,7 +231,7 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 
 
         var widgets = klass + ".components = {" + sourcer_nl + components /*source_body(studio.page)*/
-        + "}";
+        + "\n}";
         var css = studio.getCss() + "\n//app.css\n" + studio.getAppCss();
         var html = studio.getMarkup();
         //
