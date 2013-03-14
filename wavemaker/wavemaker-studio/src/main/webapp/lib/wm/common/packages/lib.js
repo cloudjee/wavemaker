@@ -26,7 +26,8 @@ For project specific widgets, add the wm.loadLibs call to the project javascript
 
 
 // Example:
-wm.loadLibs([ 
+wm.loadLibs([
     "wm.packages.example.myButton",
-    "wm.packages.example.GoogleOrgChart"
+    "wm.packages.example.GoogleOrgChart",
+    "wm.packages.example.Recaptcha.Recaptcha"
 ]);
