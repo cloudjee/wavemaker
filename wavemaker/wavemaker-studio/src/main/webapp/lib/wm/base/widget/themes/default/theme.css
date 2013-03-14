@@ -1119,7 +1119,9 @@ Overriding dijit's progress bar properties to enable height changes to progress 
 	filter: alpha(opacity=70);
 }
 
-
+.tundra .dijitProgressBarIndeterminate .dijitProgressBarTile {
+background: #cad2de url(../../../../../dojo/dijit/themes/tundra/images/progressBarAnim.gif) repeat-x center center !important;
+}
 /* End override of dijit progressbar */
 
 
