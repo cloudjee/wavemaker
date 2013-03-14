@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.wavemaker</groupId>
 		<artifactId>wavemaker-parent</artifactId>
-		<version>6.5.3.Release</version>
+		<version>6.5.X.BUILD-SNAPSHOT</version>
 	</parent>
 	<artifactId>wavemaker</artifactId>
 	<packaging>pom</packaging>
