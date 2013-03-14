@@ -1382,7 +1382,7 @@ dojo.declare("wm.Variable", wm.Component, {
         }catch(x){}
     },
     canLazyLoad: function(inTypeInfo) {
-        if (this._updating || !wm.typeManager.getLiveService(inTypeInfo.type))
+        if (this._updating || !wm.typeManager.getLiveService(this.type) || !wm.typeManager.getLiveService(inTypeInfo.type))
             return;
         // FIXME: prevent lazy loading if livelayout is not ready
         // reference to studio especially bad.
