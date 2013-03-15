@@ -30,8 +30,10 @@ dojo.declare("wm.Picture", [wm.Control, wm.TouchMixinOptional], {
 	    this._touchNode = this.img = this.linkNode.firstChild;
 	    dojo.addClass(this.img, "wmpicture-image");
 	    //this.connect(this.img, "load", this, "imageLoaded");
-	    this.connect(this.img, "click", this, "_onclick");
-	    this.connect(this.linkNode, "click", this, "_onclick");
+        if (!wm.isMobile) {
+    	    this.connect(this.img, "click", this, "_onclick");
+    	    this.connect(this.linkNode, "click", this, "_onclick");
+        }
 	    this.setSource(this.source);
 	    this.setAspect(this.aspect);
 	    this.setLink(this.link);
@@ -77,7 +79,7 @@ dojo.declare("wm.Picture", [wm.Control, wm.TouchMixinOptional], {
 	    this.valueChanged("link", inLink);
 	},
 	onTouchEnd: function(evt, isMove) {
-		if (isMove) return;		
+		if (isMove) return;
 		/* Force inputs to fire onchange events and update bound service var inputs if they have focus.
 		 * Normally, on touch devices, a touchstart and touchend can happen without the editor ever losing focus,
 		 * triggering its dijit's onBlur, and delivering new values.
@@ -89,9 +91,9 @@ dojo.declare("wm.Picture", [wm.Control, wm.TouchMixinOptional], {
 			else document.activeElement.blur();
 		}
 		if (!this._disabled) {
-    		this.click(evt);
+    		this.onclick(evt);
     	}
-	},  	
+	},
     _onclick: function(inEvent) {
         dojo.stopEvent(inEvent);
         if (this._disabled) return;

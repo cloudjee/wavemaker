@@ -27,7 +27,9 @@ dojo.declare("wm.Label", [wm.Control, wm.TouchMixinOptional], {
     init: function() {
         dojo.addClass(this.domNode, "wmlabel");
         this.inherited(arguments);
-        this.connect(this.domNode, "onclick", this, "_onclick");
+        if (!wm.isMobile) {
+            this.connect(this.domNode, "onclick", this, "_onclick");
+        }
         // this.connectEvents(this.domNode, ["dblclick"]); WAVEMAKER: Uncomment this if we find a good use for this...
     },
     build: function() {
@@ -41,7 +43,7 @@ dojo.declare("wm.Label", [wm.Control, wm.TouchMixinOptional], {
         }
     },
 	onTouchEnd: function(evt, isMove) {
-		if (isMove) return;		
+		if (isMove) return;
 		/* Force inputs to fire onchange events and update bound service var inputs if they have focus.
 		 * Normally, on touch devices, a touchstart and touchend can happen without the editor ever losing focus,
 		 * triggering its dijit's onBlur, and delivering new values.
@@ -55,8 +57,11 @@ dojo.declare("wm.Label", [wm.Control, wm.TouchMixinOptional], {
 		if (!this._disabled) {
     		this.click(evt);
     	}
-	},    
+	},
     _onclick: function(inEvent) {
+        if (this.name == "label2") {
+            console.log("Label2");
+        }
         if (this._disabled) return;
         var pseudoEvt = dojo.isIE && inEvent ? {
             clientX: inEvent.clientX,
