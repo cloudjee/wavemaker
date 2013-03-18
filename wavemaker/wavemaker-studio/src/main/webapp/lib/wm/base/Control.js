@@ -2065,7 +2065,10 @@ dojo.declare("wm.TouchMixin", null, {
     },
     _onLongTouch: function() {
         this.onLongTouch(this._touchStartX, this._touchStartY);
-        this._onTouchEnd(null, true);
+
+        // Treat an onLongTouch event as an onClick event (onTouchEnd) unless the developer
+        // has setup their own onLongTouch handler
+        this._onTouchEnd(null, this.onLongTouch != wm.TouchMixinOptional.prototype.onLongTouch);
     },
     onTouchStart: function(event) {},
     _onTouchMove: function(e) {
