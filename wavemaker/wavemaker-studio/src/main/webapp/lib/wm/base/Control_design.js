@@ -339,7 +339,7 @@ wm.Control.extend({
     //=======================================================
     listProperties: function() {
     var p = this.inherited(arguments);
-    p.onLongTouch.ignore = !(this instanceof wm.TouchMixin);
+    p.onLongTouch.ignore = !this.onLongTouch;
     p.autoSizeWidth.ignoretmp = (!this.isSizeable() && !this.autoSizeWidth) || (this.schema.autoSizeWidth && this.schema.autoSizeWidth.ignore);
     p.autoSizeHeight.ignoretmp = (!this.isSizeable() && !this.autoSizeHeight) || (this.schema.autoSizeHeight && this.schema.autoSizeHeight.ignore);
         p.minWidth.ignoretmp = !this.schema.minWidth || this.schema.minWidth.ignore || (!this._percEx.w && !this.autoSizeWidth); // minWidth only applies if width is % or autosize is on
@@ -579,7 +579,7 @@ wm.Object.extendSchema(wm.Control, {
     onTouchStart: {ignore:1},
     onTouchMove: {ignore:1},
     onTouchEnd: {ignore:1},
-    onLongTouch: {ignore:1, event:1},
+    onLongTouch: { event:1, advanced:1},
     parent: { ignore: 1, doc: 1, prototype: "wm.Control" },
     domNode: { ignore: 1, doc: 1 },
     parentNode: { ignore: 1 },
