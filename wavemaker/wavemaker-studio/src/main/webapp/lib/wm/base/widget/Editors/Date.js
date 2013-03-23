@@ -326,6 +326,7 @@ dojo.declare("wm.DateTime", wm.Date, {
             useLocalTime: this.useLocalTime,
             formatLength: this.formatLength,
             datePattern: this.datePattern,
+            required: this.required,
             maximum: this.maximum,
             minimum: this.minimum,
             minHeight: 8,
@@ -345,6 +346,7 @@ dojo.declare("wm.DateTime", wm.Date, {
             formatLength: this.formatLength,
             use24Time: this.use24Time,
             timePattern: this.timePattern || wm.Time.prototype.timePattern,
+            required: this.required,
             minHeight: 8,
             onchange: dojo.hitch(this, "changed")
         });
