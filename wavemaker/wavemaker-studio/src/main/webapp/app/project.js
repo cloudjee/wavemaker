@@ -1434,10 +1434,19 @@ dojo.declare("wm.studio.Project", null, {
             studio.warningsListVar.setData(errors);
             studio.warningsButton.setShowing(errors.length);
             if (errors.length) {
-                studio.statusBarLabel.setCaption("Errors were found");
+                studio.statusBarLabel.setCaption("Errors were found <button class='StudioButton wmbutton' onclick='studio.project.recheckErrors()'>Details...</button>");
             }
         } catch(e) {}
     },
+    recheckErrors: function() {
+        this.errorCheck();
+        if (studio.warningsListVar.isEmpty()) {
+            app.toastSuccess("Errors Fixed");
+            studio.updateStatusLabel();
+        } else {
+            studio.showProjectDesignWarnings();
+        }
+    }
 });
 
 //=========================================================================

@@ -1100,13 +1100,14 @@ dojo.declare("Studio", wm.Page, {
                     this.refreshServiceTree();
                     this.refreshComponentTree();
                 }
-                var status = "Editing ";
-                dojo.forEach(inComponents, function(c,i) { status += (i ? ", " : "") + c.toString();});
-                this.statusBarLabel.setCaption(status);
-
             }
             try {
                 var s = this.selected = inComponents;
+
+                if (studio.warningsListVar.isEmpty()) {
+                    this.updateStatusLabel();
+                }
+
                 // make sure selected widget and all ancestors are showing
                 if (!this._dontNavOnPageChange) {
                     this.revealSelected();
@@ -1138,6 +1139,15 @@ dojo.declare("Studio", wm.Page, {
             }
         } finally{
             this.inSelect = false;
+        }
+    },
+    updateStatusLabel: function() {
+        if (studio.selected.length == 0) {
+            this.statusBarLabel.setCaption("Select a widget to begin");
+        } else {
+            var status = "Editing ";
+            dojo.forEach(this.selected, function(c,i) { status += (i ? ", " : "") + c.toString();});
+            this.statusBarLabel.setCaption(status);
         }
     },
     revealSelected: function() {
@@ -2333,7 +2343,6 @@ dojo.declare("Studio", wm.Page, {
             text += "<li>" + item.getValue("name") + "</li>";
         });
         text += "</ul>";
-
         app.alert(text);
     }
 });
