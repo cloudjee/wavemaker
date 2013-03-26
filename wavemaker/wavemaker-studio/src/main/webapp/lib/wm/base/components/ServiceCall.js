@@ -130,7 +130,7 @@ dojo.declare("wm.ServiceCall", null, {
         if (this.setType) this.setType(this.type);
         if (studio.isSelected(this)) {
             studio.inspect(this);
-        }        
+        }
     },
 
     /* Set the operation and update the inputs */
@@ -172,10 +172,10 @@ dojo.declare("wm.ServiceCall", null, {
      * NOTE: If owner is a Composite or Application, this may not work
      */
     connectStartUpdate: function() {
-        if (this.owner && this.owner.start)
-            this.connectOnce(this.owner, "onStart", this, "doStartUpdate");
-        else if (this.owner instanceof wm.Application) {
+        if (this.owner && this.owner instanceof wm.Application) {
             this.doStartUpdate();
+        } else if (this.owner && this.owner.start) {
+            this.connectOnce(this.owner, "onStart", this, "doStartUpdate");
         }
     },
 
