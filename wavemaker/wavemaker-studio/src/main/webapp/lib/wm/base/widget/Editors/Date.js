@@ -265,7 +265,23 @@ dojo.declare("wm.Time", wm.Date, {
         }
         return this.makeEmptyValue();
     },
+    setEditorValue: function(inValue) {
+        if (inValue === "") inValue = null;
+        if (inValue === null || inValue === undefined) {
+            return wm.AbstractEditor.prototype.setEditorValue.call(this, null);
+        } else if (this.useLocalTime) {
+            return wm.AbstractEditor.prototype.setEditorValue.call(this, new Date(inValue));
+        }
 
+        // don't modify the source data as the caller may still need it
+        var v = new Date(inValue);
+
+        // If we assume that this is server time, then we need to add some number of hours to it so that instead of showing the date in local time, we show the date as it is according to the server
+        if (!this.useLocalTime && v && (this.owner instanceof wm.DateTime == false || this.owner.dateMode != "Date")) {
+            v.setHours(0, 60*v.getHours() + v.getMinutes() +60*wm.timezoneOffset);
+        }
+        return wm.AbstractEditor.prototype.setEditorValue.call(this, new Date(v));
+    },
     calcIsDirty: function(val1, val2) {
         if (val1 === undefined || val1 === null) val1 = 0;
         if (val2 === undefined || val2 === null) val2 = 0;
