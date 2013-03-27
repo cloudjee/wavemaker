@@ -10,6 +10,18 @@ The webapp folder contains all resources that can be loaded from a web browser. 
    	   (also used by the Studio application).  These all need to be deployed
 	   when a user deploys their application.
 
+Designtime Libraries
+--------------------
+These libraries can be found in
+* pages
+* app
+* lib/wm/base/design
+
+Runtime Libraries
+--------------------
+These libraries can be found in
+* lib
+
 Folder List
 ---------
 * app: Contains files that extend the Studio page; contains various utilities such as copy/paste.  Contains the property inspector
