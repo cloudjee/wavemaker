@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Collection;
 
+import org.springframework.security.cas.authentication.CasAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -160,6 +161,27 @@ public class SecurityService {
             return principal.getTenantId();
         }
         return -1;
+    }
+
+    /**
+     * This method returns a proxy ticket to the caller. The serviceUrl must be the EXACT url of the service that you
+     * are using the ticket to call.
+     *
+     * @param serviceUrl The url of the service, protected by CAS, that you want to call.
+     * @return A 'use once' proxy service ticket, or null if a ticket cannot be retrieved.
+     */
+    @ExposeToClient
+    public static String getCASProxyTicket(String serviceUrl) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String ticket = null;
+        try {
+            if (auth instanceof CasAuthenticationToken) {
+                ticket = ((CasAuthenticationToken) auth).getAssertion().getPrincipal().getProxyTicketFor(serviceUrl);
+            }
+        } catch (Exception e) {
+            logger.error("The CASSecurityService.getServiceTicket() has failed", e);
+        }
+        return ticket;
     }
 
     /**

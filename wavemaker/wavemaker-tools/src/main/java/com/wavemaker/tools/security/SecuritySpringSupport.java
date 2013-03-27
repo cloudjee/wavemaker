@@ -14,25 +14,18 @@
 
 package com.wavemaker.tools.security;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.wavemaker.common.util.SystemUtils;
+import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.security.schema.AuthenticationManager;
 import com.wavemaker.tools.security.schema.Http;
 import com.wavemaker.tools.security.schema.LdapServer;
-
+import com.wavemaker.tools.security.schema.UserService;
+import com.wavemaker.tools.spring.beans.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.memory.UserMap;
 import org.springframework.security.core.userdetails.memory.UserMapEditor;
 
-import com.wavemaker.common.util.SystemUtils;
-import com.wavemaker.tools.common.ConfigurationException;
-import com.wavemaker.tools.security.schema.UserService;
 import com.wavemaker.tools.spring.beans.Bean;
 import com.wavemaker.tools.spring.beans.Beans;
 import com.wavemaker.tools.spring.beans.ConstructorArg;
@@ -40,6 +33,10 @@ import com.wavemaker.tools.spring.beans.Property;
 import com.wavemaker.tools.spring.beans.Ref;
 import com.wavemaker.tools.spring.beans.Value;
 import org.springframework.util.StringUtils;
+
+import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Edward Callahan
@@ -69,6 +66,9 @@ public class SecuritySpringSupport {
     
     public static final String AUTHENTICATON_MANAGER_BEAN_ID_LDAP_WITH_DB = "authenticationManagerLDAPwithDB";
     
+    // Only used as a marker for DataSourceType
+    public static final String AUTHENTICATON_MANAGER_BEAN_ID_CAS = "authenticationManagerCAS";
+
     public static final String WM_AUTH_ENTRY_POINT = "WMSecAuthEntryPoint";
     
     public static final String ROLE_PROVIDER_LDAP = "LDAP";
@@ -168,7 +168,19 @@ public class SecuritySpringSupport {
     
     private static final String ENFORCE_HTML_PROP = "enforceIndexHtml";
     
-    
+    // UserDetailsService providers.
+    public static final String CAS_USERDETAILS_PROVIDER_DATABASE = "Database";
+    public static final String CAS_USERDETAILS_PROVIDER_LDAP = "LDAP";
+    public static final String CAS_USERDETAILS_SERVICE_DATABASE_ID = JDBC_DAO_IMPL_BEAN_ID;
+    public static final String CAS_USERDETAILS_SERVICE_LDAP_ID = "casLdapUserDetailsService";
+
+    // SpringConfig references.
+    public static final String CAS_AUTH_ENTRY_POINT = "casEntryPoint";
+    public static final String CAS_PROPERTY_PLACEHOLDER_CONFIGURER_ID = "casPropertyPlaceholderConfigurer";
+    public static final String CAS_REQUEST_SINGLE_LOGOUT_FILTER = "casRequestSingleLogoutFilter";
+    public static final String CAS_SINGLE_SIGN_OUT_FILTER = "casSingleSignOutFilter";
+    public static final String CAS_AUTHENTICATION_FILTER = "casAuthenticationFilter";
+
     private static List<String> getSecurityResourceAttrs(Beans beans, String url) {
         Map<String, List<String>> urlMap = getSecurityInterceptUrls(beans);
         return urlMap.get(url);
@@ -413,6 +425,8 @@ public class SecuritySpringSupport {
             return GeneralOptions.LDAP_TYPE;
         } else if (beanId.equals(AUTHENTICATON_MANAGER_BEAN_ID_AD)){
         	return GeneralOptions.AD_TYPE;
+        } else if (beanId.equals(AUTHENTICATON_MANAGER_BEAN_ID_CAS)) {
+            return GeneralOptions.CAS_TYPE;
         } else {
             throw new ConfigurationException("Unable to get data source type!");
         }
@@ -858,6 +872,40 @@ public class SecuritySpringSupport {
                 }
             }
         }
+    }
+
+    public static CASOptions constructCASOptions(Beans standardBeans, Beans casBeans) {
+        CASOptions options = new CASOptions();
+        Bean bean = casBeans.getBeanById(SecuritySpringSupport.CAS_PROPERTY_PLACEHOLDER_CONFIGURER_ID);
+        if (bean != null) {
+            Property property = bean.getProperty("properties");
+            if (property != null) {
+                Props props = property.getProps();
+                if (props != null) {
+                    for (Prop prop : props.getProps()) {
+                        String key = prop.getKey();
+                        List<String> values = prop.getContent();
+                        String value = values.isEmpty() ? "" : values.get(0);
+                        if (key.equals("cas.url")) {
+                            options.setCasUrl(value);
+                        } else if (key.equals("project.url")) {
+                            options.setProjectUrl(value);
+                        } else if (key.equals("userdetails.ref")) {
+                            if (value.equals(SecuritySpringSupport.CAS_USERDETAILS_SERVICE_DATABASE_ID)) {
+                                options.setUserDetailsProvider(SecuritySpringSupport.CAS_USERDETAILS_PROVIDER_DATABASE);
+                                options.setOptions(constructDatabaseOptions(standardBeans));
+                            } else if (value.equals(SecuritySpringSupport.CAS_USERDETAILS_SERVICE_LDAP_ID)) {
+                                options.setUserDetailsProvider(SecuritySpringSupport.CAS_USERDETAILS_PROVIDER_LDAP);
+                                options.setOptions(constructLDAPOptions(standardBeans));
+                            } else {
+                                // ERROR
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return options;
     }
 
     public static List<String> getRoles(Beans beans) {

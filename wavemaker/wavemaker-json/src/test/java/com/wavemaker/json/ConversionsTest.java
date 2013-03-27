@@ -18,7 +18,9 @@
 
 package com.wavemaker.json;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.json.JSONSerializationTest.HasDate;
@@ -33,13 +35,15 @@ public class ConversionsTest extends WMTestCase {
     public void testDateToLongSerializer() throws Exception {
 
         HasDate hd = new HasDate();
-        hd.setDate(new java.util.Date(1));
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        c.setTimeInMillis(1);
+        hd.setDate(c.getTime());
         JSONState jc = new JSONState();
 
         String s = JSONMarshaller.marshal(hd, jc);
         assertEquals(
-            "{\"date\":{\"date\":31,\"day\":3,\"hours\":16,\"minutes\":0,\"month\":11,\"seconds\":0,\"time\":1,\"timezoneOffset\":480,\"year\":69},\"dates\":null,\"foo\":null,\"sqlDate\":null}",
-            s);
+                "{\"date\":{\"date\":1,\"day\":4,\"hours\":1,\"minutes\":0,\"month\":0,\"seconds\":0,\"time\":1,\"timezoneOffset\":-60,\"year\":70},\"dates\":null,\"foo\":null,\"sqlDate\":null}",
+                s);
 
         jc.setTypeState(new ReflectTypeState());
         jc.getTypeState().addType(new DateTypeDefinition(java.util.Date.class));

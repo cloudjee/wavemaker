@@ -27,6 +27,8 @@ public class GeneralOptions {
     
     public static final String AD_TYPE = "Active Directory";
 
+    public static final String CAS_TYPE = "CAS";
+
     private boolean enforceSecurity;
 
     private boolean enforceIndexHtml;

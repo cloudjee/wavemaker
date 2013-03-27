@@ -14,19 +14,15 @@
 
 package com.wavemaker.tools.security;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
-import org.hibernate.cfg.Mappings;
+import com.wavemaker.tools.spring.beans.*;
 import org.springframework.util.Assert;
 
 import com.wavemaker.tools.security.schema.*;
-import com.wavemaker.tools.spring.beans.Bean;
-import com.wavemaker.tools.spring.beans.Beans;
-import com.wavemaker.tools.spring.beans.Property;
 
 /**
  * Helper class for handling security beans entities in project security config file
@@ -279,6 +275,84 @@ public class SecurityXmlSupport {
             }
         }
         objs.add(0, interceptUrl);
+    }
+
+    static List<CustomFilter>getCustomFilters(Beans beans) {
+        return getCustomFilters(getHttp(beans));
+    }
+
+    static List<CustomFilter>getCustomFilters(Http http) {
+        List<Object> objs = http.getInterceptUrlOrAccessDeniedHandlerOrFormLogin();
+        List<CustomFilter> customFilters = new ArrayList<CustomFilter>();
+        for (Object obj : objs) {
+            if (obj instanceof CustomFilter) {
+                customFilters.add((CustomFilter) obj);
+            }
+        }
+
+        return customFilters;
+    }
+
+    static void setCustomFilters(Beans beans, List<CustomFilter> customFilters) {
+        for (CustomFilter customFilter : customFilters) {
+            setCustomFilter(beans, customFilter);
+        }
+    }
+
+    static void setCustomFilter(Beans beans, CustomFilter customFilter) {
+        List<Object> objs = getHttp(beans).getInterceptUrlOrAccessDeniedHandlerOrFormLogin();
+        for (Object obj : objs) {
+            if (obj instanceof CustomFilter) {
+                CustomFilter filter = (CustomFilter) obj;
+                if (customFilter.getRef().equals(filter.getRef())) {
+                    filter.setBefore(customFilter.getBefore());
+                    filter.setPosition(customFilter.getPosition());
+                    filter.setAfter(customFilter.getAfter());
+                    return;
+                }
+            }
+        }
+        objs.add(0, customFilter);
+    }
+
+    static CustomFilter removeCustomFilter(Beans beans, CustomFilter customFilter){
+        List<Object> objs = getHttp(beans).getInterceptUrlOrAccessDeniedHandlerOrFormLogin();
+        for (Object obj : objs) {
+            if (obj instanceof CustomFilter) {
+                CustomFilter filter = (CustomFilter) obj;
+                // May need a more complex lookup, but this will do for now...
+                if (customFilter.getRef().equals(filter.getRef())) {
+                    objs.remove(obj);
+                    return filter;
+                }
+            }
+        }
+        return null;
+    }
+
+    static Http.Logout getLogout(Beans beans) {
+        return getLogout(getHttp(beans));
+    }
+
+    static Http.Logout getLogout(Http http) {
+        Http.Logout logout = null;
+        List<Object> objs = http.getInterceptUrlOrAccessDeniedHandlerOrFormLogin();
+        for (Object obj : objs) {
+            if (obj instanceof Http.Logout) {
+                logout = (Http.Logout) obj;
+                break;
+            }
+        }
+        return logout;
+    }
+
+    static void setLogout(Beans beans, Http.Logout logout) {
+        Http.Logout lo = getLogout(beans);
+        List<Object> objs = getHttp(beans).getInterceptUrlOrAccessDeniedHandlerOrFormLogin();
+        if (lo != null)
+            objs.remove(lo);
+        if (logout != null)
+            objs.add(logout);
     }
 
     static void setPortMapping(Beans beans, boolean useSSL, String httpPort, String httpsPort) {

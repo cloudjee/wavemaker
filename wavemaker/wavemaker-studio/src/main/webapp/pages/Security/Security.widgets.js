@@ -32,7 +32,7 @@ Security.widgets = {
 			secConfigPanel: ["wm.Panel", {"border":"0","height":"120px","horizontalAlign":"center","layoutKind":"left-to-right","width":"100%"}, {}, {
 			    secConfigControls: ["wm.Panel", {"border":"0","width":"638px"}, {}, {
 				panel16: ["wm.Panel", {"border":"0","height":"100%"}, {}, {
-				    secProviderInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, options: "Demo,Database,LDAP,Active Directory", "border":"0","caption":"Security Provider","captionAlign":"left","captionSize":"120px","display":"Select","emptyValue":"null","padding":"2","width":"300px"}, {"onchange":"secProviderInputChange"}],
+                    secProviderInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, options: "Demo,Database,LDAP,Active Directory,CAS", "border": "0", "caption": "Security Provider", "captionAlign": "left", "captionSize": "120px", "display": "Select", "emptyValue": "null", "padding": "2", "width": "300px"}, {"onchange": "secProviderInputChange"}],
 				    panel3: ["wm.Panel", {"border":"0","height":"95px"}, {}, {
 					secEnableInput: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"Enable Security","captionAlign":"left","captionSize":"120px","displayValue":"1","margin":"0,0,0,30","padding":"2","width":"100%"}, {"onchange":"securityCheckboxChange"}],
 					showLoginPageInput: ["wm.Checkbox", {_classe4: {domNode: ["StudioEditor"]}, "border":"0","caption":"Show Login Page","captionAlign":"left","captionSize":"140px","displayValue":"1","margin":"0,0,0,60","padding":"2","width":"100%"}, {"onchange":"setDirty"}],
@@ -84,7 +84,7 @@ Security.widgets = {
 					tenantPanel: ["wm.Panel", {width: "100%", height: "300px", fitToContentHeight: true, margin: "10,50,0,50", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 					    tenantIdField: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, captionSize: "150px", width: "500px", "border":"0","caption":"Tenant ID Field Name","display":"Select","emptyValue":"null","padding":"2",helpText: "If your creating a multi-tenanted application, specify which field of the user's table contains that user's tenant id"}, {"onchange":"setDirty"}],
 					    defTenantId: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, captionSize: "150px", width: "500px", "border":"0","caption":"Default Tenant ID Value","emptyValue":"null","padding":"2", helpText: "The default tenant ID value is the value used when querying the database while you are in design; this has no effect on running your application"}, {"onchange":"setDirty"}],
-					    spacer31: ["wm.Spacer", {"height":"10px","width":"96px"}, {}],
+					    spacer31: ["wm.Spacer", {"height":"10px","width":"96px"}, {}]
 					}],
 					dbRoleBySQLPanel: ["wm.Panel", {"border":"0","height":"100px", fitToContentHeight: true, width: "100%", margin: "10,40,0,40", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 					    panel14: ["wm.Panel", {"border":"0","height":"24px",width: "100%","layoutKind":"left-to-right"}, {}, {
@@ -103,13 +103,13 @@ Security.widgets = {
 						    spacer5: ["wm.Spacer", {"width":"20px"}, {}],
 						    dbTestSQLResultListPanel: ["wm.Panel", {verticalAlign: "top", horizontalAlign: "left", layoutKind: "top-to-bottom", width: "100%", height: "100%"}, {}, {
 							dbTestSQLResultLabel: ["wm.Label", {caption: "Roles from query:", width: "100%", height: "18px"}],
-							dbTestSQLResultList: ["wm.List", {"border":"1","width":"100%", height: "100%"}, {}],
+							dbTestSQLResultList: ["wm.List", {"border":"1","width":"100%", height: "100%"}, {}]
 						    }],
 						    dbTestSQLErrorPanel: ["wm.Panel", {verticalAlign: "top", horizontalAlign: "left", layoutKind: "top-to-bottom", width: "100%", height: "100%"}, {}, {
 							dbTestSQLErrorPanelLabel: ["wm.Label", {singleLine: false, caption: "Errors from Query:", width: "100%", height: "18px"}],
 							dbTestSQLErrorLabel: ["wm.Label", {"border":"1","caption":"dbTestSQLErrorLabel","padding":"4","width":"100%", height: "100%"}]
 						    }],
-						    spacer569: ["wm.Spacer", {"width":"20px"}, {}],
+						    spacer569: ["wm.Spacer", {"width":"20px"}, {}]
 						}]
 					    }]
 					}]
@@ -155,7 +155,59 @@ Security.widgets = {
 					    adDomainInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "border":"0","caption":"Domain","emptyValue":"null","padding":"2",helpText: "The AD domain name, e.g. 'mydomain.com'"}, {"onchange":"setDirty"}],
 					    adUrlInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "border":"0","caption":"URL","emptyValue":"null","padding":"2",helpText: "The URL of the AD server, e.g. 'ldap://adserver.mydomain.com/'"}, {"onchange":"setDirty"}]
 					}]
+                                }],
+
+                                casLayer: ["wm.Layer", {"border": "0", "borderColor": "", "caption": "CAS", autoScroll: true}, {"onShow": "showCASLayer"}, {
+                                    casMainPanel: ["wm.Panel", {width: "100%", height: "300px", fitToContentHeight: true, margin: "10,50,0,50", horizontalAlign: "left", verticalAlign: "top"}, {}, {
+                                        casUrlInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "border": "0", "caption": "CAS URL", "emptyValue": "null", "padding": "2", helpText: "The URL of the CAS server"}, {"onchange": "setDirty"}],
+                                        casProjectUrlInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, width: "500px", captionSize: "150px", "border": "0", "caption": "Project URL", "emptyValue": "null", "padding": "2", helpText: "The URL of the current application"}, {"onchange": "setDirty"}],
+                                        casUserDetailsProviderInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, options: "Database", "border": "0", "caption": "User Details Provider", "captionSize": "150px", "display": "Select", "emptyValue": "null", "padding": "2", "width": "300px", helpText: "The UserDetails provider. (Database only until LDAP etc added))"}, {"onchange": "casUserDetailsProviderInputChange"}],
+
+                                        casDatabasePanel: ["wm.Panel", {width: "100%", height: "300px", fitToContentHeight: true, horizontalAlign: "left", verticalAlign: "top"}, {}, {
+                                            casDbDataModelInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, required: true, captionSize: "150px", width: "500px", "border": "0", "caption": "Data Model", "display": "Select", "emptyValue": "null", "padding": "2", helpText: "Pick from one of the databases you have imported"}, {"onchange": "casDbDataModelInputChange"}],
+                                            casDbEntityInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, required: true, captionSize: "150px", width: "500px", "border": "0", "caption": "Entity", "display": "Select", "emptyValue": "null", "padding": "2", helpText: "Pick a table from your database that contains your registered users"}, {"onchange": "casDbEntityInputChange"}],
+                                            casDbUsernameInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, required: true, captionSize: "150px", width: "500px", "border": "0", "caption": "Username Field", "display": "Select", "emptyValue": "null", "padding": "2", helpText: "Select the column containing the username data. This will be the user name required for login"}, {"onchange": "setDirty"}],
+                                            casDbUseridInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, required: true, captionSize: "150px", width: "500px", "border": "0", "caption": "User ID Field", "display": "Select", "emptyValue": "null", "padding": "2", helpText: "Select the the column contaning the user id data"}, {"onchange": "setDirty"}],
+                                            casDbRoleInput: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, captionSize: "150px", width: "500px", "border": "0", "caption": "Role Field", "display": "Select", "emptyValue": "null", "padding": "2", helpText: "Select the field that contains the user's role.  This is optional if you aren't using roles"}, {"onchange": "setDirty"}]
+                                        }],
+                                        spacer30: ["wm.Spacer", {"height": "10px", "width": "96px"}, {}],
+
+                                        labelmt: ["wm.Label", {"_classes": {"domNode": ["wm_TextDecoration_Bold", "wm_Padding_4px"]}, "border": "0", "caption": "Multitenant Configuration", "padding": "4"}],
+                                        casTenantPanel: ["wm.Panel", {width: "100%", height: "300px", fitToContentHeight: true, margin: "10,50,0,50", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+                                            casTenantIdField: ["wm.SelectMenu", {_classes: {domNode: ["StudioEditor"]}, captionSize: "150px", width: "500px", "border": "0", "caption": "Tenant ID Field Name", "display": "Select", "emptyValue": "null", "padding": "2", helpText: "If your creating a multi-tenanted application, specify which field of the user's table contains that user's tenant id"}, {"onchange": "setDirty"}],
+                                            casDefTenantId: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, captionSize: "150px", width: "500px", "border": "0", "caption": "Default Tenant ID Value", "emptyValue": "null", "padding": "2", helpText: "The default tenant ID value is the value used when querying the database while you are in design; this has no effect on running your application"}, {"onchange": "setDirty"}],
+                                            spacer31: ["wm.Spacer", {"height": "10px", "width": "96px"}, {}]
+                                        }],
+                                        casDbRoleBySQLPanel: ["wm.Panel", {"border": "0", "height": "100px", fitToContentHeight: true, width: "100%", margin: "10,40,0,40", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+                                            panel14: ["wm.Panel", {"border": "0", "height": "24px", width: "100%", "layoutKind": "left-to-right"}, {}, {
+                                                spacer1: ["wm.Spacer", {"width": "202px"}, {}],
+                                                casDbRoleBySQLCheckbox: ["wm.Checkbox", {_classes: {domNode: ["StudioEditor"]}, "border": "0", "caption": "Roles By SQL Query", "captionAlign": "left", "captionPosition": "right", "captionSize": "100%", "displayValue": "1", "padding": "2", "width": "100%"}, {"onchange": "casDbRoleBySQLCheckboxChange"}]
+                                            }],
+                                            casDbRoleBySQLEnablePanel: ["wm.Panel", {"border": "0", "height": "100px", fitToContentHeight: true, verticalAlign: "top", horizontalAlign: "left", width: "100%", margin: "5"}, {}, {
+                                                casDbRoleBySQLInput: ["wm.LargeTextArea", {_classes: {domNode: ["StudioEditor"]}, "border": "0", "caption": "Enter Query", captionSize: "100px", captionPosition: "left", "emptyValue": "null", "height": "48px", width: "100%", helpText: "Enter the SQL query that returns the user id and roles based on the user id, returning the id first. e.g. 'select role.user_id, role.rolename from role where role.user_id = ?' "}, {"onchange": "setDirty"}],
+                                                panel22: ["wm.Panel", {"_classes": {"domNode": ["wm_Padding_2px"]}, "border": "0", "height": "24px", width: "100%", "layoutKind": "left-to-right"}, {}, {
+                                                    spacer20: ["wm.Spacer", {"width": "100%"}, {}],
+                                                    casDbTestSQLInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, "border": "0", "caption": "User ID", "emptyValue": "null", "padding": "2", "width": "250px"}, {"onchange": "setDirty"}],
+                                                    casDbTestSQLButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, "caption": "Test Query", "margin": "2", "width": "100px"}, {"onclick": "casDbTestSQLButtonClick"}]
+                                                }],
+                                                panel18: ["wm.Panel", {padding: "0,0,4,0", "border": "0", "height": "100px", width: "100%", "layoutKind": "left-to-right"}, {}, {
+                                                    spacer5: ["wm.Spacer", {"width": "20px"}, {}],
+                                                    casDbTestSQLResultListPanel: ["wm.Panel", {verticalAlign: "top", horizontalAlign: "left", layoutKind: "top-to-bottom", width: "100%", height: "100%"}, {}, {
+                                                        casDbTestSQLResultLabel: ["wm.Label", {caption: "Roles from query:", width: "100%", height: "18px"}],
+                                                        casDbTestSQLResultList: ["wm.List", {"border": "1", "width": "100%", height: "100%"}, {}]
+                                                    }],
+                                                    casDbTestSQLErrorPanel: ["wm.Panel", {verticalAlign: "top", horizontalAlign: "left", layoutKind: "top-to-bottom", width: "100%", height: "100%"}, {}, {
+                                                        casDbTestSQLErrorPanelLabel: ["wm.Label", {caption: "Errors from Query:", width: "100%", height: "18px"}],
+                                                        casDbTestSQLErrorLabel: ["wm.Label", {"border": "1", "caption": "casDbTestSQLErrorLabel", "padding": "4", "width": "100%", height: "100%"}]
+                                                    }],
+                                                    spacer569: ["wm.Spacer", {"width": "20px"}, {}]
 				    }]
+                                            }]
+                                        }]
+
+                                    }]
+                                }]
+
 				}]
 			    }]
 			}]
