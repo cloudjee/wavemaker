@@ -382,9 +382,14 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
             return this.inherited(arguments);
         } else {
             var args = inArgs || this.input.getArgsHash();
-            var baseurl = window.location.href;
-            baseurl = baseurl.replace(/\?.*$/,"");
-            baseurl = baseurl.replace(/\/[^\/]*$/,"/");
+            var baseurl;
+            if (wm.xhrPath) {
+                baseurl = wm.xhrPath;
+            } else {
+                baseurl = window.location.href;
+                baseurl = baseurl.replace(/\?.*$/,"");
+                baseurl = baseurl.replace(/\/[^\/]*$/,"/");
+            }
             var urlStr = baseurl + this._service._service.serviceUrl.replace(/\.json$/,".download");
 
             /* Delete the last iframe */
@@ -444,7 +449,7 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
     setDisabled: function(inDisabled) {
         var valueWas = this.disabled;
         this.disabled = Boolean(inDisabled);
-        
+
         // parent class (wm.Variable) does calls this, but this fires
         // the service variable immediately,
         // and the new filter/sourceData/input values
