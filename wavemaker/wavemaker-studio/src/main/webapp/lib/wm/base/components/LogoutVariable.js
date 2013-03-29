@@ -26,33 +26,35 @@ dojo.require("wm.base.components.ServiceVariable");
 	@extends wm.ServiceCall
 */
 dojo.declare("wm.LogoutVariable", wm.ServiceVariable, {
-      service: "securityService",
-      operation: "logout",
-      autoUpdate: 0,
-      startUpdate: 0,
-      clearDataOnLogout: true,
-      logoutNavCall: null,
-      init: function() {
-	  this.inherited(arguments);
-          if (!this.clearDataOnLogout  || window["PhoneGap"]) {
-              this.logoutNavCall = new wm.NavigationCall({
-	          name: "logoutNavCall",
-	          owner: this,
-	          operation: "gotoPage"
-	      });
-              this.logoutNavCall.input.setData({pageName: "Login"});
-          }
+    service: "securityService",
+    operation: "logout",
+    autoUpdate: 0,
+    startUpdate: 0,
+    clearDataOnLogout: true,
+    logoutNavCall: null,
+    init: function() {
+        this.inherited(arguments);
+        if(!this.clearDataOnLogout || window["PhoneGap"]) {
+            this.logoutNavCall = new wm.NavigationCall({
+                name: "logoutNavCall",
+                owner: this,
+                operation: "gotoPage"
+            });
+            this.logoutNavCall.input.setData({
+                pageName: "Login"
+            });
+        }
     },
-      onSuccess: function(inData) {
-	  if (window["PhoneGap"]) {
-	      window.localStorage.clear(); // remove any stored information, especially their login information
-	  }
+    onSuccess: function(inData) {
+        if(window["PhoneGap"]) {
+            window.localStorage.clear(); // remove any stored information, especially their login information
+        }
 
-          if (!this.clearDataOnLogout || window["PhoneGap"]) {
-              this.logoutNavCall.update();
-          } else {
-	      window.location.reload();
-/*
+        if(!this.clearDataOnLogout || window["PhoneGap"]) {
+            this.logoutNavCall.update();
+        } else {
+            window.location.reload();
+            /*
               var path = window.location.pathname;
               if (path.match(/[^\/]*\.html/)) {
                   path = path.replace(/[^\/]*\.html/, "login.html");
@@ -60,18 +62,19 @@ dojo.declare("wm.LogoutVariable", wm.ServiceVariable, {
                   if (!path.match(/\/$/)) path += "/";
                   path += "login.html";
               }
-              
+
               window.location = window.location.protocol + "//" + window.location.host + path + window.location.search;
-	      */
-          }
-      },
-      onError: function(inError) {
-         this.inherited(arguments);
-	  /* TODO: Localize this */
-	  app.alert(wm.getDictionaryItem("wm.LogoutVariable.FAILED", {error: inError}));
-      },
-      _end: 0
-      });
+          */
+        }
+    },
+    onError: function(inError) {
+        this.inherited(arguments); /* TODO: Localize this */
+        app.alert(wm.getDictionaryItem("wm.LogoutVariable.FAILED", {
+            error: inError
+        }));
+    },
+    _end: 0
+});
 
 
 dojo.declare("wm.LoginVariable", wm.ServiceVariable, {
@@ -79,14 +82,14 @@ dojo.declare("wm.LoginVariable", wm.ServiceVariable, {
     service: "securityService",
     operation: "login",
     _setOperation: function(inOperation) {
-	this._service._operations.login = {name: "login", 
+	this._service._operations.login = {name: "login",
 				     parameters: {
 					 username: {type: "string"},
 					 password: {type: "string"}
 				     },
 				     returnType: "java.lang.String"};
 	this.inherited(arguments);
-    },	
+    },
     request: function() {
 	var user = this.input.getValue("username");
 	var pass = this.input.getValue("password");
@@ -111,7 +114,7 @@ dojo.declare("wm.LoginVariable", wm.ServiceVariable, {
 		this.onError(e);
 	    })
 	);
-	
+
 	return deferred;
     }
 
