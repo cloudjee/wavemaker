@@ -253,8 +253,13 @@ wm.List.extend({
     },
     getViewFields: function() {
         var fields = [];
-        if (this.dataSet instanceof wm.LiveVariable) fields = this.dataSet.getViewFields();
-        else if (this.dataSet instanceof wm.Variable) fields = wm.getDefaultView(this.dataSet.type) || [];
+        if (this.dataSet instanceof wm.LiveVariable) {
+            fields = this.dataSet.getViewFields();
+        } else if  (this.dataSet.name && this.dataSet.owner instanceof wm.LiveVariable) {
+            fields = this.dataSet.owner.getViewFields();
+        } else if (this.dataSet instanceof wm.Variable) {
+            fields = wm.getDefaultView(this.dataSet.type) || [];
+        }
         return fields;
     },
 
@@ -312,14 +317,14 @@ wm.List.extend({
         dojo.forEach(inColumns, function(column, i) {
             if (column.mobileColumn || !column.show) return;
             var rowText = "";
-            
+
             var value;
             if (column.expression || column.formatFunc) {
-                value = "${wm.runtimeId}.formatCell(\"" + column.field + "\", ${" + column.field + "}, ${this}, ${wm.rowId})";               
+                value = "${wm.runtimeId}.formatCell(\"" + column.field + "\", ${" + column.field + "}, ${this}, ${wm.rowId})";
             } else {
                 value = "\${" + column.field + "}";
             }
-            
+
             if (value) {
                 if (!mobileExpr) {
                     mobileExpr = "\"<div class='MobileRowTitle'>\" +\n\"" + wm.capitalize(column.title) + ": \" + " + value + " +\n\"</div>\"\n\n";

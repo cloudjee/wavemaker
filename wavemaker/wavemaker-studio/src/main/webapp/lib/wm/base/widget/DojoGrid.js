@@ -1754,11 +1754,15 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         }
     },
 
-    getViewFields: function() {
+     getViewFields: function() {
         var fields = [];
-        if (this.variable instanceof wm.LiveVariable) fields = this.variable.getViewFields();
-        else if (this.variable instanceof wm.Variable && wm.typeManager.getType(this.variable.type) && wm.typeManager.getType(this.variable.type).liveService) fields = wm.getDefaultView(this.variable.type) || [];
-        else {
+        if (this.variable instanceof wm.LiveVariable) {
+            fields = this.variable.getViewFields();
+        } else if (this.variable.name && this.variable.owner instanceof wm.LiveVariable) {
+            fields = this.variable.owner.getViewFields();
+        } else if (this.variable instanceof wm.Variable && wm.typeManager.getType(this.variable.type) && wm.typeManager.getType(this.variable.type).liveService) {
+            fields = wm.getDefaultView(this.variable.type) || [];
+        } else {
             fields = wm.typeManager.getFieldList(this.variable._dataSchema, "", 3);
         }
 
