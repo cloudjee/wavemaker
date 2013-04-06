@@ -309,7 +309,8 @@ wm.Object.extendSchema(wm.AbstractEditor, {
     setDisplayValue: {method:1},
     setDataValue: {method:1},
     focus: {method:1},
-    clear: {method:1}
+    clear: {method:1},
+    clearDirty: {method:1}
 
 
 });
