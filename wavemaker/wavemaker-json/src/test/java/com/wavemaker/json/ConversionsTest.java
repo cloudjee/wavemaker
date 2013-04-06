@@ -18,7 +18,9 @@
 
 package com.wavemaker.json;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.json.JSONSerializationTest.HasDate;
@@ -33,13 +35,14 @@ public class ConversionsTest extends WMTestCase {
     public void testDateToLongSerializer() throws Exception {
 
         HasDate hd = new HasDate();
-        hd.setDate(new java.util.Date(1));
+        Date date = new Date(1);
+        hd.setDate(date);
         JSONState jc = new JSONState();
 
         String s = JSONMarshaller.marshal(hd, jc);
-        assertEquals(
-            "{\"date\":{\"date\":31,\"day\":3,\"hours\":16,\"minutes\":0,\"month\":11,\"seconds\":0,\"time\":1,\"timezoneOffset\":480,\"year\":69},\"dates\":null,\"foo\":null,\"sqlDate\":null}",
-            s);
+		String expected = String.format("{\"date\":{\"date\":%d,\"day\":%d,\"hours\":%d,\"minutes\":%d,\"month\":%d,\"seconds\":%d,\"time\":%d,\"timezoneOffset\":%d,\"year\":%d},\"dates\":null,\"foo\":null,\"sqlDate\":null}",
+					date.getDate(), date.getDay(), date.getHours(), date.getMinutes(), date.getMonth(), date.getSeconds(), date.getTime(), date.getTimezoneOffset(), date.getYear());
+		assertEquals(expected, s);
 
         jc.setTypeState(new ReflectTypeState());
         jc.getTypeState().addType(new DateTypeDefinition(java.util.Date.class));

@@ -65,6 +65,7 @@ dojo.declare(
             this.databaseOptions = {};
             this.adOptions = {};
             this.ldapOptions = {};
+            this.casOptions = {options: this.databaseOptions};
             this.secEnableInput.setChecked(true);
             this.servicesLayer.setShowing(true);
             this.rolesLayer.setShowing(true);
@@ -76,7 +77,9 @@ dojo.declare(
             this.dbRoleBySQLCheckboxChange(this.dbRoleBySQLCheckbox);
             this.ldapRoleBySQLCheckbox.setChecked(false);
             this.ldapRoleBySQLCheckboxChange(this.ldapRoleBySQLCheckbox);
-            this.demoUserList.renderData([ 
+            this.casDbRoleBySQLCheckbox.setChecked(false);
+            this.casDbRoleBySQLCheckboxChange(this.casDbRoleBySQLCheckbox);
+            this.demoUserList.renderData([
 				{userid : "admin",
                 password : "admin"},
 				{userid : "user",
@@ -85,6 +88,7 @@ dojo.declare(
             this.resetDatabaseInputs();
             this.resetLDAPInputs();
             this.resetADInputs();
+            this.resetCASInputs();
             this.populateGeneralOptions();
             this.populateRolesSetup();
         },
@@ -162,6 +166,26 @@ dojo.declare(
             this.adUrlInput.setDataValue("ldap://adserver.mydomain.com");
             this.adDomainInput.setDataValue("mydomain.com");
             },
+        resetCASInputs: function () {
+            this.casUrlInput.setDataValue("http://localhost:8080/cas");
+            this.casProjectUrlInput.setDataValue("http://localhost:8080/Project");
+            this.casUserDetailsProviderInput.setDataValue("Database");
+            this.clearSelectInput(this.casDbDataModelInput);
+            this.clearSelectInput(this.casDbEntityInput);
+            this.clearSelectInput(this.casDbUsernameInput);
+            this.clearSelectInput(this.casDbUseridInput);
+            this.clearSelectInput(this.casDbRoleInput);
+            this.clearSelectInput(this.casTenantIdField);
+            this.casDefTenantId.clear();
+            this.casDbRoleBySQLCheckbox.beginEditUpdate();
+            this.casDbRoleBySQLCheckbox.setChecked(false);
+            this.casDbRoleBySQLCheckboxChange(this.casDbRoleBySQLCheckbox);
+            this.casDbRoleBySQLCheckbox.endEditUpdate();
+            this.casDbRoleBySQLInput.clear();
+            this.casDbTestSQLInput.clear();
+            this.casDbTestSQLResultList.clear();
+            this.casDbTestSQLErrorLabel.setCaption("");
+        },
         secProviderInputChange : function(inSender, inValue) {
             if (inValue == "Demo") {
                 this.layers.setLayer("demoLayer");
@@ -179,24 +203,31 @@ dojo.declare(
                 this.securityCheckboxChange();
             } else if (inValue == "LDAP") {
                 this.layers.setLayer("ldapLayer");
-                this.secEnableInput.setShowing(true);
-                this.securityCheckboxChange();
                 // GD (we need to get the data model list too, since
                 // they can use DB to get roles)
                 if (!this.populatingOptions) {
                     this.getDataModelList();
                 }
+                this.secEnableInput.setShowing(true);
+                this.securityCheckboxChange();
             } else if (inValue == "Active Directory") {
                 this.layers.setLayer("adLayer");
                 this.servicesLayer.setShowing(true);
-		this.rolesLayer.setShowing(this.secEnableInput.getChecked());
+                this.rolesLayer.setShowing(this.secEnableInput.getChecked());
+                this.secEnableInput.setShowing(true);
+                this.securityCheckboxChange();
+            } else if (inValue == "CAS") {
+                this.layers.setLayer("casLayer");
+                if (!this.populatingOptions) {
+                    this.getDataModelList();
+                }
                 this.secEnableInput.setShowing(true);
                 this.securityCheckboxChange();
             } else {
                 this.layers.setLayer("emptyLayer");
                 this.secEnableInput.setChecked(false);
                 this.servicesLayer.setShowing(false);
-		this.rolesLayer.setShowing(false);
+                this.rolesLayer.setShowing(false);
                 this.securityCheckboxChange();
                 this.secEnableInput.setShowing(false);
             }
@@ -224,6 +255,8 @@ dojo.declare(
                     this.populateLDAPOptions();
                 } else if (t == "Active Directory") {
                     this.populateADOptions();
+                } else if (t == "CAS") {
+                    this.populateCASOptions();
                 }
                 this.populatingOptions = false;
             } else {
@@ -274,6 +307,23 @@ dojo.declare(
             this.ldapRoleDbEntityInput.setDataValue(inResponse.roleEntity);
             this.ldapRoleDbEntityInputChange();
         },
+        populateCASOptions: function () {
+            studio.securityConfigService.requestSync("getCASOptions", null, dojo.hitch(this, "getCASOptionsResult"));
+        },
+        getCASOptionsResult: function (inResponse) {
+            this.casOptions = inResponse;
+            this.casUrlInput.setDataValue(inResponse.casUrl);
+            this.casProjectUrlInput.setDataValue(inResponse.projectUrl);
+            var provider = inResponse.userDetailsProvider;
+            this.casUserDetailsProviderInput.setDataValue(provider);
+            if (provider == "Database") {
+                this.databaseOptions = this.casOptions.options;
+                this.casDbDataModelInput.setDataValue(this.databaseOptions.modelName);
+                this.casDbDataModelInput.changed();
+            } else if (provider == "LDAP") {
+                this.ldapOptions = this.casOptions.options;
+            }
+        },
         saveButtonClick : function(inSender) {
             studio.saveAll(this);
         },
@@ -303,6 +353,10 @@ dojo.declare(
             this.updateStudioServices();
             this.toastToSuccess();
         },
+        configCASResult: function (inResponse) {
+            this.updateStudioServices();
+            this.toastToSuccess();
+        },
         updateStudioServices : function() {
             studio.updateServices();
         },
@@ -326,6 +380,22 @@ dojo.declare(
             } else if (dataSourceType == "Active Directory") {
                 if (!(this.adDomainInput.getDataValue() && this.adUrlInput.getDataValue())) {
                     err = this.getDictionaryItem("ERROR_LDAP_INPUT_REQUIRED");
+                }
+            } else if (dataSourceType == "CAS") {
+                var provider = this.casUserDetailsProviderInput.getDataValue();
+                if (!(this.casUrlInput.getDataValue() && this.casProjectUrlInput.getDataValue() && provider)) {
+                    err = this.getDictionaryItem("ERROR_CAS_INPUT_REQUIRED");
+            }
+                if (provider == "Database") {
+                    if (!(this.casDbDataModelInput.getDataValue() && this.casDbEntityInput.getDataValue() && this.getEditorDisplayValue(this.casDbUsernameInput) && this.getEditorDisplayValue(this.casDbUseridInput))) {
+                        err = this.getDictionaryItem("ERROR_DATABASE_INPUT_REQUIRED");
+                    }
+                } else if (provider == "LDAP") {
+                    /*
+                     if (!(this.ldapUrlInput.getDataValue() && this.ldapUserDnPatternInput.getDataValue())) {
+                     err = this.getDictionaryItem("ERROR_LDAP_INPUT_REQUIRED");
+                     }
+                     */
                 }
             }
             return err;
@@ -405,28 +475,45 @@ dojo.declare(
             this.getPropertyList("ldap");
             this.setDirty();
         },
+        casDbDataModelInputChange: function (inSender, inValue) {
+            this.getTableList("cas");
+            this.setDirty();
+        },
+        casDbEntityInputChange: function (inSender, inValue) {
+            this.getPropertyList("cas");
+            this.setDirty();
+        },
         getDataModelList : function() {
             studio.dataService.requestSync("getDataModelNames", null, dojo.hitch(this, "getDataModelListResult"));
         },
         getDataModelListResult : function(inResponse) {
             if (inResponse) {
-                var t = this.dbEntityInput.getDataValue();
+                var t;
+                if (this.isDatabase()) {
+                    t = this.dbEntityInput.getDataValue();
+                    this.updateSelect(this.dbDataModelInput, inResponse);
+                } else if (this.isLDAP()) {
+                    t = this.ldapRoleDbEntityInput.getDataValue();
+                    this.updateSelect(this.ldapRoleDbDataModelInput, inResponse);
+                } else if (this.isCAS()) {
+                    t = this.casDbEntityInput.getDataValue();
+                    this.updateSelect(this.casDbDataModelInput, inResponse);
+                }
                 if (t) {
                     this.databaseOptions.entityName = t;
                 }
-                this.updateSelect(this.dbDataModelInput, inResponse);
-                // GD: Populate the data models for LDAP/DB
-                // Security/Role as well
-                this.updateSelect(this.ldapRoleDbDataModelInput, inResponse);
             }
         },
         getTableList : function(inType) {
             // Refer to the right select box to get list of tables
             // in that data model
+            var d;
             if (inType == "db") {
-                var d = this.dbDataModelInput.getDataValue();
-            } else {
-                var d = this.ldapRoleDbDataModelInput.getDataValue();
+                d = this.dbDataModelInput.getDataValue();
+            } else if (inType == "ldap") {
+                d = this.ldapRoleDbDataModelInput.getDataValue();
+            } else if (inType = "cas") {
+                d = this.casDbDataModelInput.getDataValue();
             }
             if (d) {
                 var scope = this;
@@ -434,13 +521,13 @@ dojo.declare(
                     scope.getTableListResult(inResponse, inType)
                 });
             } else {
-                // null out the right entityInput (could be DB or
-                // LDAP)
+                // null out the right entityInput (could be DB, LDAP or CAS)
                 if (inType == "db") {
                     this.updateSelect(this.dbEntityInput, null);
                 } else if (inType == "ldap") {
                     this.updateSelect(this.ldapRoleDbEntityInput, null);
-                }
+                } else if (inType == "cas")
+                    this.updateSelect(this.casDbEntityInput, null);
             }
         },
         getTableListResult : function(inResponse, inType) {
@@ -451,16 +538,23 @@ dojo.declare(
                 } else if (inType == "ldap") {
                     this.updateSelect(this.ldapRoleDbEntityInput, inResponse);
                     this.ldapRoleDbEntityInput.setDataValue(this.ldapOptions.roleEntity);
+                } else if (inType == "cas") {
+                    this.updateSelect(this.casDbEntityInput, inResponse);
+                    this.casDbEntityInput.setDataValue(this.databaseOptions.entityName);
                 }
             }
         },
         getPropertyList : function(inType) {
+            var d, t;
             if (inType == "db") {
-                var d = this.dbDataModelInput.getDataValue();
-                var t = this.dbEntityInput.getDataValue();
+                d = this.dbDataModelInput.getDataValue();
+                t = this.dbEntityInput.getDataValue();
             } else if (inType == "ldap") {
-                var d = this.ldapRoleDbDataModelInput.getDataValue();
-                var t = this.ldapRoleDbEntityInput.getDataValue();
+                d = this.ldapRoleDbDataModelInput.getDataValue();
+                t = this.ldapRoleDbEntityInput.getDataValue();
+            } else if (inType == "cas") {
+                d = this.casDbDataModelInput.getDataValue();
+                t = this.casDbEntityInput.getDataValue();
             }
             if (d && t) {
                 var scope = this;
@@ -476,6 +570,10 @@ dojo.declare(
                 } else if (inType == "ldap") {
                     this.updateSelect(this.ldapRoleDbRoleInput, null);
                     this.updateSelect(this.ldapRoleDbUsernameInput, null);
+                } else if (inType == "cas") {
+                    this.updateSelect(this.casDbUsernameInput, null);
+                    this.updateSelect(this.casDbUseridInput, null);
+                    this.updateSelect(this.casDbRoleInput, null);
                 }
             }
         },
@@ -557,6 +655,40 @@ dojo.declare(
                     this.updateSelect(this.ldapRoleDbUsernameInput, pnames);
                     this.ldapRoleDbRoleInput.setDataValue(this.ldapOptions.roleProperty);
                     this.ldapRoleDbUsernameInput.setDataValue(this.ldapOptions.roleUsername);
+                } else if (inType == "cas") {
+                    var u = this.getEditorDisplayValue(this.casDbUsernameInput);
+                    var id = this.getEditorDisplayValue(this.casDbUseridInput);
+                    var r = this.getEditorDisplayValue(this.casDbRoleInput);
+                    var tid = this.getEditorDisplayValue(this.casTenantIdField);
+                    if (u) {
+                        this.databaseOptions.unamePropertyName = u;
+                    }
+                    if (id) {
+                        this.databaseOptions.uidPropertyName = id;
+                    }
+                    if (p) {
+                        this.databaseOptions.pwPropertyName = p;
+                    }
+                    if (r) {
+                        this.databaseOptions.rolePropertyName = r;
+                    }
+                    if (tid) {
+                        this.databaseOptions.casTenantIdField = tid;
+                    }
+                    this.updateSelect(this.casDbUsernameInput, pnames);
+                    this.updateSelect(this.casDbUseridInput, pnames);
+                    this.updateSelect(this.casDbRoleInput, pnames);
+                    this.updateSelect(this.casTenantIdField, pnames);
+                    this.casDbUsernameInput.setDataValue(this.databaseOptions.unamePropertyName);
+                    this.casDbUseridInput.setDataValue(this.databaseOptions.uidPropertyName);
+                    this.casDbRoleInput.setDataValue(this.databaseOptions.rolePropertyName);
+                    this.casTenantIdField.setDataValue(this.databaseOptions.casTenantIdField); // xxx
+                    this.casDefTenantId.setDataValue(this.databaseOptions.casDefTenantId || ""); // xxx
+                    this.casDbRoleBySQLCheckbox.setChecked(this.databaseOptions.useRolesQuery);
+                    this.casDbRoleBySQLCheckboxChange(this.casDbRoleBySQLCheckbox);
+                    if (this.databaseOptions.rolesByUsernameQuery) {
+                        this.casDbRoleBySQLInput.setDataValue(this.databaseOptions.rolesByUsernameQuery);
+                    }
                 }
             }
         },
@@ -572,6 +704,13 @@ dojo.declare(
             this.ldapRoleDbRoleInput.setDisabled(c);
             this.ldapRoleBySQLInput.setShowing(c);
             this.ldapRoleBySQLEnablePanel.setShowing(c);
+            this.setDirty();
+        },
+        casDbRoleBySQLCheckboxChange: function (inSender, inDisplayValue, inDataValue) {
+            var c = inSender.getChecked();
+            this.casDbRoleInput.setDisabled(c);
+            this.casDbRoleBySQLInput.setShowing(c);
+            this.casDbRoleBySQLEnablePanel.setShowing(c);
             this.setDirty();
         },
 
@@ -638,6 +777,26 @@ dojo.declare(
 			}			
             this.ldapConnectionResultLabel.setCaption(errMsg.trim());
         },
+        casDbTestSQLButtonClick: function (inSender) {
+            studio.beginWait(this.getDictionaryItem("WAIT_TEST_SQL"));
+            studio.securityConfigService.requestAsync("testRolesByUsernameQuery", [ this.casDbDataModelInput.getDataValue(), this.casDbRoleBySQLInput.getDataValue(), this.casDbTestSQLInput.getDataValue() ], dojo.hitch(this,
+                "testCASRolesByUsernameQueryResult"), dojo.hitch(this, "testCASRolesByUsernameQueryError"));
+        },
+        testCASRolesByUsernameQueryResult: function (inResponse) {
+            studio.endWait();
+            this.casDbTestSQLErrorPanel.hide();
+            this.casDbTestSQLErrorLabel.setCaption("");
+            this.casDbTestSQLResultList.renderData(inResponse);
+            this.casDbTestSQLResultListPanel.show();
+        },
+        testCASRolesByUsernameQueryError: function (inResponse) {
+            studio.endWait();
+            this.casDbTestSQLResultList.renderData([]);
+            this.casDbTestSQLResultListPanel.hide();
+            this.casDbTestSQLErrorLabel.setCaption(inResponse.message);
+            this.casDbTestSQLErrorPanel.show();
+        },
+
         addRoleButtonClick : function(inSender) {
             var role = this.addRoleInput.getDataValue();
             if (role) {
@@ -743,6 +902,10 @@ dojo.declare(
         getRolesUpdateResult : function(inData) {
             wm.roles = inData || [];
         },
+        casUserDetailsProviderInputChange: function (inSender, inValue) {
+            this.getTableList("cas");
+            this.setDirty();
+        },
         showAdLayer : function() {
             this.secEnableInput.setChecked(true);
             this.servicesLayer.setShowing(false);
@@ -771,11 +934,17 @@ dojo.declare(
 			this.useSSLInput.setShowing(true);
             this.sessionExpirationHandler.setShowing(true);
         },
+        showCASLayer: function () {
+            this.secEnableInput.setDisabled(false);
+            this.showLoginPageInput.setShowing(false);
+            this.useSSLInput.setShowing(true);
+            this.sessionExpirationHandler.setShowing(true);
+        },
         securityCheckboxChange : function() {
             var enabled = this.secEnableInput.getChecked();
             this.servicesLayer.setShowing(enabled);
             this.rolesLayer.setShowing(enabled);
-            this.showLoginPageInput.setShowing(enabled);
+            this.showLoginPageInput.setShowing(!this.isCAS());
 			this.useSSLInput.setShowing(enabled);
             this.sessionExpirationHandler.setShowing(enabled);
             this.panel4a.setShowing(enabled);
@@ -788,6 +957,15 @@ dojo.declare(
             }
             this.setDirty();
         },
+        isDatabase: function () {
+            return this.secProviderInput.getDataValue() == "Database";
+        },
+        isLDAP: function () {
+            return this.secProviderInput.getDataValue() == "LDAP";
+        },
+        isCAS: function () {
+            return this.secProviderInput.getDataValue() == "CAS";
+        },
         isJOSSO : function() {
             return false
         },
@@ -797,12 +975,26 @@ dojo.declare(
                 rolesQuery = this.dbRoleBySQLInput.getDataValue();
             }
             var result = [ dojo.toJson(this.demoUserList._data), dojo.toJson(this.roleList._data), this.secProviderInput.getDataValue(), this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked(), this.useSSLInput.getChecked(),
-                    this.sessionExpirationHandler.getDataValue(),
-                    this.dbRoleBySQLCheckbox.getChecked(), this.dbDataModelInput.getDataValue(), this.dbEntityInput.getDataValue(), this.getEditorDisplayValue(this.dbUsernameInput),
-                    this.getEditorDisplayValue(this.dbUseridInput), this.getEditorDisplayValue(this.dbPasswordInput), this.getEditorDisplayValue(this.dbRoleInput), this.getEditorDisplayValue(this.tenantIdField) || "",
-                    this.defTenantId.getDataValue() || 0, rolesQuery, this.ldapUrlInput.getDataValue(), this.ldapManagerDnInput.getDataValue(), this.ldapManagerPasswordInput.getDataValue(),
-                    this.ldapUserDnPatternInput.getDataValue(), !this.ldapSearchRoleCheckbox.getChecked(), this.ldapGroupSearchBaseInput.getDataValue(), this.ldapGroupRoleAttributeInput.getDataValue(),
-                    this.ldapGroupSearchFilterInput.getDataValue(), dojo.toJson(this.varServList.getData()) ];
+                this.sessionExpirationHandler.getDataValue(),
+
+                this.dbRoleBySQLCheckbox.getChecked(), this.dbDataModelInput.getDataValue(), this.dbEntityInput.getDataValue(), this.getEditorDisplayValue(this.dbUsernameInput),
+                this.getEditorDisplayValue(this.dbUseridInput), this.getEditorDisplayValue(this.dbPasswordInput), this.getEditorDisplayValue(this.dbRoleInput), this.getEditorDisplayValue(this.tenantIdField) || "",
+                this.defTenantId.getDataValue() || 0, rolesQuery, this.ldapUrlInput.getDataValue(), this.ldapManagerDnInput.getDataValue(), this.ldapManagerPasswordInput.getDataValue(),
+                this.ldapUserDnPatternInput.getDataValue(), !this.ldapSearchRoleCheckbox.getChecked(), this.ldapGroupSearchBaseInput.getDataValue(), this.ldapGroupRoleAttributeInput.getDataValue(),
+                this.ldapGroupSearchFilterInput.getDataValue(),
+
+                this.casUrlInput.getDataValue(), this.casProjectUrlInput.getDataValue(), this.casUserDetailsProviderInput.getDataValue(),
+                this.casDbRoleBySQLCheckbox.getChecked(), this.casDbDataModelInput.getDataValue(), this.casDbEntityInput.getDataValue(), this.getEditorDisplayValue(this.casDbUsernameInput),
+                this.getEditorDisplayValue(this.casDbUseridInput), "UNUSED_BY_CAS", this.getEditorDisplayValue(this.casDbRoleInput), this.getEditorDisplayValue(this.casTenantIdField) || "",
+                this.casDefTenantId.getDataValue() || 0, rolesQuery,
+                /*
+                this.casLdapUrlInput.getDataValue(), this.casLdapManagerDnInput.getDataValue(), this.casLdapManagerPasswordInput.getDataValue(),
+                this.casLdapUserDnPatternInput.getDataValue(), !this.casLdapSearchRoleCheckbox.getChecked(), this.casLdapGroupSearchBaseInput.getDataValue(), this.casLdapGroupRoleAttributeInput.getDataValue(),
+                this.casLdapGroupSearchFilterInput.getDataValue(),
+                */
+
+                dojo.toJson(this.varServList.getData())
+            ];
             return result.join("|");
         },
 
@@ -875,6 +1067,9 @@ dojo.declare(
             case "adLayer":
                 t = "AD";
                 break;
+            case "casLayer":
+                t = "CAS";
+                break;
             }
             var err = this.checkErrorOnInputFields(t)
             if (err) {
@@ -886,13 +1081,14 @@ dojo.declare(
             } else {
                 this.copyLoginFiles();
                 wm.onidle(this, function() {
+                    var rolesQuery;
                     if (t == "Demo") {
                         studio.securityConfigService.requestSync("configDemo", [ this.demoUserList._data, this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked(), 
 						this.useSSLInput.getChecked()], dojo.hitch(this, "configDemoResult"), dojo
                                 .hitch(this, "saveError"));
 
                     } else if (t == "Database") {
-                        var rolesQuery = null;
+                        rolesQuery = null;
                         if (this.dbRoleBySQLCheckbox.getChecked()) {
                             rolesQuery = this.dbRoleBySQLInput.getDataValue();
                         }
@@ -901,9 +1097,8 @@ dojo.declare(
                                 this.getEditorDisplayValue(this.tenantIdField) || "", this.defTenantId.getDataValue() || 0, rolesQuery, this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked(),
 								this.useSSLInput.getChecked()], dojo.hitch(this,
                                 "configDatabaseResult"), dojo.hitch(this, "saveError"));
-
                     } else if (t == "LDAP") {
-                        var rolesQuery = null;
+                        rolesQuery = null;
                         if (this.ldapRoleBySQLCheckbox.getChecked()) {
                             rolesQuery = this.ldapRoleBySQLInput.getDataValue();
                         }
@@ -921,6 +1116,35 @@ dojo.declare(
                                 dojo.hitch(this, "configADResult"));
                             studio.application.loadServerComponents();
                             studio.refreshServiceTree();
+                    } else if (t == "CAS") {
+                        var provider = this.casUserDetailsProviderInput.getDataValue();
+                        if (provider == "Database") {
+                            rolesQuery = null;
+                            if (this.casDbRoleBySQLCheckbox.getChecked()) {
+                                rolesQuery = this.casDbRoleBySQLInput.getDataValue();
+                    }
+                            studio.securityConfigService.requestSync("configDatabase", [ this.casDbDataModelInput.getDataValue(), this.casDbEntityInput.getDataValue(), this.getEditorDisplayValue(this.casDbUsernameInput),
+                                // We reuse the userId as the password column as it will not be used by CAS
+                                this.getEditorDisplayValue(this.casDbUseridInput), this.getEditorDisplayValue(this.casDbUseridInput), this.getEditorDisplayValue(this.casDbRoleInput),
+                                this.getEditorDisplayValue(this.casTenantIdField) || "", this.casDefTenantId.getDataValue() || 0, rolesQuery, this.secEnableInput.getChecked(), false,
+                                this.useSSLInput.getChecked()], dojo.hitch(this,
+                                "configDatabaseResult"), dojo.hitch(this, "saveError"));
+                        } else if (provider == "LDAP") {
+                            /*
+                             if (this.casLdapRoleBySQLCheckbox.getChecked()) {
+                             rolesQuery = this.casLdapRoleBySQLInput.getDataValue();
+                             }
+                             studio.securityConfigService.requestSync("configLDAP", [ this.casLdapUrlInput.getDataValue(), this.casLdapManagerDnInput.getDataValue(), this.casLdapManagerPasswordInput.getDataValue(),
+                             this.casLdapUserDnPatternInput.getDataValue(), !this.casLdapSearchRoleCheckbox.getChecked(), this.casLdapGroupSearchBaseInput.getDataValue(), this.casLdapGroupRoleAttributeInput.getDataValue(),
+                             this.casLdapGroupSearchFilterInput.getDataValue(),
+                             // Added by Girish
+                             this.casLdapRoleDbDataModelInput.getDataValue(), this.casLdapRoleDbEntityInput.getDataValue(), this.casLdapRoleDbUsernameInput.getDataValue(), this.casLdapRoleDbRoleInput.getDataValue(), rolesQuery,
+                             this.casLdapRoleProviderInput.getDataValue(), this.secEnableInput.getChecked(), this.showLoginPageInput.getChecked(),
+                             this.useSSLInput.getChecked()], dojo.hitch(this, "configLDAPResult"), dojo.hitch(this, "saveError"));
+                             */
+                        }
+                        studio.securityConfigService.requestSync("configCAS", [ this.casUrlInput.getDataValue(), this.casProjectUrlInput.getDataValue(), this.casUserDetailsProviderInput.getDataValue()],
+                            dojo.hitch(this, "configCASResult"), dojo.hitch(this, "saveError"));
                     }
                         this.saveRolesSetup();
                         this.saveServicesSetup();

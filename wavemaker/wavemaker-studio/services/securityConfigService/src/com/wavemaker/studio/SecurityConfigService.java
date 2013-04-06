@@ -376,6 +376,27 @@ public class SecurityConfigService {
         SecurityToolsManager.testLDAPConnection(ldapUrl, managerDn, managerPassword);
     }
 
+    /**
+     * CAS
+     */
+    public CASOptions getCASOptions() throws JAXBException, IOException {
+        CASOptions options = getSecToolsMgr().getCASOptions();
+        options = populateJavaSpecificCASParams(options);
+        return options;
+    }
+
+    public void configCAS(String casUrl, String projectUrl, String userDetailsProvider) throws JAXBException, IOException {
+        getSecToolsMgr().configCAS(casUrl, projectUrl, userDetailsProvider);
+    }
+
+    public CASOptions populateJavaSpecificCASParams(CASOptions options) {
+        if(options.getUserDetailsProvider().equals(SecuritySpringSupport.CAS_USERDETAILS_PROVIDER_DATABASE))
+            populateJavaSpecificDatabaseParams((DatabaseOptions)options.getOptions());
+        else
+            populateJavaSpecificLDAPParams((LDAPOptions)options.getOptions());
+        return options;
+    }
+
     public List<String> getRoles(Boolean isJoSSO) throws IOException, JAXBException {
         if (Boolean.valueOf("true")) {
         	throw new IOException("Unsupported");
