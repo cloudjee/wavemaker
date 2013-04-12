@@ -102,10 +102,10 @@ Download and install Apache Tomcat 6 from http://tomcat.apache.org/download-60.c
 
 Enable the manager application by editing /conf/tomcat-users.xml and adding the following:
 <pre>
-    &lt;tomcat-users$gt;
-      &lt;role rolename="manager"/$gt;
-      &lt;user username="manager" password="manager" roles="manager"/$gt;
-    &lt;/tomcat-users$gt;
+    &lt;tomcat-users&gt;
+      &lt;role rolename="manager"/&gt;
+      &lt;user username="manager" password="manager" roles="manager"/&gt;
+    &lt;/tomcat-users&gt;
 </pre>
 
 Build and deploy the project using Maven:
