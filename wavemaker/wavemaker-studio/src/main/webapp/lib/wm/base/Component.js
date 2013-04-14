@@ -860,25 +860,25 @@ this.panel1.createComponent("custom", "wm.Panel", {
         var e, n, f;
         var eventsArray = [];
         for (n in inEvents) {
-        eventsArray.push(n);
+            eventsArray.push(n);
         }
         eventsArray.sort();
         for (var i = 0; i < eventsArray.length; i++) {
-        var n = eventsArray[i];
+            var n = eventsArray[i];
 
             // name of the source
             f = inEvents[n];
             // the target
             e = this[f] || f;
-                if (this._designer) {
+            if (this._designer) {
                 // if designing, it helps to have an actual function of the given name, which events ending in numbers
                 // should not have
-                if (n.match(/\d+$/) && !inComponent[n])
-                inComponent[n] = function(){};
-
+                if (n.match(/\d+$/) && !inComponent[n]) {
+                    inComponent[n] = function(){};
+                }
                 // if designing, note the eventBinding
                 wm.fire(inComponent, "setProp", [n, f]);
-                } else {
+            } else {
                 // otherwise, connect the named event
                 this.connect(inComponent._eventSource||inComponent, n.replace(/\d*$/,""), this.makeEvent(e, f, inComponent, n.replace(/\d*$/,"")));
                 // For most events, doing connections this way is a bad idea; many uses of
@@ -887,30 +887,30 @@ this.panel1.createComponent("custom", "wm.Panel", {
                 // suporting, I've made an exception here.
                 if (n.match(/^onRightClick\d*$/)) {
 
-                inComponent.connect(inComponent.domNode, "oncontextmenu", inComponent, function(event) {
-                    dojo.stopEvent(event);
-                    this.onRightClick(event);
-                });
-                if (dojo.isFF) { // FF 3.6/4.0 on OSX require this, others may as well
-                    inComponent.connect(inComponent.domNode, "onmousedown", inComponent, function(event) {
-                    if (event.button == 2 || event.ctrlKey) {
+                    inComponent.connect(inComponent.domNode, "oncontextmenu", inComponent, function(event) {
                         dojo.stopEvent(event);
                         this.onRightClick(event);
-                    }
                     });
-                }
+                    if (dojo.isFF) { // FF 3.6/4.0 on OSX require this, others may as well
+                        inComponent.connect(inComponent.domNode, "onmousedown", inComponent, function(event) {
+                        if (event.button == 2 || event.ctrlKey) {
+                            dojo.stopEvent(event);
+                            this.onRightClick(event);
+                        }
+                        });
+                    }
 
                 } else if (n.match(/^onMouseOver\d*$/)) {
-                inComponent.createMouseOverConnect();
+                    inComponent.createMouseOverConnect();
                 } else if (n.match(/^onMouseOut\d*$/)) {
-                inComponent.createMouseOutConnect();
+                    inComponent.createMouseOutConnect();
                 } else if (n.match(/^onEnterKeyPress\d*$/) && inComponent instanceof wm.Container) {
-                inComponent.connectOnEnterKey();
+                    inComponent.connectOnEnterKey();
                 }
             }
         }
     },
-        makeEvent: function(inHandler, inName, inComponent, eventName) {
+    makeEvent: function(inHandler, inName, inComponent, eventName) {
         return dojo.isFunction(inHandler) ? this._makeEvent(inName,inComponent,eventName) : this._makeComponentEvent(inHandler,inComponent,eventName);
     },
     _makeEvent: function(inName, inComponent, eventName) {
