@@ -81,25 +81,32 @@ wm.Plugin.plugin("rbacLayer", wm.Layer, {
 wm.Plugin.plugin("rbacservice", wm.ServiceVariable, {
     roles: '',
     update: function() {
-    if (djConfig.isDebug) try { this.log("update", arguments.callee.caller.nom || arguments.callee.caller.name || "anonymous");} catch(e) {}
-    if (!this.roles || this.isRbacUpdateAllowed())
-        return this.rbacserviceSocket(arguments);
-    else {
-        console.log(this.getId() + " blocked by role settings");
-        return new dojo.Deferred();
-    }
+        if (djConfig.isDebug) {
+            try {
+                this.log("update", arguments.callee.caller.nom || arguments.callee.caller.name || "anonymous");
+            } catch (e) {}
+        }
+        if (!this.roles || this.isRbacUpdateAllowed()) {
+            return this.rbacserviceSocket(arguments);
+        } else {
+            console.log(this.getId() + " blocked by role settings");
+            return new dojo.Deferred();
+        }
     },
     updateInternal: function() {
-    if (!this.roles || this.isRbacUpdateAllowed())
-        return this.rbacserviceSocket(arguments);
-    else
-        console.log(this.getId() + " blocked by role settings");
+        if (!this.roles || this.isRbacUpdateAllowed()) {
+            return this.rbacserviceSocket(arguments);
+        } else {
+            console.log(this.getId() + " blocked by role settings");
+        }
     },
     isRbacUpdateAllowed: function() {
         var userRoles = this._getUserRoles();
         if (userRoles) {
-            for (var i=0, r; (r=this.roles[i]); i++) {
-                for (var j=0, ur; (ur=userRoles[j]); j++) {
+            for (var i = 0, r;
+            (r = this.roles[i]); i++) {
+                for (var j = 0, ur;
+                (ur = userRoles[j]); j++) {
                     if (r == ur) {
                         return true;
                     }
@@ -119,65 +126,3 @@ wm.Plugin.plugin("rbacservice", wm.ServiceVariable, {
     }
 });
 
-
-wm.Plugin.plugin("mobile", wm.Control, {
-    deviceSizes: '',
-    prepare: function(inProps) {
-        this.mobileSocket(arguments);
-        if (this.deviceSizes || inProps.deviceSizes || window["studio"] && this.deviceType) {
-            this._mobileShowingRequested = this.showing;
-            this.showing = this.updateMobileShowing(this.showing);
-            this.subscribe("deviceSizeRecalc", this, "reshowMobile");
-        }
-    },
-    reshowMobile: function() {
-        this.setShowing(this._mobileShowingRequested || this.showing);
-    },
-    setShowing: function(inValue) {
-        /* wm.Layer.setShowing calls TabDecorator.setShowing which calls wm.Control.setShowing, which would clobber our
-         * _mobileShowingRequested value
-         */
-        if (this instanceof wm.Layer == false && this.deviceSizes || this._isDesignLoaded && this.deviceType) inValue = this.updateMobileShowing(inValue);
-        this.mobileSocket(arguments);
-    },
-    updateMobileShowing: function(inValue) {
-        if (!this._cupdating) this._mobileShowingRequested = inValue; // cache whether it should be showing even if we don't let it show
-        if (this.deviceSizes && this.deviceSizes.length || this._isDesignLoaded && this.deviceType) {
-            return inValue && this.isMobileShowAllowed();
-        } else {
-            return inValue;
-        }
-    },
-    isMobileShowAllowed: function() {
-        if (window["studio"] && this.isDesignLoaded()) {
-            var deviceType = studio.currentDeviceType;
-            if (deviceType && this.deviceType && dojo.indexOf(this.deviceType, deviceType) == -1) {
-                return false;
-            }
-
-            var deviceSize = studio.deviceSizeSelect.getDataValue();
-            if (!deviceSize) return true;
-            if (deviceType == "desktop" || studio.portraitToggleButton.clicked) {
-                deviceSize = deviceSize.width;
-            } else {
-                deviceSize = deviceSize.height;
-            }
-            if (deviceSize == "100%") return true;
-            deviceSize = app.appRoot.calcDeviceSize(parseInt(deviceSize));
-            var isOk = true;
-            if (this.deviceSizes && dojo.indexOf(this.deviceSizes, deviceSize) == -1) return false;
-            return true;
-        } else {
-            var deviceSize = app.appRoot.deviceSize;
-            return (!deviceSize || dojo.indexOf(this.deviceSizes, deviceSize) != -1);
-        }
-    }
-});
-
-wm.Plugin.plugin("mobileLayer", wm.Layer, {
-    deviceSizes: '',
-    setShowing: function(inValue) {
-        inValue = this.updateMobileShowing(inValue);
-        this.mobileLayerSocket(arguments);
-    }
-});

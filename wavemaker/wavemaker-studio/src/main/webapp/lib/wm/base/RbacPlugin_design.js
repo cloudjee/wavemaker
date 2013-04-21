@@ -27,37 +27,6 @@ wm.Component.extend({
 		}
 		this.roles = r;
 		if (this.setShowing) this.setShowing(true);
-	},
-	set_deviceSizes: function(inSize) {
-		this.deviceSizes = inSize;
-		var found = false;
-		for (var i = 0; i < this._subscriptions.length; i++) {
-			if (this._subscriptions[i][0] == "deviceSizeRecalc") {
-				found = true;
-				break;
-			}
-		}
-		if (!found) {
-			this.subscribe("deviceSizeRecalc", this, "reshowMobile");
-		}
-		this.reshowMobile();
-	},
-	set_deviceType: function(inType) {
-		this.deviceType = inType;
-		var deviceType = studio.currentDeviceType;
-		this.setShowing(this._mobileShowingRequested || this.showing);
-
-		var found = false;
-		for (var i = 0; i < this._subscriptions.length; i++) {
-			if (this._subscriptions[i][0] == "deviceSizeRecalc") {
-				found = true;
-				break;
-			}
-		}
-		if (!found) {
-			this.subscribe("deviceSizeRecalc", this, "reshowMobile");
-		}
-		this.reshowMobile();
 	}
 });
 
@@ -65,9 +34,7 @@ wm.Component.extend({
 
 
 wm.Object.extendSchema(wm.Control, {
-    roles: {group: "roles", editor: "wm.prop.RolesEditor", editorProps: {singleLine: false, captionSize: "90px", height: "240px"}, shortname: "<div class='NotTrueSecurity'><table><tr><td class='SecurityNote'>NOTE:</td><td>These selections effect client access only, and do not ensure complete security. For more information, see <a target='Docs' href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.6/Security#HServerSideSecurity'>WaveMaker Security</a>.</td></tr></table></div>Visibile to which roles"},
-    deviceSizes: {group: "mobile", subgroup: "devices", shortname: "showForDeviceSizes", editor: "wm.prop.DeviceSizeEditor", order: 101},
-    deviceType: {group: "mobile",  subgroup: "devices", editor: "wm.prop.DeviceListEditor",  order: 100}
+    roles: {group: "roles", editor: "wm.prop.RolesEditor", editorProps: {singleLine: false, captionSize: "90px", height: "240px"}, shortname: "<div class='NotTrueSecurity'><table><tr><td class='SecurityNote'>NOTE:</td><td>These selections effect client access only, and do not ensure complete security. For more information, see <a target='Docs' href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.6/Security#HServerSideSecurity'>WaveMaker Security</a>.</td></tr></table></div>Visibile to which roles"}
 }, true);
 
 wm.Object.extendSchema(wm.ServiceVariable, {
