@@ -34,11 +34,11 @@ wm.Component.extend({
 
 
 wm.Object.extendSchema(wm.Control, {
-    roles: {group: "roles", editor: "wm.prop.RolesEditor", editorProps: {singleLine: false, captionSize: "90px", height: "240px"}, shortname: "<div class='NotTrueSecurity'><table><tr><td class='SecurityNote'>NOTE:</td><td>These selections effect client access only, and do not ensure complete security. For more information, see <a target='Docs' href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.6/Security#HServerSideSecurity'>WaveMaker Security</a>.</td></tr></table></div>Visibile to which roles"}
+    roles: {group: "roles", editor: "wm.prop.RolesEditor", nonlocalizable:1, editorProps: {singleLine: false, captionSize: "90px", height: "240px"}, shortname: "<div class='NotTrueSecurity'><table><tr><td class='SecurityNote'>NOTE:</td><td>These selections effect client access only, and do not ensure complete security. For more information, see <a target='Docs' href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.6/Security#HServerSideSecurity'>WaveMaker Security</a>.</td></tr></table></div>Visibile to which roles"}
 }, true);
 
 wm.Object.extendSchema(wm.ServiceVariable, {
-    roles: {group: "roles", editor: "wm.prop.RolesEditor", editorProps: {singleLine: false, captionSize: "90px", height: "240px"}, advanced: 1, shortname: "<div class='NotTrueSecurity'><table><tr><td class='SecurityNote'>NOTE:</td><td>These selections effect client access only, and do not ensure complete security. For more information, see <a target='Docs' href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.6/Security#HServerSideSecurity'>WaveMaker Security</a>.</td></tr></table></div>Fires for which roles"}
+    roles: {group: "roles", editor: "wm.prop.RolesEditor", nonlocalizable:1, editorProps: {singleLine: false, captionSize: "90px", height: "240px"}, advanced: 1, shortname: "<div class='NotTrueSecurity'><table><tr><td class='SecurityNote'>NOTE:</td><td>These selections effect client access only, and do not ensure complete security. For more information, see <a target='Docs' href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.6/Security#HServerSideSecurity'>WaveMaker Security</a>.</td></tr></table></div>Fires for which roles"}
 }, true);
 
 

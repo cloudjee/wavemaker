@@ -537,7 +537,7 @@ wm.Object.extendSchema(wm.Control, {
     classNames: { ignore: 1 },
     className: { ignore: 1 },
     styles: {order: 50, group: "style", editor: "wm.prop.StyleEditor"},
-    _classes: {writeonly:1},
+    _classes: {writeonly:1,nonlocalizable:1},
     classes: {order: 100, group: "style", hidden:true}, // handled by StyleEditor
     container: { ignore: 1 },
     flex: { ignore: 1 },
