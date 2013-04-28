@@ -230,5 +230,6 @@ wm.loadLibs([
 	// Plugins
 	//"wm.modules.rbac.RbacPlugin"
        "wm.base.RbacPlugin",
+       "wm.base.MobilePlugin",
        "wm.base.I18nPlugin"
 ]);
