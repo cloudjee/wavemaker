@@ -20,6 +20,7 @@ BASE:
 * Plugin.js
 * I18nPlugin.js
 * RbacPlugin.js
+* MobilePlugin.js
 
 Everything in base is required for any application to run (the plugins could be removed,
 but at this time we will assume that the functionality represented by them is required.
@@ -268,6 +269,7 @@ dependencies = {
 			    "wm.base.Control",
 			    "wm.base.Plugin",
 			    "wm.base.RbacPlugin",
+                "wm.base.MobilePlugin",
 			    "wm.base.I18nPlugin",
 
 			    /* Services */
@@ -367,6 +369,7 @@ dependencies = {
 			    "wm.base.Control",
 			    "wm.base.Plugin",
 			    "wm.base.RbacPlugin",
+                "wm.base.MobilePlugin",
 			    "wm.base.I18nPlugin",
 
 			    /* Services */
@@ -479,6 +482,7 @@ dependencies = {
 			    "wm.base.Control",
 			    "wm.base.Plugin",
 			    "wm.base.RbacPlugin",
+                "wm.base.MobilePlugin",
 			    "wm.base.I18nPlugin",
 			    "wm.base.components.CssLoader",
 			    "wm.base.components.Application",
@@ -576,7 +580,7 @@ dependencies = {
 			dependencies: [
 				"dojox.gfx._base",
 				"dojox.gfx.shape",
-				"dojox.gfx.svg",			
+				"dojox.gfx.svg",
 				"dojox.charting.Chart2D",
 				"dojox.charting.widget.Legend",
 				"dojox.charting.action2d.Highlight",
