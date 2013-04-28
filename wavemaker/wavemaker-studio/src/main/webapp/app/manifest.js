@@ -83,13 +83,14 @@ wm.loadLibs([
 	"wm.base.components.ImageList_design",
 	"wm.base.components.Variable_design",
 	"wm.base.components.ServiceCall_design",
-    "wm.base.components.ServiceVariable_design",    
+    "wm.base.components.ServiceVariable_design",
 	"wm.base.components.NavigationService_design",
 	"wm.base.components.LiveVariable_design",
 	"wm.base.components.LogoutVariable_design",
 	"wm.base.components.Property_design",
 	"wm.base.components.TypeDefinition_design",
-        "wm.base.RbacPlugin_design",
+    "wm.base.RbacPlugin_design",
+    "wm.base.MobilePlugin_design",
 	"wm.base.components.Publisher",
 	"wm.base.components.ServerComponent",
 	"wm.base.components.DataModel",
@@ -100,7 +101,7 @@ wm.loadLibs([
 ]);
 
 // Designer
-wm.loadLibs([ 
+wm.loadLibs([
 	"wm.base.design.Designable",
 	"wm.base.design.Surface",
 	"wm.base.design.Drag",
@@ -180,9 +181,3 @@ wm.loadLibs([
 	"wm.studio.pages.HandleRequiredJars.HandleRequiredJars"
 ]);
 
-// Kana
-/*
-wm.loadLibs([ 
-	"Kana.Design"
-]);
-*/
