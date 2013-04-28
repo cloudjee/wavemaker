@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 
 dependencies = {
 	layers: [
@@ -39,7 +39,7 @@ dependencies = {
 			dependencies: [
 			    "dojo.number",
 			    "dojo.currency",
-			    "dojo.fx",			    
+			    "dojo.fx",
 			    "dojo.io.iframe",
 			    "dojo.string",
 			    "dojo.date.stamp",
@@ -79,7 +79,7 @@ dependencies = {
 				"dijit._base.typematic",
 				"dijit._base.wai",
 				"dijit._Templated",
-			        "dijit.Tooltip", 
+			        "dijit.Tooltip",
 
 			    /* CORE COMPONENTS */
 				"wm.base.Object",
@@ -92,6 +92,8 @@ dependencies = {
 				"wm.base.Plugin",
 				"wm.base.RbacPlugin_design",
 				"wm.base.RbacPlugin",
+                "wm.base.MobilePlugin_design",
+                "wm.base.MobilePlugin",
 				"wm.base.I18nPlugin",
 
 			    /*  COMPONENTS FOLDER */
@@ -111,7 +113,7 @@ dependencies = {
 				"wm.base.components.Service",
 				"wm.base.components.ServiceQueue",
 				"wm.base.components.ServiceCall",
-			        "wm.base.components.ServiceCall_design",                    
+			        "wm.base.components.ServiceCall_design",
 				"wm.base.components.ServiceVariable",
                 "wm.base.components.ServiceVariable_design",
 				"wm.base.components.LiveView",
@@ -157,7 +159,7 @@ dependencies = {
 				"wm.base.widget.Bevel_design",
 				"wm.base.widget.Splitter",
 				"wm.base.widget.Splitter_design",
-			    
+
 				"wm.base.widget.Buttons.ToggleButton",
 				"wm.base.widget.Buttons.ToolButton",
 				"wm.base.widget.Buttons.Button",
@@ -225,7 +227,7 @@ dependencies = {
 			    /* Required advanced widgets */
 			    "wm.base.widget.IFrame",  /* Required for the start page */
 			    "wm.base.widget.IFrame_design",
-			    "wm.base.widget.Trees.Tree", 
+			    "wm.base.widget.Trees.Tree",
 			    "wm.base.widget.Trees.Tree_design",
 			    "wm.base.widget.Trees.DraggableTree",
 			    "wm.base.widget.JsonStatus",
@@ -260,10 +262,10 @@ dependencies = {
 			    "wm.base.widget.Dialogs.LoadingDialog",/* Not required but expected to be very common */
 			    "wm.base.widget.Dialogs.Dialog_design",
 
-			    
+
 			    /* ProgressBar is required */
 			    "wm.base.widget.dijit.Dijit",
-			    "wm.base.widget.dijit.Dijit_design",			    
+			    "wm.base.widget.dijit.Dijit_design",
 			    "wm.base.widget.dijit.ProgressBar",
 			    "wm.base.widget.dijit.ProgressBar_design",
 
@@ -320,7 +322,7 @@ dependencies = {
 				"wm.studio.app.templates.widgetTemplates",
 				"wm.studio.app.dataconstants",
 				"wm.studio.app.datautils",
-			    
+
 
 			    "wm.studio.pages.Start.Start",
 			    "wm.studio.pages.ConfirmSaveDialog.ConfirmSaveDialog",
@@ -348,7 +350,7 @@ dependencies = {
 				"wm.studio.pages.Security.Security",
 				"wm.studio.pages.ServiceDialog.ServiceDialog",
 				"wm.studio.pages.Services.Services",
-			    "wm.studio.pages.HandleRequiredJars.HandleRequiredJars" 
+			    "wm.studio.pages.HandleRequiredJars.HandleRequiredJars"
 				*/
 
 
@@ -429,7 +431,7 @@ dependencies = {
 		    "wm.base.widget.Buttons.BusyButton",
 		    "wm.base.widget.Buttons.BusyButton_design",
 		    "wm.base.widget.DojoLightbox",
-		    "wm.base.widget.ListViewer",				
+		    "wm.base.widget.ListViewer",
 		    "wm.base.widget.ListViewer_design"
 		]
 	    },
@@ -501,8 +503,8 @@ dependencies = {
 		resourceName: "wm_fileupload",
 		layerDependencies: ["studio.js", "studio_base.js"],
 		dependencies: [
-		    "wm.base.widget.DojoFileUpload",				
-		    "wm.base.widget.DojoFlashFileUpload",				
+		    "wm.base.widget.DojoFileUpload",
+		    "wm.base.widget.DojoFlashFileUpload",
 		]
 	    },
 		{
@@ -518,7 +520,7 @@ dependencies = {
                "wm.base.widget.Editors._CheckBoxEditor",
                "wm.base.widget.Editors._RadioButtonEditor",
                "wm.base.widget.Editors._SelectEditor"
-			]		
+			]
 		},
 
 
@@ -528,7 +530,7 @@ dependencies = {
 
 
 
-				
+
 
 
 	prefixes: [
