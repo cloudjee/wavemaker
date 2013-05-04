@@ -16,6 +16,8 @@ dojo.provide("wm.base.components.LiveView_Design");
 
 wm.LiveView.extend({
 	noInspector: true,
+
+    /* Deprecated; user no longer inserts these into project */
 	afterPaletteDrop: function() {
 		this.set_owner("Application");
 		this._defaultView = true;
@@ -64,10 +66,10 @@ wm.LiveView.extend({
 		this.editView();
 	},
     getLayerName: function() {
-	return this.name + "LiveView";
+	   return this.name + "LiveView";
     },
     getLayerCaption: function() {
-	return this.name + " (" + studio.getDictionaryItem("wm.LiveView.TAB_CAPTION") + ")";
+	   return this.name + " (" + studio.getDictionaryItem("wm.LiveView.TAB_CAPTION") + ")";
     },
 	editView: function() {
 	    var c = studio.navGotoEditor("LiveViewEditor", studio.databaseTab, this.getLayerName(), this.getLayerCaption());
