@@ -28,7 +28,7 @@ wm.getViewField = function(inTypeSchema, inPropName) {
 			//displayType: wm.getPrimitiveDisplayType(propInfo.type),
 			displayType: wm.getDisplayType(propInfo), //xxx
 			required: propInfo.required,
-			readonly: dojo.indexOf(propInfo.noChange||[], "read") >= 0, 
+			readonly: dojo.indexOf(propInfo.noChange||[], "read") >= 0,
 			includeLists: true,
 			includeForms: true,
 			order: propInfo.fieldOrder,
@@ -116,20 +116,20 @@ dojo.declare("wm.LiveView", wm.Component, {
 				var isRelatedField = wm.typeManager.isStructuredType(field.type);
 				if (isRelatedField && field.required)
 				{
-					if (field.type == "com.sforce.soap.enterprise.salesforceservice.QueryResultType") 
+					if (field.type == "com.sforce.soap.enterprise.salesforceservice.QueryResultType")
 						continue; //xxx
 					this.addRelated(i);
 					ts.push(i);
 				}
 			}
-			
+
 			return ts;
 		}
 		catch(e)
 		{
 			console.info('error finding required fields.', e);
 		}
-		
+
 		return [];
 	},
 	setFields: function(inRelated, inView) {
@@ -188,7 +188,7 @@ dojo.declare("wm.LiveView", wm.Component, {
 		}, this);
 		this._sortView();
 	},
-	
+
 	_sortView: function(inView) {
 		if (dojo.isArray(inView)) {
 			var t = this.dataType;
@@ -239,12 +239,6 @@ dojo.declare("wm.LiveView", wm.Component, {
 	},
 	//$ Set the dataType for the dataView. This is a type that supports crud operations.
 	setDataType: function(inType) {
-		if (this._typeChangeSubscribe) {
-			try {
-				dojo.disconnect(this._typeChangeSubscribe);
-			} catch (e) {}
-			delete this._typeChangeSubscribe;
-		}
 		var t = this.dataType;
 		this.dataType = inType;
 		if (t != this.dataType) this.dataTypeChanged();
@@ -253,9 +247,6 @@ dojo.declare("wm.LiveView", wm.Component, {
 		if (this._isDesignLoaded && this.owner instanceof wm.Variable) {
 			var typeInfo = wm.typeManager.getType(this.dataType);
 			if (typeInfo) {
-				this._typeChangeSubscribe = this._subscribeTypeChange = dojo.subscribe("ServiceTypeChanged-" + typeInfo.service, dojo.hitch(this, function() {
-					this.owner.typeChanged(this.owner.type);
-				}));
 
 				// see if the type has changed to something that invalidates this view
 				if (this.view) {
@@ -281,7 +272,7 @@ dojo.declare("wm.LiveView", wm.Component, {
 			}
 		}
 	},
-	
+
 	dataTypeChanged: function() {
 		// FIXME: we need to do something smart here. changing the datatype should probably zot
 		// the view info and may need to inform things bound to this and/or update.
@@ -317,7 +308,7 @@ dojo.declare("wm.LiveView", wm.Component, {
 					list.push(r.substring(l));
 			});
 			return list;
-		} 
+		}
 		else
 			return this.related;
 	},
@@ -342,7 +333,7 @@ dojo.declare("wm.LiveView", wm.Component, {
 		} else
 			return view;
 	},
-	
+
 	//check if any picklist(for salesforce for now) exists
 	pickListExists: function() { //xxx
 		var exists = false;
