@@ -60,7 +60,7 @@ wm.Object.extendSchema(wm.Label, {
 wm.Label.description = "A simple label.";
 
 wm.Label.extend({
-        themeable: false,
+    themeable: false,
 	designCreate: function() {
 		// if this is being created in studio, supply a default caption
 		if (this._studioCreating)
@@ -78,20 +78,20 @@ wm.Label.extend({
 			return;
 		this.display = inDisplay;
 	    var ctor = this.display ? wm.getFormatter(this.display) : null;
-	        if (this.components.format)
+        if (this.components.format) {
 		    this.components.format.destroy();
-
+        }
 	    var funcName = this.generateEventName("onReadOnlyNodeFormat");
 	    if (this.display == "Custom Function" || this.display == funcName) {
-		this.display = funcName;
-		eventEdit(this, "onFormat", funcName, this.owner == studio.application, "inValue");
-		this.renderLabel(); // If there was a formatter on it before chaning the display property, we need to show that this formatter no longer is applied
+    		this.display = funcName;
+    		eventEdit(this, "onFormat", funcName, this.owner == studio.application, "inValue");
+    		this.renderLabel(); // If there was a formatter on it before chaning the display property, we need to show that this formatter no longer is applied
 	    } else if (ctor) {
-		var ctor = wm.getFormatter(this.display);
-		new ctor({name: "format", owner: this});
-		this.renderLabel();
+    		var ctor = wm.getFormatter(this.display);
+    		new ctor({name: "format", owner: this});
+    		this.renderLabel();
 	    } else {
-		this.renderLabel();
+		    this.renderLabel();
 	    }
 	},
 	writeComponents: function(inIndent, inOptinos) {
@@ -111,31 +111,17 @@ wm.Label.extend({
 		}
 		return s;
 	},
-/*
-	resizeLabel: function(){
-		var divObj = dojo.doc.createElement('span');
-		divObj.innerHTML = this.caption;
-		divObj.style.padding = '5px';
-		document.body.appendChild(divObj);
-		var coords = dojo.coords(divObj);
-		var captionWidth = coords.w;
-		divObj.parentNode.removeChild(divObj);
-		this.setWidth(captionWidth + 'px');
-		// the line underneath updates panel's width property. Therefore only required for studio.
-		if (this.isDesignLoaded())
-			setTimeout(dojo.hitch(studio.inspector, "reinspect"), 100);
-	},
-        */
+
 	makePropEdit: function(inName, inValue, inEditorProps) {
 	    switch (inName) {
-	    case "display":
-	    case "formatter":
-		var funcName = this.generateEventName("onReadOnlyNodeFormat");
-		var customFunction = (this.formatter == funcName) ? funcName : "Custom Function";
-		inEditorProps.options = ["", customFunction].concat(wm.formatters);
-		inEditorProps.displayField = inEditorProps.dataField = "dataValue";
-		inEditorProps.restrictValues = false;
-		return new wm.SelectMenu(inEditorProps);
+    	    case "display":
+    	    case "formatter":
+        		var funcName = this.generateEventName("onReadOnlyNodeFormat");
+        		var customFunction = (this.formatter == funcName) ? funcName : "Custom Function";
+        		inEditorProps.options = ["", customFunction].concat(wm.formatters);
+        		inEditorProps.displayField = inEditorProps.dataField = "dataValue";
+        		inEditorProps.restrictValues = false;
+        		return new wm.SelectMenu(inEditorProps);
 	    }
 	    return this.inherited(arguments);
 	},
@@ -146,42 +132,36 @@ wm.Label.extend({
     },
 
     getAutoSize: function() {
-	if (this.autoSizeWidth) return "width";
-	if (this.autoSizeHeight) return "height";
-	return "none";
+        if (this.autoSizeWidth) return "width";
+        if (this.autoSizeHeight) return "height";
+        return "none";
     },
     /* This hack should only be called at design time */
     setAutoSize: function(inValue) {
         if (inValue == "none") {
-	    if (this.autoSizeWidth)
-		this.setAutoSizeWidth(false);
-	    if (this.autoSizeHeight)
-		this.setAutoSizeHeight(false);
+            if (this.autoSizeWidth) this.setAutoSizeWidth(false);
+            if (this.autoSizeHeight) this.setAutoSizeHeight(false);
         } else if (inValue == "width") {
             if (inValue) {
                 this.setSingleLine(true);
             }
-	    if (!this.autoSizeWidth)
-		this.setAutoSizeWidth(true);
-	    if (this.autoSizeHeight)
-		this.setAutoSizeHeight(false);
+            if (!this.autoSizeWidth) this.setAutoSizeWidth(true);
+            if (this.autoSizeHeight) this.setAutoSizeHeight(false);
 
         } else if (inValue == "height") {
             if (inValue) {
                 this.setSingleLine(false);
             }
-	    if (this.autoSizeWidth)
-		this.setAutoSizeWidth(false);
-	    if (!this.autoSizeHeight)
-		this.setAutoSizeHeight(true);
+            if (this.autoSizeWidth) this.setAutoSizeWidth(false);
+            if (!this.autoSizeHeight) this.setAutoSizeHeight(true);
         }
     },
 
     // Any time the user changes the class for the label, recalculate autosize with the new styleing which may include font size changes
     addUserClass: function(inClass, inNodeName) {
-	this.inherited(arguments);
+        this.inherited(arguments);
         if (this.autoSizeHeight || this.autoSizeWidth) {
-	    this.scheduleAutoSize();
+            this.scheduleAutoSize();
         }
     }
 });
