@@ -231,23 +231,25 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	    this.filter.setType(this.type);
 	    this.sourceData.setType(this.type);
 
-	    if (this.liveView && this.liveView.dataType != this.type && this.liveView.owner == this) {
-		this.liveView.setDataType(this.type);
-		this.liveView.createDefaultView();
-	    }
+        if (this.liveView && this.liveView.owner == this && (this.liveView.dataType != this.type || hasChanged)) {
+            this.liveView.setDataType(this.type);
+            this.liveView.createDefaultView();
+        }
+
 	    // I've been seeing these bindings fire way too often, so
 	    // some extra tests to insure its needed
 	    var newSourceType = this.sourceData.type + "|" + dojo.toJson(this.sourceData._dataSchema);
 	    var newFilterType = this.filter.type + "|" + dojo.toJson(this.filter._dataSchema);
-	    if (!this._updating && !this._inLVPostInit && this.$.binding && (hasChanged || oldSourceType != newSourceType || oldFilterType != newFilterType))
-		this.$.binding.refresh();
-	    if (this.refireOnDbChange) {
-		if (this._updateOnDbSubscribe) {
-		    dojo.unsubscribe(this._updateOnDbSubscribe);
-		}
-		if (this.type) {
-		    this._updateOnDbSubscribe = this.subscribe(this.type + "-server-changed", this, "updateOnDbChange");
-		}
+	    if (!this._updating && !this._inLVPostInit && this.$.binding && (hasChanged || oldSourceType != newSourceType || oldFilterType != newFilterType)) {
+    		this.$.binding.refresh();
+        }
+      	if (this.refireOnDbChange) {
+    		if (this._updateOnDbSubscribe) {
+    		    dojo.unsubscribe(this._updateOnDbSubscribe);
+    		}
+    		if (this.type) {
+    		    this._updateOnDbSubscribe = this.subscribe(this.type + "-server-changed", this, "updateOnDbChange");
+    		}
 	    }
 	},
 	_liveViewChanged: function() {
