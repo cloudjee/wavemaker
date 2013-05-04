@@ -57,7 +57,7 @@ wm.LiveVariable.extend({
 	},
 	makePropEdit: function(inName, inValue, inEditorProps) {
 	    if (inName == "operation") {
-		return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: this._operations}));
+		    return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: this._operations}));
 	    }
 	    return this.inherited(arguments);
 	},
@@ -72,16 +72,16 @@ wm.LiveVariable.extend({
 		p.orderBy.ignoretmp = !r;
 		p.ignoreCase.ignoretmp = !r;
 		p.filter.ignoretmp = !r;
-	        p.sourceData.ignoretmp = r;
+	    p.sourceData.ignoretmp = r;
 
 	    p.liveSource.ignoretmp = !this.liveSource; // if there's no liveSource, hide the prop because its deprecated
 	    var hasLiveSource = Boolean(this.liveSource);
 	    p.editView.ignoretmp = hasLiveSource // if its got a liveSource its using an app-level live view, don't let it editView.
-		|| !this.type; // if it doesn't have a type, don't allow editing of its view
+		                      || !this.type; // if it doesn't have a type, don't allow editing of its view
 
 
-	        p.sourceData.categoryParent = !r ? "Properties" : "";
-	        p.sourceData.ignoretmp = r;
+        p.sourceData.categoryParent = !r ? "Properties" : "";
+        p.sourceData.ignoretmp = r;
 		return p;
 	},
 	isListBindable: function() {
