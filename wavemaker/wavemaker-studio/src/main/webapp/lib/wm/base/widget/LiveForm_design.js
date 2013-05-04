@@ -42,7 +42,7 @@ wm.Object.extendSchema(wm.LiveFormBase, {
 
     /* Operations group */
     clearData: { group: "operation", order: 2, operation:1},
-    addEditors: { group: "operation", order: 5, operation:1},
+    addEditors: { group: "operation", order: 5, operation:"addEditorsClick"},
     removeEditors: { group: "operation", order: 10, operation:1},
 
     //validateBeforeSave: {group: "display", order: 7, type: "Boolean"},
@@ -201,6 +201,14 @@ wm.LiveFormBase.extend({
 				return (!this.getFormEditorsArray().length);
 		}
 	},
+    addEditorsClick: function() {
+        if (!this.dataSet) {
+            app.toastWarning("Your Form must have a valid dataSet before we can add editors");
+        } else {
+            this.addEditors();
+        }
+    },
+
 	addEditors: function() {
 		var ds = this.dataSet;
 		this._currentEditors = this.getFormEditorsArray();
@@ -227,7 +235,7 @@ wm.LiveFormBase.extend({
 			lv = this.findLiveVariable(),
 			fields = lv ? lv.getViewFields() : wm.getDefaultView((this.dataSet || 0).type);
             var dbFieldDefs = {};
-            if (lv) {                
+            if (lv) {
                 var typeDef = wm.typeManager.getType(lv.type);
     			studio.dataService.requestSync("getEntity", [typeDef.service, lv.type.replace(/^.*\./,"")], function(inResult) {
     			     dojo.forEach(inResult.properties, function(field) {
@@ -277,7 +285,7 @@ wm.LiveFormBase.extend({
     		    }
             }
 			if (e) {
-    			this._bindEditor(e);				
+    			this._bindEditor(e);
     		}
 			return true;
 		}
