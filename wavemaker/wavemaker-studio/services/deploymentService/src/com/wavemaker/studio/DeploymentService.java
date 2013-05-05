@@ -460,7 +460,7 @@ public class DeploymentService {
 	    for (com.wavemaker.tools.io.Resource resource : projecttemplate.list().folders()) {
 		if (!first) response += ",";
 		first = false;
-		response += "{'name':" + resource.getName() + "', 'exists':" + commonThemes.getFolder(resource.getName()).exists()  + "}";
+		response += "{'name':'" + resource.getName() + "', 'exists':" + commonThemes.getFolder(resource.getName()).exists()  + "}";
 	    }
 	    response += "],";
 	}
