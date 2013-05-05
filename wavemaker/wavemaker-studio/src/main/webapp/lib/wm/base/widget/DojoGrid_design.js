@@ -214,6 +214,7 @@ wm.Object.extendSchema(wm.DojoGrid, {
     primaryKeyFields:      {group: "widgetName", subgroup: "behavior",  order: 20, advanced:1, editor: "wm.prop.FieldList"},
     resortOnDataUpdate: {group: "widgetName", subgroup: "behavior", order: 19, advanced: 1, type: "boolean"},
     sortingEnabled: {group: "widgetName", subgroup: "behavior", order: 25, advanced: 1, type: "boolean"},
+    columnReordering:      {group: "widgetName", subgroup: "behavior",  order: 40, advanced:1},
 
     /* Display group; layout subgroup */
     //noHeader: {group: "display", subgroup: "layout", order: 50, advanced:1},

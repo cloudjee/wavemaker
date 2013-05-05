@@ -17,6 +17,7 @@ dojo.provide("wm.base.widget.DojoGrid");
 dojo.declare("wm.DojoGrid", wm.Control, {
     _regenerateOnDeviceChange: 1,
     resortOnDataUpdate: true,
+    columnReordering: true, // allows user to drag and drop reorder columns
     manageHistory: true,
     deleteConfirm: "Are you sure you want to delete this?",
     deleteColumn: false,
@@ -1009,7 +1010,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             structure: structure,
             store: this.store,
             singleClickEdit: this.singleClickEdit,
-            columnReordering: true,
+            columnReordering: this.columnReordering,
             queryOptions: this.queryOptions,
             query: this.query || {},
             updateDelay: 0
