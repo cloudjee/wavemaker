@@ -739,13 +739,14 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         }
     },
 
-    setInvalid: function() {
+    setInvalid: function(inValue) {
+        if (inValue === undefined) inValue = true;
         this._isValid = false;
         if (this.editor instanceof dijit._WidgetBase) {
-            this.editor.set("state","Error");
+            this.editor.set("state",inValue ? "Error" : "");
         }
         this.editorValidated();
-        this.valueChanged("invalid", this.getInvalid());
+        this.valueChanged("invalid", Boolean(inValue));
     },
     _getReadonlyValue: function() {
         return this.getDisplayValue() || "";
