@@ -2481,6 +2481,17 @@ dojo.declare("wm.grid.cells.DateTextBox", dojox.grid.cells.DateTextBox, {
         }
         this.applyEdit(value, inRowIndex);
         this._finish(inRowIndex);
+    },
+    getWidgetProps: function(inDatum){
+        if (this.constraint) {
+            if (typeof this.constraint.max == "number")
+                this.constraint.max = new Date(this.constraint.max);
+            if (typeof this.constraint.min == "number")
+                this.constraint.min = new Date(this.constraint.min);
+        }
+        return dojo.mixin(this.inherited(arguments), {
+            value: inDatum ? new Date(inDatum) : null
+        });
     }
 
 });
