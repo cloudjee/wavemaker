@@ -1070,7 +1070,12 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     },
     dojoRenderer: function() {
         if (!this.dojoObj) return;
+
+        /* Tweak Headers is ugly hack to fix WM-4721 */
+        var tweakHeader =  (this.noHeader && (this.selectionMode == "checkbox" || this.selectionMode == "radio"));
+        if (tweakHeader) this.setNoHeader(false);
         this.dojoObj.startup();
+        if (tweakHeader) wm.onidle(this, function() {this.setNoHeader(true)});
         if (this.styles && this.styles.fontSize) this.dojoObj.domNode.style.fontSize = this.styles.fontSize;
         this.dojoObj.updateDelay = 1; // reset this after creation; I just want this set to zero to insure that everything is generated promptly when we first create the grid.
         if (this._isDesignLoaded) {
