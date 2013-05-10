@@ -34,7 +34,7 @@ wm.loadLibs([
 	// WM
         "css.wm.base.widget.themes.default." + (wm.isMobile ? "m" : "") + "theme",
 	"css.wm.base.styles.wavemaker",
-	"css.wm.base.styles.progressBar",
+	//"css.wm.base.styles.progressBar",
 	"css.dojox.widget.FisheyeList.FisheyeList",
 	"css.dojox.image.resources.image",
 
