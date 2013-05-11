@@ -17,6 +17,6 @@ dojo.provide("wm.common.manifest");
 
 wm.loadLibs([ 
 	// User extensible lib
-	"css.common.common",
+//	"css.common.common",
 	"common.packages.lib"
 ]);
