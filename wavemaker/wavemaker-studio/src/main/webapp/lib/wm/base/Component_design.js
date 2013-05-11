@@ -589,7 +589,7 @@ wm.Component.extend({
    afterPaletteDrop: function() {
    },
    _afterPaletteDrop: function(inPackageName) {
-        this.afterPaletteDrop();
+        return this.afterPaletteDrop();
    },
 
    createDesignContextMenu: function(children) {},
