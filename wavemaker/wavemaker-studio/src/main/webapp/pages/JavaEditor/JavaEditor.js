@@ -248,6 +248,8 @@ dojo.declare("JavaEditor", wm.Page, {
         }
         m += "\n\n";
 
+        inData.compileOutput = String(inData.compileOutput).replace(/\</g, "&lt;");
+
         this.javaCompilerOutputEditor.setHtml("<pre>" + m + inData.compileOutput.substring(inData.compileOutput.indexOf("compile:") + 9) + "</pre>");
         this.logViewer.page.clearLog();
         this.updateJavaLogs();
