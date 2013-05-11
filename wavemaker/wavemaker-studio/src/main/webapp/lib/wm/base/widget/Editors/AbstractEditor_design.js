@@ -303,6 +303,7 @@ wm.Object.extendSchema(wm.AbstractEditor, {
     /* METHODS */
     setDisabled: {method:1},
     getInvalid: {method:1, returns: "Boolean"},
+    setInvalid: {method:1},
     setReadonly: {method:1},
     getDisplayValue: {method:1, returns: "String"},
     getDataValue: {method:1, returns: "Any"},
