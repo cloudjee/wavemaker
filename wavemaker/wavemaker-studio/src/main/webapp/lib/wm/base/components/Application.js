@@ -1505,6 +1505,8 @@ dojo.declare("wm.Application", wm.Component, {
         try {
             if (state) {
                 var id = state.id;
+                // TODO: comp.destroy() should strip out component from history
+                // so nothing points to destroyed components
                 var c = this.getValueById(id);
                 if (c instanceof wm.Component && c.handleBack) {
                     try {
