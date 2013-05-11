@@ -703,6 +703,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     //           and it may be better to just tell people not to show/hide parents of widgets needing these; just use layers
     // NOTE: Also handles dialogs if "this" is in a dialog; these connections to layers are more about knowing when its hidden/showing
     // and less about the details of whether its a layer or something else.
+    // TODO: Verify if this is needed, or if _onShowParent makes this no longer necessary.
     connectToAllLayers: function(obj, callback) {
         var layers = [];
         var dialogs = []; // should only be 0 or 1 dialogs, but arrays work nicely no matter how many elements
