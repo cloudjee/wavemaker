@@ -43,10 +43,10 @@ dojo.declare("wm.DraggableTree", wm.Tree, {
         dojo.toggleClass(inNode.contentNode, "noDrop", noDrop);
     },
     getNoDrop: function(inNode) {
-       
+
         return inNode.noDrop;
     },
-    nodeDrop: function() {        
+    nodeDrop: function() {
         // TODO: Better management of which nodes have what temporary classes
         dojo.query(".dndHover", this.root.domNode).removeClass("dndHover");
         if (this.dropBetweenNodes) {
@@ -55,76 +55,89 @@ dojo.declare("wm.DraggableTree", wm.Tree, {
         }
 
         this.dragger.mouseUp();
-        var moveNode = this.draggedItem;
+        var moveNodes = !this.multiSelect || this.selected.length === 0 ? this.draggedItem : this.selected;
+
+        // nodes are ordered in order of selection; we need them ordered by how they appear in the document
+        if (moveNodes.length > 1) {
+            moveNodes = moveNodes.sort(dojo.hitch(this, function(a,b) {
+                if (a.parent === b.parent) {
+                    return wm.data.compareNumbers(a._findIndexInParent(a), b._findIndexInParent(b));
+                } else {
+                    return wm.data.compareNumbers(dojo.indexOf(this.selected, a), dojo.indexOf(this.selected, b));
+                }
+            }));
+        }
 
         var targetNode = this.dragger.target;
-        if (!targetNode || this.getNoDrop(targetNode) && !this.dropBetweenNodes) return;
+        dojo.forEach(moveNodes, function(moveNode) {
+            if (!targetNode || this.getNoDrop(targetNode) && !this.dropBetweenNodes) return;
 
-        if (this.dropBetweenNodes) {
-            var isParentDropTarget = !this.getNoDrop(targetNode.parent);
-            var index;
-            switch (this.dragger.targetArea) {
-            case "top":
-                /*************************************************************************************
-                 * if it goes above the current target, then it gets the same parent and index in
-                 * that parent as the targetNode (side effect of the targetNode moves one index greater)
-                 *************************************************************************************/
-                if (isParentDropTarget) {
-                    index = dojo.indexOf(targetNode.parent.kids, targetNode);
-                    targetNode = targetNode.parent;
-                } else if (!this.getNoDrop(targetNode)) {
-                    index = targetNode.kids.length;
-                } else {
-                    return;
-                }
-                break;
-            case "mid":
-                /*************************************************************************************
-                 * if dropping it right on a node that allows droptargets, then the targetNode is now
-                 * the parentNode, and the dropNode is the last child.
-                 * If it does NOT allow itself to be a droptarget, then default assumption is
-                 * that we drop the node below the target.
-                 *************************************************************************************/
-                if (!this.getNoDrop(targetNode)) {
-                    index = targetNode.kids.length;
-                } else {
-                    index = dojo.indexOf(targetNode.parent.kids, targetNode) + 1;
-                    targetNode = targetNode.parent;
-                }
-                break;
-            case "bot":
-                /*************************************************************************************
-                 * If dropping it at the bottom of the target, then if its a valid drop target AND
-                 * its open, it goes as the first child of that node.
-                 * Otherwise, the drop node becomes the target node's next sibling.
-                 *************************************************************************************/
-                if (!this.getNoDrop(targetNode) && !targetNode.closed && targetNode.kids) {
-                    if (targetNode.declaredClass == "wm.TreeNode" && targetNode.kids.length == 0) {
+            if (this.dropBetweenNodes) {
+                var isParentDropTarget = !this.getNoDrop(targetNode.parent);
+                var index;
+                switch (this.dragger.targetArea) {
+                case "top":
+                    /*************************************************************************************
+                     * if it goes above the current target, then it gets the same parent and index in
+                     * that parent as the targetNode (side effect of the targetNode moves one index greater)
+                     *************************************************************************************/
+                    if (isParentDropTarget) {
+                        index = dojo.indexOf(targetNode.parent.kids, targetNode);
+                        targetNode = targetNode.parent;
+                    } else if (!this.getNoDrop(targetNode)) {
+                        index = targetNode.kids.length;
+                    } else {
+                        return;
+                    }
+                    break;
+                case "mid":
+                    /*************************************************************************************
+                     * if dropping it right on a node that allows droptargets, then the targetNode is now
+                     * the parentNode, and the dropNode is the last child.
+                     * If it does NOT allow itself to be a droptarget, then default assumption is
+                     * that we drop the node below the target.
+                     *************************************************************************************/
+                    if (!this.getNoDrop(targetNode)) {
+                        index = targetNode.kids.length;
+                    } else {
+                        index = dojo.indexOf(targetNode.parent.kids, targetNode) + 1;
+                        targetNode = targetNode.parent;
+                    }
+                    break;
+                case "bot":
+                    /*************************************************************************************
+                     * If dropping it at the bottom of the target, then if its a valid drop target AND
+                     * its open, it goes as the first child of that node.
+                     * Otherwise, the drop node becomes the target node's next sibling.
+                     *************************************************************************************/
+                    if (!this.getNoDrop(targetNode) && !targetNode.closed && targetNode.kids) {
+                        if (targetNode.declaredClass == "wm.TreeNode" && targetNode.kids.length == 0) {
+                            index = dojo.indexOf(targetNode.parent.kids, targetNode) + 1; // next sibling
+                            targetNode = targetNode.parent; // has same parent as targetnode
+                        } else {
+                            index = 0; // first child
+                        }
+                    } else if (isParentDropTarget) {
                         index = dojo.indexOf(targetNode.parent.kids, targetNode) + 1; // next sibling
                         targetNode = targetNode.parent; // has same parent as targetnode
                     } else {
-                        index = 0; // first child
+                        return;
                     }
-                } else if (isParentDropTarget) {
-                    index = dojo.indexOf(targetNode.parent.kids, targetNode) + 1; // next sibling
-                    targetNode = targetNode.parent; // has same parent as targetnode
-                } else {
-                    return;
                 }
+                moveNode.parentIndex = index;
             }
-            moveNode.parentIndex = index;
-        }
 
-        var result = {result:true};
-        this.onCanDropNode(moveNode,  targetNode, index, oldparent, result);
-        if (!result.result) return false;
+            var result = {result:true};
+            this.onCanDropNode(moveNode,  targetNode, index, oldparent, result);
+            if (!result.result) return false;
 
-        var oldparent = moveNode.parent;
-        oldparent._remove(moveNode);
-        moveNode.addParent(targetNode);
-        targetNode.renderChild(moveNode);
+            var oldparent = moveNode.parent;
+            oldparent._remove(moveNode);
+            moveNode.addParent(targetNode);
+            targetNode.renderChild(moveNode);
 
-        this.onNodeDrop(moveNode, targetNode, index, oldparent);
+            this.onNodeDrop(moveNode, targetNode, index, oldparent);
+        }, this);
     },
     onNodeDrop: function(inMovedNode, inNewParentNode, inIndexInParent, inOldParent) {},
     onCanDropNode: function(inMovedNode, inNewParentNode, inIndexInParent, inOldParent, inResponseInfo) {},
@@ -266,7 +279,7 @@ dojo.declare("wm.DraggableTreeMover", wm.DragDropper, {
         }
     },
     updateAvatar: function() {
-        //this.showHideAvatar(Boolean(this.target));      
+        //this.showHideAvatar(Boolean(this.target));
         this.showHideAvatar(true);
         if (!this.target) {
             this.setAvatarContent("Moving <b>" + this.info.caption + "</b>");

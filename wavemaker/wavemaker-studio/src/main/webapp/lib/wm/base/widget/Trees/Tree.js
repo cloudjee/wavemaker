@@ -156,7 +156,7 @@ dojo.declare("wm.TreeNode", null, {
 				} else {
 					dojo.place(child.domNode, this.domNode, "index");
 				}
-			}	
+			}
 		}));
 	},
 	createKidsNode: function() {
@@ -614,11 +614,11 @@ dojo.declare("wm.Tree", wm.Box, {
         (old!=neo) && neo && neo.styleContent();
     },
     // selection
-    eventSelect: function(inNode, shiftClick) {
+    eventSelect: function(inNode, shiftClick, metaClick) {
         var selectInfo = {canSelect: true};
         this._oncanselect(inNode, selectInfo);
         if (inNode.canSelect && selectInfo.canSelect) {
-            this.select(inNode, shiftClick);
+            this.select(inNode, shiftClick, metaClick);
         }
     },
     addToSelection: function(inNode) {
@@ -678,30 +678,71 @@ dojo.declare("wm.Tree", wm.Box, {
         this._deselect(optionalNode);
         this.ondeselect(optionalNode || this.selected,shiftClick);
     },
-    select: function(inNode, addToSelection) {
-        if (!this.multiSelect) {
-            if (this.selected != inNode) {
-                this.deselect();
-                this.addToSelection(inNode);
-                this.onselect(inNode, addToSelection);
-            } else if (this.selected && !this.selected.selected) {
-                this.selected.selected = true;
-                this.selected.styleContent();
+    select: function(inNode, shiftClick, metaClick) {
+        if (this._inSelect) return;
+        this._inSelect = true;
+        try {
+            if (!this.multiSelect) {
+                if (this.selected != inNode) {
+                    this.deselect();
+                    this.addToSelection(inNode);
+                    this.onselect(inNode, addToSelection);
+                } else if (this.selected && !this.selected.selected) {
+                    this.selected.selected = true;
+                    this.selected.styleContent();
+                }
+            } else {
+                if (!shiftClick && !metaClick) {
+                    this.deselect();
+                }
+
+                var index = dojo.indexOf(this.selected, inNode);
+                if ((shiftClick || metaClick) && index != -1) {
+                    this.deselect(inNode, shiftClick || metaClick);
+                } else if (index == -1) {
+                    if (metaClick || (!metaClick && !shiftClick)) {
+                        this.addToSelection(inNode);
+                    } else if (shiftClick) {
+                        // find the nearest node in the same parent node and select
+                        // everything between that node and the selected node
+                        this._shiftSelect(inNode);
+                    }
+                    this.onselect(inNode, shiftClick,metaClick);
+                }
+            }
+        } catch(e) {
+            console.error(e);
+        }
+        delete this._inSelect;
+    },
+    _shiftSelect: function(inNode) {
+        var parent = inNode.parent;
+
+        var index = inNode._findIndexInParent(inNode);
+        var closestIndex = 1000;
+        var closestNode;
+        var closestDistance = 1000;
+        dojo.forEach(parent.kids, function(kid,i) {
+            if (dojo.indexOf(this.selected, kid) == -1) return;
+            var distance = Math.abs(index - i);
+            if (distance < closestDistance) {
+                closestIndex = i;
+                closestDistance = distance;
+                closestNode = kid;
+            }
+        }, this);
+        if (closestNode) {
+            for (var i = Math.min(closestIndex, index); i <= Math.max(closestIndex, index); i++) {
+                var kid = parent.kids[i];
+                if (dojo.indexOf(this.selected, kid) == -1) {
+                    this.addToSelection(kid);
+                }
             }
         } else {
-            if (!addToSelection) {
-                this.deselect();
-            }
-
-            var index = dojo.indexOf(this.selected, inNode);
-            if (addToSelection && index != -1) {
-                this.deselect(inNode, addToSelection);
-            } else if (index == -1) {
-                this.addToSelection(inNode);
-                this.onselect(inNode, addToSelection);
-            }
+            this.addToSelection(inNode);
         }
     },
+
     // simple lazy loading
     initNodeChildren: function(inNode) {
         this.oninitchildren(inNode);
@@ -794,7 +835,7 @@ dojo.declare("wm.Tree", wm.Box, {
         if (inEvent._treeHandled)
             return;
         inEvent._treeHandled = true;
-        this.eventSelect(inNode, inEvent.shiftKey || inEvent.metaKey);
+        this.eventSelect(inNode, inEvent.shiftKey, inEvent.ctrlKey || inEvent.metaKey);
         setTimeout(dojo.hitch(this, "onclick", inNode), 1);
         //this.onclick(inNode);
     },
@@ -857,7 +898,7 @@ dojo.declare("wm.Tree", wm.Box, {
     onclick: function(inNode) {},
     _oncanselect: function(inNode, inSelectInfo) {},
     onmousedown: function(inNode) {},
-    onselect: function(inNode, shiftClick) {},
+    onselect: function(inNode, shiftClick, metaClick) {},
     ondeselect: function(inNode, shiftClick) {},
     oncheckboxclick: function(inNode) {}, // since we don't expose checkbox, don't expose the event
     ondblclick: function(inNode) {},

@@ -1118,6 +1118,7 @@ dojo.declare("Studio", wm.Page, {
                 /* Update the selected tree items */
                 if (this.tree.selected && dojo.indexOf(this.selected, this.tree.selected) == -1) this.tree.deselect();
                 dojo.forEach([this.widgetsTree, this.compTree], function(inTree) {
+                    if (inTree._inSelect) return; // don't call deselect on the tree causing this select event
                     dojo.forEach(inTree.selected, function(c) {
                         if (dojo.indexOf(this.selected, c) == -1) {
                             inTree.deselect(c._studioTreeNode);
