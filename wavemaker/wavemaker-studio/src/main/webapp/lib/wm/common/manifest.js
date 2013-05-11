@@ -15,8 +15,8 @@
 
 dojo.provide("wm.common.manifest");
 
-wm.loadLibs([ 
+wm.loadLibs([
 	// User extensible lib
-//	"css.common.common",
+    //	"css.common.common", // Uncomment this to have a Docs/WaveMaker/common/common.css file loaded for all projects
 	"common.packages.lib"
 ]);
