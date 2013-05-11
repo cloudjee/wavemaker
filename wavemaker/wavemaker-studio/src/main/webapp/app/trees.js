@@ -323,14 +323,15 @@ Studio.extend({
         }));
     },
     matchSearch: function(inSearch, inComponent) {
-    if (!inSearch) return true;
-    if (inComponent.name.toLowerCase().match(this.regex)) return true;
-    if (inComponent instanceof wm.ServiceVariable &&
-        (inComponent.operation && inComponent.operation.toLowerCase().match(this.regex) ||
-         inComponent.service && inComponent.service.toLowerCase().match(this.regex) ||
-         inComponent.liveSource && inComponent.liveSource.toLowerCase().match(this.regex)))
-        return true;
-    return false;
+        if (!inSearch) return true;
+        if (inComponent.name.toLowerCase().match(this.regex)) return true;
+        if (inComponent instanceof wm.ServiceVariable &&
+            (inComponent.operation && inComponent.operation.toLowerCase().match(this.regex) ||
+             inComponent.service && inComponent.service.toLowerCase().match(this.regex) ||
+             inComponent.liveSource && inComponent.liveSource.toLowerCase().match(this.regex))) {
+            return true;
+        }
+        return false;
     },
     componentToTree: function(inNode, inComponent, inType) {
         if (inComponent && (!inComponent.flags || !inComponent.flags.notInspectable) && (!inType || inComponent instanceof inType)) {
@@ -361,40 +362,41 @@ Studio.extend({
     componentsToTree: function(inNode, inComponents, inType) {
         var n = [], cn;
         if (!this.useHierarchy) {
-        for (cn in inComponents) { if (typeof(inComponents[cn]) != "function") n.push(cn); } // The ACE editor changed how IE sees some objects; must filter out non-properties
-        n.sort();
-        for (var i=0; (cn=n[i]); i++)
-            this.componentToTree(inNode, inComponents[cn], inType);
+            for (cn in inComponents) { if (typeof(inComponents[cn]) != "function") n.push(cn); } // The ACE editor changed how IE sees some objects; must filter out non-properties
+            n.sort();
+            for (var i=0; (cn=n[i]); i++) {
+                this.componentToTree(inNode, inComponents[cn], inType);
+            }
         } else {
-        for (cn in inComponents) { if (typeof(inComponents[cn]) != "function") n.push(inComponents[cn]); }// The ACE editor changed how IE sees some objects; must filter out non-properties
-        n.sort(function(a,b) {
-            if (a.declaredClass > b.declaredClass) return 1;
-            if (a.declaredClass < b.declaredClass) return -1;
-            if (a.name > b.name) return 1;
-            if (a.name < b.name) return -1;
-            return 0;
-        });
-        var lastClass = "";
-        var lastParent = null;
-        for (var i = 0; i < n.length; i++) {
-            var c = n[i];
-            if (c instanceof wm.TypeDefinitionField) {
-            ;
-            } else if (c.declaredClass != lastClass) {
-            var img = this.getComponentImage(c);
-            if (n.length <= 1 ||
-                n.length > 1 && (i == 0 &&  n[0].declaredClass != n[1].declaredClass ||
-                         i == n.length - 1 && n[i].declaredClass !=n[i-1].declaredClass ||
-                         i > 0 && i < n.length - 2 && n[i].declaredClass != n[i-1].declaredClass && n[i].declaredClass != n[i+1].declaredClass)) {
-                var lastParent = inNode;
-            } else {
-                var lastParent = this.newTreeNode(inNode, img, "<span class='TreeHeader'>" +c.declaredClass + "</span>");
-                this.buildTreeGroupContextMenu(lastParent, c.declaredClass);
-                lastClass = c.declaredClass;
+            for (cn in inComponents) { if (typeof(inComponents[cn]) != "function") n.push(inComponents[cn]); }// The ACE editor changed how IE sees some objects; must filter out non-properties
+            n.sort(function(a,b) {
+                if (a.declaredClass > b.declaredClass) return 1;
+                if (a.declaredClass < b.declaredClass) return -1;
+                if (a.name > b.name) return 1;
+                if (a.name < b.name) return -1;
+                return 0;
+            });
+            var lastClass = "";
+            var lastParent = null;
+            for (var i = 0; i < n.length; i++) {
+                var c = n[i];
+                if (c instanceof wm.TypeDefinitionField) {
+                    ;
+                } else if (c.declaredClass != lastClass) {
+                    var img = this.getComponentImage(c);
+                    if (n.length <= 1 ||
+                        n.length > 1 && (i == 0 &&  n[0].declaredClass != n[1].declaredClass ||
+                                 i == n.length - 1 && n[i].declaredClass !=n[i-1].declaredClass ||
+                                 i > 0 && i < n.length - 2 && n[i].declaredClass != n[i-1].declaredClass && n[i].declaredClass != n[i+1].declaredClass)) {
+                        lastParent = inNode;
+                    } else {
+                        lastParent = this.newTreeNode(inNode, img, "<span class='TreeHeader'>" +c.declaredClass + "</span>");
+                        this.buildTreeGroupContextMenu(lastParent, c.declaredClass);
+                        lastClass = c.declaredClass;
+                    }
+                }
+                this.componentToTree(lastParent, c, inType);
             }
-            }
-            this.componentToTree(lastParent, c, inType);
-        }
         }
     },
     componentsToTree_rev: function(inNode, inComponents, inTypes, inType) {
@@ -462,74 +464,81 @@ Studio.extend({
         dojo.forEach(inNodes, function(inNode) {
             var c = inNode.component;
 
-        if (c) {
-            if (c.designSelect) {
-                return c.designSelect();
+            if (c) {
+                if (c.designSelect) {
+                    return c.designSelect();
+                }
+                this.navGotoDesignerClick();
             }
-            this.navGotoDesignerClick();
-        }
-        if (!c) {
-            var c = inNode.content;
-            switch(c){
-                case "Designer":
-                    this.navGotoDesignerClick();
-                    break;
-                case "Source":
-                    this.navGotoSourceClick();
-                    break;
+            if (!c) {
+                var c = inNode.content;
+                switch(c){
+                    case "Designer":
+                        this.navGotoDesignerClick();
+                        break;
+                    case "Source":
+                        this.navGotoSourceClick();
+                        break;
+                }
             }
-        }
-    }, this);
+        }, this);
     },
     buildTreeGroupContextMenu: function(inNode, inClassName) {
-    dojo.connect(inNode.domNode, dojo.isFF ? "onmousedown" : "oncontextmenu", this, function(e) {
-        if (dojo.isFF && !(e.button == 2 || e.ctrlKey)) return;
-        dojo.stopEvent(e);
-        var menuObj = studio.contextualMenu;
-        menuObj.removeAllChildren();
-        if (inClassName != "wm.DataModel")
-        menuObj.addAdvancedMenuChildren(menuObj.dojoObj,
-                        {label: this.getDictionaryItem("MODELTREE_CONTEXTMENU_NEW", {className: inClassName}),
-                         iconClass: "StudioAddIcon",
-                         onClick: dojo.hitch(this, function() {
-                         var props = {owner: studio.page,
-                                  _designer: studio.page._designer,
-                                  name: studio.page.getUniqueName(studio.makeName(inClassName))};
-                         var ctor = dojo.getObject(inClassName);
+        dojo.connect(inNode.domNode, dojo.isFF ? "onmousedown" : "oncontextmenu", this, function(e) {
+            if (dojo.isFF && !(e.button == 2 || e.ctrlKey)) return;
+            dojo.stopEvent(e);
+            var menuObj = studio.contextualMenu;
+            menuObj.removeAllChildren();
+            if (inClassName != "wm.DataModel") {
+                menuObj.addAdvancedMenuChildren(menuObj.dojoObj, {
+                    label: this.getDictionaryItem("MODELTREE_CONTEXTMENU_NEW", {
+                        className: inClassName
+                    }),
+                    iconClass: "StudioAddIcon",
+                    onClick: dojo.hitch(this, function() {
+                        var props = {
+                            owner: studio.page,
+                            _designer: studio.page._designer,
+                            name: studio.page.getUniqueName(studio.makeName(inClassName))
+                        };
+                        var ctor = dojo.getObject(inClassName);
 
-                         /* all this code copied from Palette.js */
-                         studio.application.loadThemePrototypeForClass(ctor);
-                         var comp = new ctor(props);
+                        /* all this code copied from Palette.js */
+                        studio.application.loadThemePrototypeForClass(ctor);
+                        var comp = new ctor(props);
 
-                         if (!(comp instanceof wm.ServerComponent)) {
-                             // create an undo task
-                             new wm.AddTask(comp);
-                         }
-                         if (comp instanceof wm.Control) {
-                             //comp.designMoveControl(this.dragger.target, this.dragger.dropRect);
-                             this.dragger.target.designMoveControl(comp, this.dragger.dropRect);
-                         }
-                         if (!wm.fire(comp, "afterPaletteDrop")) {
-                             // FIXME: should not refresh entire tree when dropping from palette.
-                             studio.refreshDesignTrees();
-                             studio.inspector.resetInspector();
-                             studio.select(comp);
-                         }
+                        if (!(comp instanceof wm.ServerComponent)) {
+                            // create an undo task
+                            new wm.AddTask(comp);
+                        }
+                        if (comp instanceof wm.Control) {
+                            //comp.designMoveControl(this.dragger.target, this.dragger.dropRect);
+                            this.dragger.target.designMoveControl(comp, this.dragger.dropRect);
+                        }
+                        if (!wm.fire(comp, "afterPaletteDrop")) {
+                            // FIXME: should not refresh entire tree when dropping from palette.
+                            studio.refreshDesignTrees();
+                            studio.inspector.resetInspector();
+                            studio.select(comp);
+                        }
+                    })
+                });
+            }
+            menuObj.addAdvancedMenuChildren(menuObj.dojoObj, {
+                label: this.getDictionaryItem("wm.Palette.MENU_ITEM_DOCS", {
+                    className: inClassName
+                }),
+                iconClass: "StudioHelpIcon",
+                onClick: dojo.hitch(this, function() {
+                    window.open(this.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {
+                        className: inClassName.replace(/^.*\./, "")
+                    }));
+                })
+            });
 
 
-                         })
-                        });
-        menuObj.addAdvancedMenuChildren(menuObj.dojoObj,
-                        {label: this.getDictionaryItem("wm.Palette.MENU_ITEM_DOCS", {className: inClassName}),
-                         iconClass: "StudioHelpIcon",
-                         onClick: dojo.hitch(this, function() {
-                         window.open(this.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {className: inClassName.replace(/^.*\./,"")}));
-                         })
-                        });
-
-
-        menuObj.update(e, inNode.domNode);
-    });
+            menuObj.update(e, inNode.domNode);
+        });
 
     }
 })
