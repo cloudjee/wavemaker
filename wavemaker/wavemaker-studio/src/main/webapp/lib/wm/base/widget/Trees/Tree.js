@@ -686,7 +686,7 @@ dojo.declare("wm.Tree", wm.Box, {
                 if (this.selected != inNode) {
                     this.deselect();
                     this.addToSelection(inNode);
-                    this.onselect(inNode, addToSelection);
+                    this.onselect(inNode, shiftClick, metaClick);
                 } else if (this.selected && !this.selected.selected) {
                     this.selected.selected = true;
                     this.selected.styleContent();
