@@ -1024,7 +1024,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
                                 canSelect: false});
     },
     _buildDisplayExpressionTree: function(inParent) {
-        new wm.BindSourceTreeNode(inParent, {object: this.owner.targetProps.displayExpressionObject,
+        new wm.BindSourceTreeNode(inParent, {object: this.owner.targetProps.propDef.displayExpressionObject,
                          closed: false});
 /*
         addComponentTypeBinderNodes(inParent, dojo.getObject(
@@ -1345,8 +1345,8 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
         if (inNode.isProperty && inNode.source) {
             var gv = this.simpleRb.getValue("groupValue");
             var source = this.owner.getBindNodeSource(inNode);
-            if (gv == "displayExpression" && source.indexOf(this.owner.targetProps.displayExpressionObject.getId()) == 0) {
-            source = source.substring(1+this.owner.targetProps.displayExpressionObject.getId().length);
+            if (gv == "displayExpression" && source.indexOf(this.owner.targetProps.propDef.displayExpressionObject.getId()) == 0) {
+            source = source.substring(1+this.owner.targetProps.propDef.displayExpressionObject.getId().length);
             }
 
             /* Expressions must bind to values not objects; see if there's a simpleBindProp we can bind to if no property is specified */

@@ -702,7 +702,7 @@
          editorProps = dojo.mixin(editorProps, inProp.editorProps);
      }
 
-     
+
 
      /**********************************************************
       * Create the Editor Widget
@@ -733,7 +733,7 @@
     // Ugh.  Make sure that captionPosition value isn't there through the prototype
     // because theme changes could change the prototype's captionPosition
     if (e.captionPosition == "left") e.captionPosition = "left";
-    
+
      /* Cache a refernce to the editor so that reinspect can quickly find it */
      this.editorHash[hashId] = e;
 
@@ -746,6 +746,9 @@
           **********************************************************/
          if ((inProp.bindable || inProp.bindTarget) && !e.noBindColumn) {
              this.createBindEditor(inProp, editorProps, e, isBound, inComponent, optionalAppendToHashName);
+         } else if (inProp.displayExpression) {
+            this.showBindButton(inComponent, inProp, panel, e);
+
          } else if (!e.noBindColumn) {
              /*
          new wm.Spacer({owner:this,
@@ -884,22 +887,31 @@
 
      if (!e.hideBindColumn) {
          var captionHeight = (bindableEditor.captionPosition == "top" ? parseInt(bindableEditor.captionSize) : 0);
-     var l = new wm.Label({owner:this,
-                   parent: e.parent,
-                   _classes: {domNode: ["wminspector-bindProp"]},
-                   caption: "",
-                   margin: captionHeight + ",0,0,0",
-                   width: "20px",
-                   height: captionHeight + 20 + "px"});
-     var self = this;
-     l.onclick = function() {
-         //studio.bindDialog.page.update({object: inComponent, targetProperty: inProp.treeBindField || inProp.name});
-         var p = self.getBindDialogProps(inComponent,inProp,e);
-         studio.bindDialog.page.update(p);
-         studio.bindDialog.show();
-     };
+         this.showBindButton(inComponent, inProp, e.parent, e, captionHeight);
      }
      },
+    showBindButton: function(inComponent, inProp, parent, editor, optionalHeight) {
+        var height = optionalHeight || 0;
+        var l = new wm.Label({
+            owner: this,
+            parent: parent,
+            _classes: {
+                domNode: ["wminspector-bindProp"]
+            },
+            caption: "",
+            margin: height + ",0,0,0",
+            width: "20px",
+            height: height + 20 + "px"
+        });
+        var self = this;
+        l.onclick = function() {
+            //studio.bindDialog.page.update({object: inComponent, targetProperty: inProp.treeBindField || inProp.name});
+            var p = self.getBindDialogProps(inComponent, inProp, editor);
+            studio.bindDialog.page.update(p);
+            studio.bindDialog.show();
+        };
+
+    },
 
      /**************************************************************************************
       * Handles any onchange event from a standard property editor widget.  Editors
@@ -1166,7 +1178,7 @@
            return true;
        },
         refocusEditor: function() {
-        
+
                 var activeElement = document.activeElement;
         while (activeElement.tagName != "BODY" && !activeElement.id.match(/^studio_inspector_propEdit/)) activeElement = activeElement.parentNode;
         if (activeElement && activeElement.tagName != "BODY") {

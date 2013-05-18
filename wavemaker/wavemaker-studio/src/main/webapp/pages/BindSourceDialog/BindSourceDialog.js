@@ -53,7 +53,7 @@ dojo.declare("BindSourceDialog", wm.Page, {
 
         var propDef;
         if (inTargetProps.propDef) {
-            propDef = dojo.clone(inTargetProps.propDef);
+            propDef = wm.shallowClone(inTargetProps.propDef);
         } else {
             propDef = tp.object.listProperties()[inTargetProps.targetProperty];
         }
@@ -72,7 +72,7 @@ dojo.declare("BindSourceDialog", wm.Page, {
         }
         if (!propDef) propDef = {};
         this.binderSource.initBinding(noRegen, propDef);
-        this.binderSource.updateUiForWire(w, tp.displayExpression ? tp.object.getProp(tp.targetProperty) : "");
+        this.binderSource.updateUiForWire(w, tp.propDef && tp.propDef.displayExpression ? tp.object.getProp(tp.targetProperty) : "");
 
         //this.bindTargetLabel.setValue("caption", [(tp.object|| 0).getId(), tp.targetProperty].join('.'));
         this.owner.owner.setTitle("Binding: " + [(tp.object || 0).getId(), tp.targetProperty].join('.'));
@@ -82,9 +82,9 @@ dojo.declare("BindSourceDialog", wm.Page, {
 
         if (propDef.subtype == "File") {
             this.resourceRb.editor.setChecked(true);
-        } else if (tp.displayExpression) {
-            tp.displayExpressionObject = tp.object.getProp(tp.displayExpressionDataSet);
-            if (!tp.displayExpressionObject) return app.toastWarning(this.getDictionaryItem("NEED_DATASET_FOR_DISPLAY_EXPR"));
+        } else if (tp.propDef && tp.propDef.displayExpression) {
+            tp.propDef.displayExpressionObject = tp.object.getProp(tp.propDef.displayExpressionDataSet);
+            if (!tp.propDef.displayExpressionObject) return app.toastWarning(this.getDictionaryItem("NEED_DATASET_FOR_DISPLAY_EXPR"));
             this.displayExpressionRb.editor.setChecked(true);
             this.binderSource.displayExpressionLayer.activate();
             this.binderSource.updateBindSourceUi("displayExpression");

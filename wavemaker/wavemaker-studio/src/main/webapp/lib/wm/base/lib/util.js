@@ -56,6 +56,17 @@ wm.flattenObject = function(inObj, keepOld) {
     return outObj;
 }
 
+/* Use this instead of dojo.clone when you don't want to recurse through the full depth
+ * of the object.  Full recursion can cause infinite recursion; almost certain to do this
+ * for a Component which has an owner and child component where each points to the other.
+ */
+ wm.shallowClone = function(inObj) {
+    var result = {};
+    wm.forEachProperty(inObj, function(inValue, inKey) {
+        result[inKey] = inValue;
+    });
+    return result;
+ }
 
 wm.requireCss = function(modulepath) {
 /*
