@@ -537,7 +537,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         return "hidden";
     },
     getReadOnlyNodeWhiteSpace: function() {
-        return "nowrap";
+        return this.singleLine ? "nowrap" : "";
     },
     getReadOnlyNodeWordWrap: function() {
         return "normal";
