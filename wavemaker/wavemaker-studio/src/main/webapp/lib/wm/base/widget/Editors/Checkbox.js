@@ -50,7 +50,7 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
             wm.cancelJob(this.getRuntimeId() + "." + ".touch");
             this.editorNode.style.backgroundColor = "";
             this.editorNode.style.color = "";
-            this.setChecked(!this.getChecked());
+            this.setChecked(!this.getChecked(), true);
             this._touched = false;
         }
     },
@@ -114,8 +114,9 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
         this.beginEditUpdate();
         // if setEditorValue has been called, then startChecked no longer controls the checkbox's initial state;
         // the dataValue only controls the state now.
-        if (this.startChecked && !this._setEditorValueCalled || Boolean(this.dataValue))
+        if (this.startChecked && !this._setEditorValueCalled || Boolean(this.dataValue)) {
             this.setChecked(true);
+        }
         this.endEditUpdate();
     },
     editorChanged: function() {
@@ -140,12 +141,16 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 
     // pass in the false parameer so that there is no delayed firing of side-effects to the checking of the checkbox; fire our own changed event
     // handler instead so that it onchange fires now.
-    setChecked: function(inChecked) {
-        this.editor.set('checked',inChecked, false);
-        if (!this._cupdating) {
-            this.changed();
-        }
-        this._lastValue = this.getEditorValue();
+    setChecked: function(inChecked, isUserEvent) {
+        if (!isUserEvent) this._inSetDataValue = true;
+        try {
+            this.editor.set('checked',inChecked, false);
+            if (!this._cupdating) {
+                this.changed();
+            }
+            this._lastValue = this.getEditorValue();
+        } catch(e) {}
+        delete this._inSetDataValue;
     },
 /*
     captionClicked: function(e) {

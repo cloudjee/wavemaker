@@ -246,13 +246,14 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 		}
 		this.inherited(arguments);
 	},
-	setChecked: function(inChecked) {
-		this.inherited(arguments);
+	setChecked: function(inChecked, isUserEvent) {
+        this.inherited(arguments);
 		if (inChecked) {
 			this.updateGroupValue();
 			this._setEditorValueCalled = true;
         }
         this.updateLastValueForGroup();
+
 	},
     updateLastValueForGroup: function() {
         var group = this.getGroup();
