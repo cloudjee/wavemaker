@@ -711,7 +711,7 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog {
             chooser.setCurrentDirectory(new File(this.folder));
         }
 
-        if (chooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
+        if (chooser.showOpenDialog(LauncherAdvOptsDialog.this) == JFileChooser.APPROVE_OPTION) {
             this.tfBrowser.setText(chooser.getSelectedFile().getAbsolutePath());
             this.folder = chooser.getCurrentDirectory().getAbsolutePath();
         }
