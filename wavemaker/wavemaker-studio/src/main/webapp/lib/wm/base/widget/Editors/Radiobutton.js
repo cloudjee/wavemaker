@@ -78,18 +78,21 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 	    var setEditorValueCalled = false;
 	    var g = this.getGroup();
 	    for (var i = 0; i < g.length; i++) {
-		var o = g[i].owner;
-		if (o._setEditorValueCalled) {
-		    setEditorValueCalled = true;
-		    this.valueChanged("groupValue", this.groupValue = o.groupValue);
-		    break;
-		}
+    		var o = g[i].owner;
+    		if (o._setEditorValueCalled) {
+    		    setEditorValueCalled = true;
+    		    this.valueChanged("groupValue", this.groupValue = o.groupValue);
+    		    break;
+    		} else {
+                wm.job(this.radioGroup + ".setInitialValue", 1, this, "updateLastValueForGroup");
+            }
 	    }
 
 	    // if setEditorValue has been called, then startChecked no longer controls the checkbox's initial state;
 	    // the dataValue only controls the state now.
 	    if (this.startChecked && !setEditorValueCalled || this.groupValue == this.checkedValue)
 			this.setChecked(true);
+
 		this.endEditUpdate();
 	},
 	getChecked: function() {
@@ -98,58 +101,56 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 	    else
 		return this.groupValue == this.checkedValue;
 	},
-	setEditorValue: function(inValue) {
+    setEditorValue: function(inValue) {
 
-	    if (inValue == this.checkedValue) {
-		if (this.editor) {
-		    this.editor.set('checked',true);
-		    this.updateGroupValue();
-		    this._lastValue = this.checkedValue;
-		} else {
-		    this.groupValue = this.checkedValue;
-		    this._lastValue = this.checkedValue;
-		}
-		var group = this.getGroup();
-		for (var i=0, v, o; (v=group[i]); i++) {
-		    if (v.owner && v.owner != this) {
-			v.owner._lastValue = this.makeEmptyValue();
-		    }
-		}
-	    } else {
-		var found = false;
-		var group = this.getGroup(), gv = this.getGroupValue();
-		for (var i=0, v, o; (v=group[i]); i++) {
-		    if (v) {
-			o = v.owner;// v.owner refers to a wm.RadioButton (dijit's owner)
-			if (o.checkedValue == inValue) {
-			    o.setEditorValue(inValue);
-			    o._lastValue = inValue;
-			    found = true;
-			    break;
-			} else {
-			    o._lastValue = this.makeEmptyValue();
-			}
-		    }
-		}
+        if (inValue == this.checkedValue) {
+            if (this.editor) {
+                this.editor.set('checked', true);
+                this.updateGroupValue();
+                this._lastValue = this.checkedValue;
+            } else {
+                this.groupValue = this.checkedValue;
+                this._lastValue = this.checkedValue;
+            }
+            this.updateLastValueForGroup();
+        } else {
+            var found = false;
+            var group = this.getGroup(),
+                gv = this.getGroupValue();
+            for (var i = 0, v, o;
+            (v = group[i]); i++) {
+                if (v) {
+                    o = v.owner; // v.owner refers to a wm.RadioButton (dijit's owner)
+                    if (o.checkedValue == inValue) {
+                        o.setEditorValue(inValue);
+                        o._lastValue = inValue;
+                        found = true;
+                        break;
+                    } else {
+                        o._lastValue = this.makeEmptyValue();
+                    }
+                }
+            }
 
-		if (!found) {
-		    // If we made it this far, then inValue does not match any of our radio buttons;
-		    // so no buttons should be checked
-		    for (var i=0, v, o; (v=group[i]); i++) {
-			if (v) {
-			    o = v.owner;// v.owner refers to a wm.RadioButton (dijit's owner)
-			    if (o.getChecked()) {
-				o.setChecked(false);
-				this.updateGroupValue();
-				return;
-			    }
-			}
-		    }
-		}
-	    }
-	    this._setEditorValueCalled = true;
+            if (!found) {
+                // If we made it this far, then inValue does not match any of our radio buttons;
+                // so no buttons should be checked
+                for (var i = 0, v, o;
+                (v = group[i]); i++) {
+                    if (v) {
+                        o = v.owner; // v.owner refers to a wm.RadioButton (dijit's owner)
+                        if (o.getChecked()) {
+                            o.setChecked(false);
+                            this.updateGroupValue();
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        this._setEditorValueCalled = true;
 
-	},
+    },
 	setRadioGroup: function(inGroup) {
 		this.radioGroup = inGroup ? wm.getValidJsName(inGroup) : "";
 		var group = this.getGroup();
@@ -175,7 +176,7 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
                 o = v.owner; // v.owner refers to a wm.RadioButton (dijit's owner)
                 if (o) {
                     // avoid setter since we just want to process the update
-                    if (o.groupValue != gv) {
+                    if (o.groupValue !== gv) {
                         o.groupValue = gv;
                         o.valueChanged("groupValue", gv);
                         o.onGroupValueChange(gv);
@@ -247,12 +248,22 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 	},
 	setChecked: function(inChecked) {
 		this.inherited(arguments);
-		/* If _cupdating, then changed won't be called, so we have to update the groupValue now */
-		if (this._cupdating && inChecked) {
+		if (inChecked) {
 			this.updateGroupValue();
 			this._setEditorValueCalled = true;
-		}
+        }
+        this.updateLastValueForGroup();
 	},
+    updateLastValueForGroup: function() {
+        var group = this.getGroup();
+        var groupValue = this.getGroupValue();
+        for (var i = 0, v, o;
+            (v = group[i]); i++) {
+            if (v.owner && v.owner != this) {
+                v.owner._lastValue = groupValue;
+            }
+        }
+    },
 	editorChanged: function() {
 	    this.inherited(arguments);
 	    this.updateGroupValue();
