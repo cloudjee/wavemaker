@@ -293,7 +293,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
                     this.setProp(propName, this[propName]);
                 }
                 var propDef = this.page[propName];
-                if (propDef.bindSource) {
+                if (propDef && propDef.bindSource) {
                     var target = this.page.getRuntimeId() + "." + propDef.property;
                     this.subscribe(target + "-changed", dojo.hitch(this, "setBoundProp", propName));
                     var lastIndex = propDef.property.lastIndexOf(".");
