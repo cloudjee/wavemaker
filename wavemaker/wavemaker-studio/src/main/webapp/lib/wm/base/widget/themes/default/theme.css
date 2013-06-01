@@ -749,25 +749,27 @@ display: none; /* if shown, selecting 500 rows hangs even chrome */
 	   background-image: url(../../../../../images/silkIcons/bullet_add.png);
 	   background-repeat: no-repeat;
 	   background-position: 100% 0% !important;
-       text-align: left !important;
+}
+.dojoxGridCell.dirty.rightAlign,
+.dojoxGridCell.saveFailed.rightAlign,
+.dojoxGridCell.saved.rightAlign,
+.dojoxGridCell.invalid.rightAlign {
+    background-position: 0% 0% !important;
 }
 .dojoxGridCell.dirty.saveFailed, .dojoxGridCell.saveFailed {
 	   background-image: url(../../../../../images/silkIcons/delete.png);
 	   background-repeat: no-repeat;
 	   background-position: 100% 0% !important;
-       text-align: left !important;
 }
 .dojoxGridCell.saved {
 	   background-image: url(../../../../../images/silkIcons/accept.png);
 	   background-repeat: no-repeat;
 	   background-position: 100% 0% !important;
-       text-align: left !important;
 }
 .dojoxGridCell.invalid {
 	background-image: url(../../../../../images/silkIcons/error.png);
 	   background-repeat: no-repeat;
 	   background-position: 100% 0% !important;
-       text-align: left !important;
 }
 .dojoxGrid-input, .dojoxGrid-select, .dojoxGrid-textarea {
 	margin: 0;

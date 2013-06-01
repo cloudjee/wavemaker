@@ -323,11 +323,12 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             if (isInvalid) {
                 wm.onidle(this, function() {
                     if (this.selectedItem.getValue(inFieldName) instanceof wm.Variable == false) {
-                        dojo.addClass(this.getCellNode(rowIdx, inFieldName), "invalid");
+                        var col = dojo.filter(this.columns, function(inCol) {return inCol.field == inFieldName;})[0]
+                        if (col) this.setCellStatusIndicator(this.getCellNode(rowIdx, inFieldName), col, "invalid");
                     } else {
                         for (var i = 0; i < this.columns.length; i++) {
                             if (this.columns[i].field.indexOf(inFieldName + ".") == 0) {
-                                dojo.addClass(this.getCellNode(rowIdx, this.columns[i].field), "invalid");
+                                this.setCellStatusIndicator(tthis.getCellNode(rowIdx, this.columns[i].field), this.columns[i], "invalid");
                             }
                         }
                     }
@@ -395,12 +396,12 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             this.writeSelectedItem(); /* Without onidle, we are adding class to the cell with the editor rather than the cell that replaces the editor when editing is done */
             wm.onidle(this, function() {
                 if (this.selectedItem.getValue(inFieldName) instanceof wm.Variable == false) {
-                    dojo.addClass(this.getCellNode(inRowIndex, inFieldName), "dirty");
+                    var col = dojo.filter(this.columns, function(inCol) {return inCol.field == inFieldName;})[0]
+                    this.setCellStatusIndicator(this.getCellNode(inRowIndex, inFieldName), col, "dirty");
                 } else {
                     for (var i = 0; i < this.columns.length; i++) {
                         if (this.columns[i].field.indexOf(inFieldName + ".") == 0) {
-                            var cell = this.getCellNode(inRowIndex, this.columns[i].field);
-                            if (cell) dojo.addClass(cell, "dirty");
+                            this.setCellStatusIndicator(this.getCellNode(inRowIndex, this.columns[i].field), this.columns[i], "dirty");
                         }
                     }
                 }
@@ -558,6 +559,18 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             console.error(result);
         }));
     },
+    setCellStatusIndicator: function(inNode, inColumn, inStatus) {
+        if (!inNode || !inColumn) return;
+
+        // Do not try showing the status icons for checkbox fields that are
+        // right aligned or which just don't have enough space.  25px was
+        // a guesstimation, not an exact number
+        if (inNode.clientWidth < 25) return;
+
+        dojo.removeClass(inNode, "dirty saveFailed saved");
+        dojo.addClass(inNode, inColumn.align + "Align " + inStatus);
+if (inColumn.align == "right") debugger;
+    },
     handleUpdateResult: function(deferred, rowIndex) {
         deferred.addCallback(dojo.hitch(this, function(result) {
             var data = this.getRowData(rowIndex);
@@ -567,12 +580,12 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             }
             if (parentNode) {
                 dojo.query("td.dirty",parentNode).forEach(dojo.hitch(this, function(cell) {
-                    var field = this.columns[dojo.attr(cell, "idx")].field;
+                    var col = this.columns[dojo.attr(cell, "idx")];
+                    var field = col.field;
                     var gridValue = this.getCell(rowIndex, field);
                     var resultFieldValue = field.indexOf(".") == -1 ? result[field] : wm.expression.getValue("${" + field + "}", result);
                     if (gridValue == resultFieldValue) {
-                        dojo.removeClass(cell, "dirty saveFailed");
-                        dojo.addClass(cell, "saved");
+                        this.setCellStatusIndicator(cell, col, "saved");
                     }
                 }));
 
