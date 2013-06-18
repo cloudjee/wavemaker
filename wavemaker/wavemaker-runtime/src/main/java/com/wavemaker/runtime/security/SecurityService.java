@@ -20,15 +20,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Collection;
 
+import org.springframework.security.authentication.*;
 import org.springframework.security.cas.authentication.CasAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.apache.log4j.Logger;
 
 import com.wavemaker.runtime.RuntimeAccess;
@@ -84,6 +81,10 @@ public class SecurityService {
 
     /**
      * Returns the user name of the principal in the current security context.
+     *
+     * If the @link{UserDetails} obtained from authentication is an instance of @link{WMUserDetiails},then we return the user's long name from WMUserDetails,
+     * else we return the username from authentication Object.
+     * Second case happens when services like ldap are used to authenticate.
      * 
      * @return The user name.
      */
@@ -91,8 +92,11 @@ public class SecurityService {
     public String getUserName() {
         Authentication authentication = getAuthenticatedAuthentication();
         if (authentication != null) {
-            WMUserDetails principal = (WMUserDetails) authentication.getPrincipal();
-            return principal.getUserLongName();
+            Object principal = authentication.getPrincipal();
+            if(principal instanceof WMUserDetails) {
+                return ((WMUserDetails) principal).getUserLongName();
+            }
+            return authentication.getName();
         }
         return null;
     }
