@@ -89,7 +89,7 @@ public class EnhancedJdbcDaoImpl extends JdbcDaoImpl {
                 } catch (Exception ex) {
                 }
 
-                WMUserDetails user = new WMUser(userId, password, userName, tenantId, enabled, true, true,
+                WMUserDetails user = new WMUser(userName, password, userName, tenantId, enabled, true, true,
                         true, AuthorityUtils.NO_AUTHORITIES);
 
                 return user;

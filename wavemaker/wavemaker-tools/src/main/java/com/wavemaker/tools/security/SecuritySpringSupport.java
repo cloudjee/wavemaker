@@ -115,14 +115,16 @@ public class SecuritySpringSupport {
 
     private static final String ROLE_COLUMN_MARKER = "_roleColumn_";
 
-    private static final String USERS_BY_USERNAME_QUERY = "SELECT " + UID_COLUMN_MARKER + ", " + PW_COLUMN_MARKER + ", 1, " + UNAME_COLUMN_MARKER
-        + " FROM " + TABLE_MARKER + " WHERE " + UNAME_COLUMN_MARKER + " = ?";
+    private static final String SELECT_UID_COLUMN_MARKER = "SELECT " + UID_COLUMN_MARKER + ", ";
 
-    private static final String AUTHORITIES_BY_USERNAME_QUERY_PREFIX = "SELECT " + UID_COLUMN_MARKER + ", ";
+    private static final String AUTHORITIES_BY_UID_QUERY_SUFFIX = " FROM " + TABLE_MARKER + " WHERE " + UID_COLUMN_MARKER + " = ?";
 
-    private static final String AUTHORITIES_BY_USERNAME_QUERY_SUFFIX = " FROM " + TABLE_MARKER + " WHERE " + UID_COLUMN_MARKER + " = ?";
+    private static final String AUTHORITIES_BY_USERNAME_QUERY_SUFFIX = " FROM " + TABLE_MARKER + " WHERE " + UNAME_COLUMN_MARKER + " = ?";
 
-    private static final String AUTHORITIES_BY_USERNAME_QUERY = AUTHORITIES_BY_USERNAME_QUERY_PREFIX + ROLE_COLUMN_MARKER
+    private static final String USERS_BY_USERNAME_QUERY = SELECT_UID_COLUMN_MARKER + PW_COLUMN_MARKER + ", 1, " + UNAME_COLUMN_MARKER
+            + AUTHORITIES_BY_USERNAME_QUERY_SUFFIX;
+
+    private static final String AUTHORITIES_BY_USERNAME_QUERY = SELECT_UID_COLUMN_MARKER + ROLE_COLUMN_MARKER
         + AUTHORITIES_BY_USERNAME_QUERY_SUFFIX;
 
     private static final String LDAP_DIR_CONTEXT_FACTORY_BEAN_ID = "initialDirContextFactory";
@@ -546,8 +548,8 @@ public class SecuritySpringSupport {
 
         value = getPropertyValueString(jdbcDaoBean, AUTHORITIES_BY_USERNAME_QUERY_PROPERTY);
         options.setRolesByUsernameQuery(value);
-        String authQueryPrefix = AUTHORITIES_BY_USERNAME_QUERY_PREFIX.replaceAll(UID_COLUMN_MARKER, uidColumnName);
-        String authQuerySuffix = AUTHORITIES_BY_USERNAME_QUERY_SUFFIX.replaceAll(TABLE_MARKER, tableNameWithPrefix);
+        String authQueryPrefix = SELECT_UID_COLUMN_MARKER.replaceAll(UID_COLUMN_MARKER, uidColumnName);
+        String authQuerySuffix = AUTHORITIES_BY_UID_QUERY_SUFFIX.replaceAll(TABLE_MARKER, tableNameWithPrefix);
         authQuerySuffix = authQuerySuffix.replaceAll(UID_COLUMN_MARKER, uidColumnName);
         if (value.indexOf(authQueryPrefix) != -1 && value.indexOf(authQuerySuffix) != -1) {
             // the query most likely not a custom query
@@ -620,6 +622,7 @@ public class SecuritySpringSupport {
             roleColumnName = "'" + DEFAULT_NO_ROLES_ROLE + "'";
         }
         queryString = queryString.replaceAll(ROLE_COLUMN_MARKER, roleColumnName);
+        queryString = queryString.replaceAll(UNAME_COLUMN_MARKER, unameColumnName);
         return queryString;
     }
 
