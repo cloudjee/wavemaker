@@ -47,6 +47,7 @@ import com.wavemaker.json.type.ObjectTypeDefinition;
 import com.wavemaker.json.type.OperationEnumeration;
 import com.wavemaker.json.type.TypeDefinition;
 import com.wavemaker.runtime.pws.IPwsServiceModifier;
+import com.wavemaker.runtime.service.definition.AbstractDeprecatedServiceDefinition;
 import com.wavemaker.runtime.service.definition.ReflectServiceDefinition;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.runtime.service.definition.ServiceOperation;
@@ -386,6 +387,26 @@ public class DesignServiceManager {
         Service oldService = getService(serviceDef.getServiceId());
 
         Service service = new Service();
+        
+        /**
+         * Copying the service operations to the new service
+         * 
+         */
+        if(serviceDef instanceof AbstractDeprecatedServiceDefinition){
+        	//List<String> opNames = ((AbstractDeprecatedServiceDefinition)serviceDef).getOperationNames();
+        	if(oldService != null){
+		        List<Operation> ops = oldService.getOperation();
+		        if(ops != null){
+		        	for(Operation op:ops){
+		        		//if(opNames != null && opNames.contains(op.getName())){
+		        			service.addOperation(op);
+		        		//}
+		        	}
+		        }
+        	}
+        }
+        
+        
         getCurrentServiceDefinitions().put(serviceDef.getServiceId(), service);
 
         IPwsServiceModifier serviceModifier;

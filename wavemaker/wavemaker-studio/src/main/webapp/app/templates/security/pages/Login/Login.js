@@ -21,6 +21,7 @@ dojo.declare("Login", wm.Page, {
             this.usernameInput.setDataValue(dojo.cookie("user") || "");
             this.usernameInput.focus();
         }
+        this.hashInput.setDataValue(window.location.hash);
         if (this.wmTitle) this.wmTitle.setCaption(app.name || app.declaredClass);
         this.loadingDialog.setMargin(parseInt(this.loadingDialog.widgetToCover.margin) + parseInt(this.loadingDialog.widgetToCover.border));
     },

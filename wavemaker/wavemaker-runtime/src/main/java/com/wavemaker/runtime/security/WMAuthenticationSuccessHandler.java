@@ -14,17 +14,16 @@
 package com.wavemaker.runtime.security;
 
 import java.io.IOException;
-import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 
+import org.json.JSONObject;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
@@ -84,13 +83,20 @@ public class WMAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
 				throw new IOException("Unable to determine a redirect URL");
 			}
 			System.out.println("redirect URL IS: " + redirectURL);
-
+			RedirectStrategy rs = getRedirectStrategy();
+			if(rs instanceof WMHashAwareRedirectStrategy){
+				redirectURL = ((WMHashAwareRedirectStrategy)rs).getHashAwareRedirectUrl(request,redirectURL);
+			}
+			Map<String,String> urlMap = new HashMap<String, String>();
+			urlMap.put("url", redirectURL);
+			
 			request.setCharacterEncoding("UTF-8");
 			response.setContentType("text/plain;charset=utf-8");
 			response.setHeader("Cache-Control", "no-cache");
 			response.setDateHeader("Expires", 0);
 			response.setHeader("Pragma", "no-cache");
-			String jsonContent = "{\"url\":\"" +  redirectURL + "\"}";
+			//String jsonContent = "{\"url\":\"" +  redirectURL + "\"}";
+			String jsonContent = new JSONObject(urlMap).toString();
 			response.getWriter().print(jsonContent);
 			response.getWriter().flush();
 		}
