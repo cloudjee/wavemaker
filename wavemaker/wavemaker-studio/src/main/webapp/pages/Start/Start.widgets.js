@@ -77,7 +77,7 @@ Start.widgets = {
 						}]
 					}]
 				}],
-			    copyright: ["wm.Html", {_classes: {domNode: ["wm_TextAlign_Center"]}, height: "20px", width: "100%", html: "Copyright &copy; 2008-2013 <a target='_blank' href='http://www.vmware.com' style='color:0000ff;'>VMware, Inc.</a>, Studio Version: "}, {}]
+			    copyright: ["wm.Html", {_classes: {domNode: ["wm_TextAlign_Center"]}, height: "20px", width: "100%", html: "Copyright &copy; 2008-2013 <a target='_blank' href='http://www.cloudjee.com' style='color:0000ff;'>Cloudjee, Inc.</a>, Studio Version: "}, {}]
 			}]
 		}]
 	}]
