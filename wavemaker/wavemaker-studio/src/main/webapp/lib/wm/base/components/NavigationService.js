@@ -63,6 +63,10 @@ dojo.declare("wm.NavigationService", wm.Service, {
             returnType: "any",
             hint: "This operation displays a different page and requires a pageName."
         },
+        gotoHomePage: {
+            returnType: "any",
+            hint: "This operation displays the home page."
+        },
         gotoPageContainerPage: {
             parameters: {
                 pageName: { type: "string" },
@@ -206,6 +210,9 @@ dojo.declare("wm.NavigationService", wm.Service, {
         } else if(page.owner instanceof wm.PageContainer || page.owner instanceof wm.PageContainerMixin) {
             this.gotoPageContainerPage(inPageName, page.owner);
         }
+    },
+    gotoHomePage:function(inOwner){
+        this.gotoPage(app.main,inOwner);
     },
     /**
         Dynamically load and show a page inside of a page container.
