@@ -275,13 +275,13 @@ dojo.declare("NewProjectDialog", wm.Page, {
                                                     studio.beginWait(studio.getDictionaryItem("wm.studio.Project.WAIT_CREATING_PROJECT"));
                                                     var d = studio.project.openProject(projectName);
                                                     d.addCallback(function() {
-                                                        studio.application.setTheme(themeName);
-                                                        studio.endWait();
+                                                        studio.application._setTheme(themeName);
+                                                        studio.endWait(studio.getDictionaryItem("wm.studio.Project.WAIT_CREATING_PROJECT"));
                                                         studio.saveAll();
                                                     });
                                                 }),
                                                 function(inError) {
-                                                    studio.endWait();
+                                                    studio.endWait(studio.getDictionaryItem("wm.studio.Project.WAIT_CREATING_PROJECT"));
                                                     app.alert(inError.toString());
                                                 });
         } else {
