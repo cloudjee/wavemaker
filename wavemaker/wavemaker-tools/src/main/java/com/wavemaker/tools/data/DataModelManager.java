@@ -241,7 +241,7 @@ public class DataModelManager {
             // up if queries reference types that are no longer there
             tmpCfg.addUserQueries(queries);
             tmpCfg.save(true);
-            tmpCfg.revert();
+            //tmpCfg.revert();
 
             if (tmpCfg.getEntityNames().isEmpty()) {
                 throw new ConfigurationException("ReImport didn't create any types");
