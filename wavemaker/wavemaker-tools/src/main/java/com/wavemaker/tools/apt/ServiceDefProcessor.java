@@ -259,6 +259,9 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
         }
 
         private boolean isMethodHidden(ExecutableElement method) {
+        	if(isMethodPrivate(method)){
+        		return true;
+        	}
             if (method.getAnnotation(ExposeToClient.class) != null) {
                 return false;
             } else if (method.getAnnotation(HideFromClient.class) != null) {
@@ -267,6 +270,20 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
                 return true;
             }
             return false;
+        }
+        
+        private boolean isMethodPrivate(ExecutableElement method){
+        	boolean isPrivate = true;
+        	Set<javax.lang.model.element.Modifier> modifiers = method.getModifiers();
+        	if(modifiers != null){
+        		for(javax.lang.model.element.Modifier m:modifiers){
+        			if(javax.lang.model.element.Modifier.PUBLIC.equals(m)){
+        				isPrivate = false;
+        				break;
+        			}
+        		}
+        	}
+        	return isPrivate;
         }
 
         private void checkAddType(JavaServiceDefinition serviceDef, TypeDefinition td) {
