@@ -1003,11 +1003,16 @@ dojo.declare("wm.TimePicker", wm.Container, {
         if (hour == 12 && !this.use24Time) hour = 0;
         var minute = this.minutes.selectedItem.getValue("dataValue");
         var isPM = this.pmButton.clicked;
-        date.setHours(hour + (isPM && !this.use24Time ? 12 : 0), minute);
+        date.setHours(hour + ((isPM && !this.use24Time) ? 12 : 0), minute);
 
         this.dataValue = date;
         if (this._currentDijit) {
+            var tp = this._currentDijit.constraints.timePattern;
+            if(isPM && !this.use24Time){
+                this._currentDijit.constraints.timePattern = "hh:mm a";
+            }
             this._currentDijit.set("value", date);
+            //this._currentDijit.constraints.timePattern = tp;
         }
     },
     set: function(inName, inValue) {
