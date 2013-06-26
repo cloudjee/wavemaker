@@ -85,7 +85,8 @@ dojo.declare("wm.LoginVariable", wm.ServiceVariable, {
 	this._service._operations.login = {name: "login",
 				     parameters: {
 					 username: {type: "string"},
-					 password: {type: "string"}
+					 password: {type: "string"},
+                     hash : {type: "string"}
 				     },
 				     returnType: "java.lang.String"};
 	this.inherited(arguments);
@@ -93,7 +94,8 @@ dojo.declare("wm.LoginVariable", wm.ServiceVariable, {
     request: function() {
 	var user = this.input.getValue("username");
 	var pass = this.input.getValue("password");
-	if (!user || !pass) {
+    var hash = this.input.getValue("hash");
+    if (!user || !pass) {
 	    var d = new dojo.Deferred();
 	    var e = new Error("Username and Password are required");
 	    d.errback(e);
@@ -102,7 +104,7 @@ dojo.declare("wm.LoginVariable", wm.ServiceVariable, {
 	    return d;
 	}
 
-	var deferred = wm.login([user,pass],
+	var deferred = wm.login([user,pass,hash],
 				this.useDefaultSuccessHandler ? null : function() {});
 	deferred.addCallbacks(
 	    dojo.hitch(this, function() {

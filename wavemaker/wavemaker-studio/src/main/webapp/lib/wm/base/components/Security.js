@@ -21,7 +21,8 @@ wm.login = function(args, loginSuccessCallback, loginFailedCallback, properties,
     if (properties === undefined || properties == null) {
 	properties = {
 	    j_username : args[0],
-	    j_password : args[1]
+	    j_password : args[1],
+        hash:args[2]
 	    };
     }
 
