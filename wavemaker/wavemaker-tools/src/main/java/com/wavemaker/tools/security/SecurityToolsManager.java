@@ -17,6 +17,7 @@ package com.wavemaker.tools.security;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.security.SecurityService;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.DataModelConfiguration;
@@ -383,7 +384,9 @@ public class SecurityToolsManager {
     public List<String> testRolesByUsernameQuery(DataModelConfiguration dataModel, String query, String username) {
         Properties properties = dataModel.readConnectionProperties();
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setUrl(properties.getProperty("connectionUrl"));
+        String connectionUrl = properties.getProperty("connectionUrl");
+        connectionUrl = connectionUrl.replace(DataServiceConstants.WEB_ROOT_TOKEN, this.projectMgr.getCurrentProject().getWebAppRootFolderRawPath());
+        dataSource.setUrl(connectionUrl);
         dataSource.setDriverClassName(properties.getProperty("driverClassName"));
         dataSource.setUsername(properties.getProperty("username"));
         String pwd = properties.getProperty("password");
