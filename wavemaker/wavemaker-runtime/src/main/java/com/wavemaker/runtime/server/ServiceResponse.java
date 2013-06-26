@@ -52,7 +52,8 @@ public class ServiceResponse {
         Object ret;
         this.threads.put(this.getRequestId(), Thread.currentThread());
         if (!isPollingRequest()) {
-            ret = addResponse(System.currentTimeMillis(), method.invoke(serviceObject, args));
+            //ret = addResponse(System.currentTimeMillis(), method.invoke(serviceObject, args));
+        	ret = addResponse(System.currentTimeMillis(), ServerUtils.invokeMethod(serviceObject, method, args));
         } else {
             ret = getResponseFromService();
         }
