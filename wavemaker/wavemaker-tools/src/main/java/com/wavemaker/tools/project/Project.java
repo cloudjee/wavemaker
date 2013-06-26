@@ -120,6 +120,14 @@ public class Project extends AbstractFileService {
         return getRootFolder().getFolder(this.mavenProject ? ProjectConstants.MAVEN_WEB_DIR : ProjectConstants.WEB_DIR);
     }
 
+    public String getWebAppRootFolderRawPath() {
+        try {
+            return getWebAppRoot().getURI().getRawPath();
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
+    }
+
     public boolean isMavenProject() {
         return this.mavenProject;
     }

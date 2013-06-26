@@ -95,7 +95,7 @@ Security.widgets = {
 						dbRoleBySQLInput: ["wm.LargeTextArea", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"Enter Query",captionSize: "100px", captionPosition: "left", "emptyValue":"null","height":"48px", width:"100%", helpText: "Enter the SQL query that returns the user id and roles based on the user id, returning the id first. e.g. 'select role.user_id, role.rolename from role where role.user_id = ?' "}, {"onchange":"setDirty"}],
 						panel22: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_2px"]},"border":"0","height":"24px",width: "100%", "layoutKind":"left-to-right"}, {}, {
 						    spacer20: ["wm.Spacer", {"width":"100%"}, {}],
-						    dbTestSQLInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"User ID","emptyValue":"null","padding":"2","width":"250px"}, {"onchange":"setDirty"}],
+						    dbTestSQLInput: ["wm.Text", {_classes: {domNode: ["StudioEditor"]}, "border":"0","caption":"User Name","emptyValue":"null","padding":"2","width":"250px"}, {"onchange":"setDirty"}],
 						    dbTestSQLButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, "caption":"Test Query","margin":"2","width":"100px"}, {"onclick":"dbTestSQLButtonClick"}],
                             dbTestSQLHelp1: ["wm.Text", {readonly: 1, width: "32px", dataValue: "", captionSize: "0px", helpText: "The Test Query button does not work for HSQLDB databases, <a href='http://jira.wavemaker.com/browse/WM-3056' target='Doc'/>WM-3056</a>"}]
 						}],
