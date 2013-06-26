@@ -84,15 +84,20 @@ public class SecurityService {
 
     /**
      * Returns the user name of the principal in the current security context.
-     * 
+     * If the {@link org.springframework.security.core.userdetails.UserDetails} obtained from authentication is an instance of {@link WMUserDetails},then user's long name is returned from WMUserDetails,
+     * else returns the username from authentication Object.
+     * Second case happens when services like ldap are used to authenticate
      * @return The user name.
      */
     @ExposeToClient
     public String getUserName() {
         Authentication authentication = getAuthenticatedAuthentication();
         if (authentication != null) {
-            WMUserDetails principal = (WMUserDetails) authentication.getPrincipal();
-            return principal.getUserLongName();
+            Object principal = authentication.getPrincipal();
+            if(principal instanceof WMUserDetails) {
+                return ((WMUserDetails) principal).getUserLongName();
+            }
+            return authentication.getName();
         }
         return null;
     }
