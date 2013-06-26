@@ -14,6 +14,8 @@
 
 package com.wavemaker.runtime.server;
 
+import java.beans.PropertyEditor;
+import java.beans.PropertyEditorManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
@@ -324,8 +326,38 @@ public class ServerUtils {
 
         return ret;
     }
+    
+    public static Object invokeMethod(Object serviceObject,Method method,Object[] args) throws IllegalArgumentException,
+    					IllegalAccessException, InvocationTargetException{
+    	Class<?>[] paramTypes = method.getParameterTypes();
+    	Object[] argsToSend = null;
+    	if(args != null && paramTypes != null && args.length > 0){
+    		argsToSend = new Object[args.length];
+    		int i = 0;
+    		for(Class<?> p:paramTypes){
+    			Object arg = args[i];
+    			if(arg != null && !p.isAssignableFrom(arg.getClass()) && String.class.isAssignableFrom(arg.getClass())){
+    				arg = convert(arg.toString(),p);
+    			}
+    			argsToSend[i] = arg;
+    			i++;
+    		}
+    		
+    	}
+    	return method.invoke(serviceObject,argsToSend);
+    }
 
-    /**
+    private static Object convert(String value,Class clazz) {
+    	PropertyEditor editor = PropertyEditorManager.findEditor(clazz);
+        editor.setAsText(value);
+        return editor.getValue();
+	}
+    
+    public static void main(String[] args) {
+		System.out.println(convert("223342.3",Double.class));
+	}
+
+	/**
      * Detect proxy class, and find underlying class. <br>
      * An inglorious hack: This simple version works for CGLIB proxy; as used by Springframework.security. No guarantee
      * (or even expectation) that other AOP proxies will be detected. Java (or CGLIB) may have more deterministic ways
