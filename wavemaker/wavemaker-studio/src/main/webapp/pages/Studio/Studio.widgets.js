@@ -70,7 +70,7 @@ Studio.widgets = {
 	javaService: ["wm.JsonRpcService", {service: "javaService", sync: true}, {}],
 	securityConfigService: ["wm.JsonRpcService", {service: "securityConfigService", sync: true}, {}],
 	securityService: ["wm.JsonRpcService", {service: "securityService", sync: true}, {}, {}],
-	securityServiceJOSSO: ["wm.JsonRpcService", {service: "securityServiceJOSSO", sync: true}, {}, {}],
+	//securityServiceJOSSO: ["wm.JsonRpcService", {service: "securityServiceJOSSO", sync: true}, {}, {}],
 	resourceManagerService: ["wm.JsonRpcService", {service: "resourceFileService", sync: true}, {}],
     jarListService: ["wm.JsonRpcService", {service: "studioService", sync: false}, {}],
     publishedPropsDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, title: "Published Properties", pageName: "PropertyPublisher", modal: false, deferLoad: true,  width: "650px", height: "650px", hideControls: true, noEscape: false, minHeight: "200", noTopBottomDocking: true, noLeftRightDocking:true}],
