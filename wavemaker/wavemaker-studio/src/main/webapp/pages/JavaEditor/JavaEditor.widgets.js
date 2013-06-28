@@ -26,12 +26,12 @@ JavaEditor.widgets = {
 				closeCmpOutBtn: ["wm.studio.ToolbarButton", {imageIndex: 23,   hint: "Close Compiler Output"}, {onclick: "closeCmpOutBtnClick"}],
 			    javaServiceRefreshButton: ["wm.studio.ToolbarButton", {imageIndex: 27, hint: "Refresh Java service from disk"}, {onclick: "javaServiceRefreshButtonClick"}],
 			    toolbarspacer3: ["wm.studio.ToolbarSpacer", {}, {}],
-		    findBtn: ["wm.studio.ToolbarButton", {hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findClick"}],
+		        findBtn: ["wm.studio.ToolbarButton", {hint: "Search", iconUrl: "lib/images/silkIcons/magnifier.png"}, {onclick: "findClick"}],
 			    formatBtn: ["wm.studio.ToolbarButton", {hint: "Reformat Code", imageIndex: 29}, {onclick: "formatClick"}],
 			    wordWrapBtn: ["wm.studio.ToolbarButton", {_classes: {domNode: ["ToggleWordWrap", "StudioToolbarButton"]}, hint: "Toggle line wrapping", imageIndex: 15,imageList: "studio.canvasToolbarImageList16"}, {onclick: "toggleWrapClick"}],
-			    pageHelpBtn: ["wm.studio.ToolbarButton", { hint: "Help", imageIndex: 26}, {onclick: "showEditorHelp"}],
-
+			    pageHelpBtn: ["wm.studio.ToolbarButton", { hint: "Help", imageIndex: 26}, {onclick: "showEditorHelp"}]
 			}],
+			javaEditAreaZoomWarningLabel: ["wm.Label", {_classes: {domNode:["StudioLabel","AceEditorZoomWarning"]},showing:false,width: "100px", height: "100%", caption: "Zoomed <div class='StudioWarningIcon'/>", hint: "<div class='StudioWarningIcon'></div>Zooming out or in your browser may cause the code editor selection to work improperly; Restoring your browser to its standard zoom level will fix this"}],
 			logoBtmHolder: ["wm.Panel", {border: "0", width: "221px"}, {}]
 		}],
 		editorContainer: ["wm.Panel", {border: "0", width: "100%", layoutKind: "left-to-right", height: "100%"}, {}, {

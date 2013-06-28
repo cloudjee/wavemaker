@@ -2332,10 +2332,18 @@ dojo.declare("Studio", wm.Page, {
     },
     browserZoomed: function() {
         var isZoomed = Boolean(app._currentZoomLevel);
-        this.editAreaZoomWarningLabel.setShowing(isZoomed);
         this.cssEditAreaZoomWarningLabel.setShowing(isZoomed);
         this.markupEditAreaZoomWarningLabel.setShowing(isZoomed);
         this.appsourceEditAreaZoomWarningLabel.setShowing(isZoomed);
+        if(this.JavaEditorSubTab){
+            var jePanel = this.JavaEditorSubTab.c$[1];
+            var jeLayers = jePanel.c$;
+            if(jeLayers && jeLayers.length > 0){
+                jeLayers[0].c$[0]
+                            .page.javaEditAreaZoomWarningLabel.setShowing(isZoomed);    
+            }
+            
+        }
     },
     showProjectDesignWarnings: function(inSender, inEvent) {
 
