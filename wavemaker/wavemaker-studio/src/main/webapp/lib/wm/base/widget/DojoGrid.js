@@ -569,7 +569,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
         dojo.removeClass(inNode, "dirty saveFailed saved");
         dojo.addClass(inNode, inColumn.align + "Align " + inStatus);
-if (inColumn.align == "right") debugger;
+if (inColumn.align == "right") {}
     },
     handleUpdateResult: function(deferred, rowIndex) {
         deferred.addCallback(dojo.hitch(this, function(result) {

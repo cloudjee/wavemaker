@@ -30,8 +30,7 @@ dojo.declare("wm.AdaptorVariable", wm.Variable, {
 	    this._mapping = dojo.fromJson(this.mapping);
 	} catch(e){}
     },
-    setDataSet: function(inData) {
-	debugger;
+    setDataSet: function(inData) {	
 	this.inherited(arguments);
 	var outputData;
 	if (this.isList) {
