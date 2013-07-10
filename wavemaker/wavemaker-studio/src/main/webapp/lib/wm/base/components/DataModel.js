@@ -186,7 +186,7 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
         studio.addQryAndViewToTree(inNode);
     },
     designSelect: function() {
-        if (studio.tree.selected.component instanceof wm.DataModelEntity) return;
+        if (studio.tree.selected && (studio.tree.selected.component instanceof wm.DataModelEntity)) return;
         var c = studio.navGotoEditor("DataObjectsEditor", studio.databaseTab, this.getLayerName(), this.getLayerCaption());
         studio.selected[0]._studioTreeNode.setOpen(true);
         c.page.setDataModel(this);
