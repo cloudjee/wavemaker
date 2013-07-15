@@ -160,30 +160,22 @@ public class CompileTypeUtils {
             return typeState.getType(type.toString());
         }
 
-        ObjectReflectTypeDefinition def = new ObjectReflectTypeDefinition();
-        def.setTypeName(type.toString());
-        def.setRootTypeName(type.toString());
-        def.setShortName(type.asElement().getSimpleName().toString());
-        typeState.addType(def);
-        type.asElement().accept(new JavaBeanScanner(processingEnv), typeState);
-        typeDefForParentBeans(processingEnv, typeState, type);
-        return def;
+        ObjectReflectTypeDefinition objectReflectTypeDefinition = new ObjectReflectTypeDefinition();
+        objectReflectTypeDefinition.setTypeName(type.toString());
+        objectReflectTypeDefinition.setRootTypeName(type.toString());
+        objectReflectTypeDefinition.setShortName(type.asElement().getSimpleName().toString());
+        typeState.addType(objectReflectTypeDefinition);
+        type.asElement().accept(new JavaBeanScanner(processingEnv), new StateInformation(typeState, objectReflectTypeDefinition));
+        typeDefForParentBeans(processingEnv, typeState, type, objectReflectTypeDefinition);
+        return objectReflectTypeDefinition;
     }
 
-    private static void typeDefForParentBeans(ProcessingEnvironment processingEnv, TypeState typeState, DeclaredType type) {
+    private static void typeDefForParentBeans(ProcessingEnvironment processingEnv, TypeState typeState, DeclaredType type, ObjectReflectTypeDefinition objectReflectTypeDefinition) {
 
         List<DeclaredType> allParentTypes = retrieveAllParentTypes(processingEnv, type);
         for (TypeMirror typeMirror : allParentTypes) {
             DeclaredType dt = (DeclaredType) typeMirror;
-            ObjectReflectTypeDefinition def = (ObjectReflectTypeDefinition) typeState.getType(dt.toString());
-            if (def == null) {
-                def = new ObjectReflectTypeDefinition();
-                def.setTypeName(dt.toString());
-                def.setRootTypeName(type.toString());
-                def.setShortName(dt.asElement().getSimpleName().toString());
-                typeState.addType(def);
-            }
-            dt.asElement().accept(new JavaBeanScanner(processingEnv), typeState);
+            dt.asElement().accept(new JavaBeanScanner(processingEnv), new StateInformation(typeState,objectReflectTypeDefinition));
         }
     }
 
@@ -293,7 +285,7 @@ public class CompileTypeUtils {
         return types.getDeclaredType(elements.getTypeElement(className));
     }
 
-    private static class JavaBeanScanner extends ElementScanner6<TypeState, TypeState> {
+    private static class JavaBeanScanner extends ElementScanner6<TypeState, StateInformation> {
 
         private final ProcessingEnvironment processingEnv;
 
@@ -302,13 +294,13 @@ public class CompileTypeUtils {
         }
 
         @Override
-        public TypeState scan(Element element, TypeState typeState) {
-            return element.accept(new JavaBeanVisitor(this.processingEnv), typeState);
+        public TypeState scan(Element element, StateInformation stateInformation) {
+            return element.accept(new JavaBeanVisitor(this.processingEnv), stateInformation);
         }
 
     }
 
-    private static class JavaBeanVisitor extends ElementKindVisitor6<TypeState, TypeState> {
+        private static class JavaBeanVisitor extends ElementKindVisitor6<TypeState, StateInformation> {
 
         private final ProcessingEnvironment processingEnv;
 
@@ -317,34 +309,25 @@ public class CompileTypeUtils {
         }
 
         @Override
-        public TypeState visitExecutableAsMethod(ExecutableElement method, TypeState typeState) {
+        public TypeState visitExecutableAsMethod(ExecutableElement method, StateInformation stateInformation) {
 
             if (!method.getSimpleName().toString().endsWith("Class") ||
                     method.getEnclosingElement().toString().equals("java.lang.reflect.TypeVariable")) {
 
-                ObjectReflectTypeDefinition def = (ObjectReflectTypeDefinition) typeState.getType(method.getEnclosingElement().asType().toString());
-
-                if (def != null) {
-                    if (!def.getTypeName().equals(def.getRootTypeName())) {
-                        def = (ObjectReflectTypeDefinition) typeState.getType(def.getRootTypeName());
-                    }
-                    if (def != null) {
-                        String propName = getPropertyName(method);
-                        if (!def.getFields().containsKey(propName)) {
-                            if (isGetter(method)) {
-                                def.getFields().put(propName,
-                                    CompileTypeUtils.buildFieldDefinition(this.processingEnv, typeState, method.getReturnType(), propName));
-                            } else if (isSetter(method)) {
-                                def.getFields().put(
-                                    propName,
-                                    CompileTypeUtils.buildFieldDefinition(this.processingEnv, typeState, method.getParameters().get(0).asType(), propName));
-                            }
-                        }
+                ObjectReflectTypeDefinition objectReflectTypeDefinition = stateInformation.getObjectReflectTypeDefinition();
+                String propName = getPropertyName(method);
+                if (!objectReflectTypeDefinition.getFields().containsKey(propName)) {
+                    if (isGetter(method)) {
+                        objectReflectTypeDefinition.getFields().put(propName,
+                                CompileTypeUtils.buildFieldDefinition(this.processingEnv, stateInformation.getTypeState(), method.getReturnType(), propName));
+                    } else if (isSetter(method)) {
+                        objectReflectTypeDefinition.getFields().put(
+                                propName,
+                                CompileTypeUtils.buildFieldDefinition(this.processingEnv, stateInformation.getTypeState(), method.getParameters().get(0).asType(), propName));
                     }
                 }
             }
-
-            return typeState;
+            return stateInformation.getTypeState();
         }
 
         private boolean isGetter(ExecutableElement method) {
@@ -378,6 +361,25 @@ public class CompileTypeUtils {
             } else {
                 return "";
             }
+        }
+    }
+
+    private static class StateInformation {
+        private TypeState typeState;
+        private ObjectReflectTypeDefinition objectReflectTypeDefinition;
+
+        public StateInformation(TypeState typeState, ObjectReflectTypeDefinition objectReflectTypeDefinition) {
+            this.typeState = typeState;
+            this.objectReflectTypeDefinition = objectReflectTypeDefinition;
+        }
+
+
+        public TypeState getTypeState() {
+            return typeState;
+        }
+
+        public ObjectReflectTypeDefinition getObjectReflectTypeDefinition() {
+            return objectReflectTypeDefinition;
         }
     }
 }
