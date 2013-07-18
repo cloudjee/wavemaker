@@ -122,6 +122,7 @@ public final class FileController extends AbstractController {
         }
 
         if (sendFile != null && !sendFile.exists()) {
+            logger.debug("File " + reqPath + " not found in expected path: " + sendFile);
             handleError(response, "File " + reqPath + " not found in expected path: " + sendFile, HttpServletResponse.SC_NOT_FOUND);
         } else if (sendFile != null) {
             if (addExpiresTag) {
@@ -199,9 +200,9 @@ public final class FileController extends AbstractController {
 
     protected void handleError(HttpServletResponse response, String errorMessage, int code) throws IOException {
 
-        response.setStatus(code);
-        Writer outputWriter = response.getWriter();
-        outputWriter.write(errorMessage);
+        response.sendError(code);
+        /*Writer outputWriter = response.getWriter();
+        outputWriter.write(errorMessage); */
     }
 
     protected void setContentType(HttpServletResponse response, File file) {
