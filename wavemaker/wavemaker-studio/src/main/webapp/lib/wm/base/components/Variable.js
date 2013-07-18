@@ -727,6 +727,7 @@ dojo.declare("wm.Variable", wm.Component, {
     _setItem: function(inIndex, inData) {
         if (this.isList)
             this._needItem(inIndex, inData);
+        this.onSetData();
     },
     /**
         Adds an item to the list of data. Only functions if data forms a list.
