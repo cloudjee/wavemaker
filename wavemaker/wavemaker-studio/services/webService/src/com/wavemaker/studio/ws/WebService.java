@@ -169,6 +169,10 @@ public class WebService {
         return getWSToolsMgr().registerFeedService();
     }
 
+    public String registerTwitterFeedService() throws JAXBException, IOException {
+        return getWSToolsMgr().registerTwitterFeedService();
+    }
+
     public String getWSDL(String serviceId) throws IOException {
         return getWSToolsMgr().getWSDL(serviceId);
     }
@@ -183,5 +187,17 @@ public class WebService {
 
     public void setBindingProperties(String serviceId, BindingProperties bindingProperties) throws Exception {
         getWSToolsMgr().setBindingProperties(serviceId, bindingProperties);
+    }
+
+    public Map<String, String> getProperties(String serviceId) throws Exception {
+        return getWSToolsMgr().getProperties(serviceId);
+    }
+
+    public String getProperty(String serviceId, String key) throws Exception {
+        return getWSToolsMgr().getProperty(serviceId, key);
+    }
+
+    public void setProperty(String serviceId, String key, String value) throws Exception {
+        getWSToolsMgr().setProperty(serviceId, key, value);
     }
 }

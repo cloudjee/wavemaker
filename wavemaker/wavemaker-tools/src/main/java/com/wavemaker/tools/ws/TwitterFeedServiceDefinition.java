@@ -1,0 +1,60 @@
+/*
+ *  Copyright (C) 2007-2013 VMware, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+package com.wavemaker.tools.ws;
+
+import com.wavemaker.json.type.TypeDefinition;
+import com.wavemaker.json.type.TypeState;
+import com.wavemaker.json.type.reflect.ReflectTypeState;
+import com.wavemaker.json.type.reflect.ReflectTypeUtils;
+import com.wavemaker.runtime.service.ServiceType;
+import com.wavemaker.runtime.ws.*;
+import com.wavemaker.tools.javaservice.JavaServiceDefinition;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Service definition for {@link TwitterFeedService}
+ * 
+ * @author Uday Shankar
+ */
+public class TwitterFeedServiceDefinition extends JavaServiceDefinition {
+
+    public static final String TWITTER_FEED_SERVICE_NAME = "TwitterFeedService";
+
+    private static final Class<?>[] ALL_TYPES = new Class[] { Feed.class, Entry.class};
+
+    private final List<TypeDefinition> types;
+
+    public TwitterFeedServiceDefinition() {
+        super(TwitterFeedService.class, TWITTER_FEED_SERVICE_NAME);
+        TypeState typeState = new ReflectTypeState();
+        this.types = new ArrayList<TypeDefinition>();
+        for (Class<?> c : ALL_TYPES) {
+            TypeDefinition ft = ReflectTypeUtils.getTypeDefinition(c, typeState, false);
+            this.types.add(ft);
+        }
+    }
+
+    @Override
+    public ServiceType getServiceType() {
+        return new WebServiceType();
+    }
+
+    @Override
+    public List<TypeDefinition> getLocalTypes() {
+        return this.types;
+    }
+}

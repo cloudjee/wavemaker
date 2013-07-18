@@ -941,10 +941,11 @@ public class DesignServiceManager {
         }
 
         for (TypeDefinition et : elementTypes) {
-
-            if (findDataObjectFromJavaType(et.getTypeName()) != null) {
+            //No need to check the existence of the types in other services as there is no problem if
+            //there are two services using same dataObjects.
+            /*if (findDataObjectFromJavaType(et.getTypeName()) != null) {
                 throw new WMRuntimeException("Conflicting java type: " + et.getTypeName());
-            }
+            }*/
 
             DataObject dso = new DataObject();
             dos.add(dso);

@@ -21,7 +21,6 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,7 +72,6 @@ import com.wavemaker.runtime.ws.HTTPBindingSupport.HTTPRequestMethod;
 import com.wavemaker.runtime.ws.RESTInputParam;
 import com.wavemaker.runtime.ws.WebServiceException;
 import com.wavemaker.runtime.ws.util.Constants;
-import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.FilterOn;
 import com.wavemaker.tools.io.Folder;
@@ -84,7 +82,6 @@ import com.wavemaker.tools.pws.IPwsRestWsdlGenerator;
 import com.wavemaker.tools.pws.PwsRestWsdlGeneratorBeanFactory;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
-import com.wavemaker.tools.ws.wadl.Wadl2Wsdl;
 import com.wavemaker.tools.ws.wsdl.WSDL;
 import com.wavemaker.tools.ws.wsdl.WSDLException;
 import com.wavemaker.tools.ws.wsdl.WSDLManager;
@@ -337,6 +334,24 @@ public class WebServiceToolsManager {
      */
     public String registerFeedService() throws JAXBException, IOException {
         FeedServiceDefinition definition = new FeedServiceDefinition();
+        String serviceId = definition.getServiceId();
+
+        this.designServiceMgr.validateServiceId(serviceId);
+
+        this.designServiceMgr.defineService(definition, null, null);
+
+        return serviceId;
+    }
+
+    /**
+     * Adds Feed Service to the system.
+     *
+     * @return The service ID.
+     * @throws IOException
+     * @throws JAXBException
+     */
+    public String registerTwitterFeedService() throws JAXBException, IOException {
+        TwitterFeedServiceDefinition definition = new TwitterFeedServiceDefinition();
         String serviceId = definition.getServiceId();
 
         this.designServiceMgr.validateServiceId(serviceId);
@@ -928,6 +943,18 @@ public class WebServiceToolsManager {
 
     public void setBindingProperties(String serviceId, BindingProperties bindingProperties) throws Exception {
         WebServiceSpringSupport.setBindingProperties(this.designServiceMgr, serviceId, bindingProperties);
+    }
+
+    public Map<String, String> getProperties(String serviceId) throws Exception {
+        return WebServiceSpringSupport.getProperties(this.designServiceMgr, serviceId);
+    }
+
+    public String getProperty(String serviceId, String key) throws Exception {
+        return WebServiceSpringSupport.getProperty(this.designServiceMgr, serviceId, key);
+    }
+
+    public void setProperty(String serviceId, String key, String value) throws Exception {
+        WebServiceSpringSupport.setProperty(this.designServiceMgr, serviceId, key, value);
     }
 
     // If the service name happens to be the same as one of the operation names,

@@ -110,7 +110,7 @@ public class SyndFeedService {
                 }
             }
             SyndFeed feed = input.build(new XmlReader(urlConn));
-            return new Feed(feed);
+            return FeedBuilder.getFeed(feed);
         } catch (IllegalArgumentException e) {
             throw new WebServiceInvocationException(e);
         } catch (FeedException e) {

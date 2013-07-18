@@ -18,28 +18,78 @@ dojo.require("wm.base.widget.FeedList");
 dojo.declare("wm.TwitterFeed", wm.FeedList, {
 	width:'100%',
 	twitterId:'',
-        classNames: 'wmfeedlist wmtwitterlist',
+    consumerKey: '',
+    consumerSecret: '',
+    accessToken: '',
+    accessTokenSecret : '',
+    classNames: 'wmfeedlist wmtwitterlist',
+    serviceName: "TwitterFeedService",
+    registerFeedService : "registerTwitterFeedService",
 	init: function() {
 		this.inherited(arguments);
-/*		this.url = '';*/
 	},
+    build : function() {
+        this.inherited(arguments);
+        if(this.isDesignLoaded()) {
+            studio.webService.requestAsync("getProperties", [this.serviceName], dojo.hitch(this, function(inData) {
+                this.consumerKey = inData.OAuthConsumerKey ? inData.OAuthConsumerKey : '';
+                this.consumerSecret = inData.OAuthConsumerSecret ? inData.OAuthConsumerSecret : '';
+                this.accessToken = inData.OAuthAccessToken ? inData.OAuthAccessToken : '';
+                this.accessTokenSecret = inData.OAuthAccessTokenSecret ? inData.OAuthAccessTokenSecret : '';
+            }));
+        }
+    },
+    setConsumerKey : function(inValue) {
+        this.consumerKey = inValue? inValue : '';
+        studio.webService.requestAsync("setProperty", [this.serviceName,"OAuthConsumerKey", this.consumerKey]);
+    },
+    setConsumerSecret : function(inValue) {
+        this.consumerSecret = inValue? inValue : '';
+        studio.webService.requestAsync("setProperty", [this.serviceName,"OAuthConsumerSecret", this.consumerSecret]);
+    },
+    setAccessToken : function(inValue) {
+        this.accessToken = inValue? inValue : '';
+        studio.webService.requestAsync("setProperty", [this.serviceName,"OAuthAccessToken", this.accessToken]);
+    },
+    setAccessTokenSecret : function(inValue) {
+        this.accessTokenSecret = inValue? inValue : '';
+        studio.webService.requestAsync("setProperty", [this.serviceName,"OAuthAccessTokenSecret", this.accessTokenSecret]);
+    },
 	setTwitterId: function(inValue){
 		this.twitterId = inValue;
-		if (this.twitterId && this.twitterId != '')
-		{
-			this.url = 'http://search.twitter.com/search.atom?q=' + this.twitterId;
+        if (this.validate()){
 			this.update();
-		}
-		else
-		{
+		} else {
 			this.clear();
 		}
-	}
+	},
+    designTimeMandatoryFields:function () {
+        return (this.consumerKey && this.consumerKey != '') && (this.consumerSecret && this.consumerSecret != '') &&
+            (this.accessToken && this.accessToken != '') && (this.accessTokenSecret && this.accessTokenSecret != '');
+    },
+    validate: function() {
+        if ((this.twitterId && this.twitterId != '') && (!this.isDesignLoaded() || this.designTimeMandatoryFields())) {
+            return true;
+        }
+        return false;
+    },
+    getParamsForServiceVariable: function() {
+        return [this.twitterId];
+    },
+    getFeedItemTitleContent: function(inTitle, inLink) {
+        return inTitle;
+    },
+    onclick: function(inEvent, inItem) {
+    }
 });
 
 wm.Object.extendSchema(wm.TwitterFeed, {
-	url: {hidden:true, type: "String", bindTarget: 1},
-	twitterId: {bindable: 1, group: "edit", order: 30}
+	url: {ignore:true, hidden:true, type: "String", bindTarget: 1},
+	twitterId: {bindable: 1, group: "edit", order: 30},
+    consumerKey: {group: "Oauth Details", requiredGroup:1, order: 30},
+    consumerSecret: {group: "Oauth Details", requiredGroup:1, order: 30},
+    accessToken: {group: "Oauth Details", requiredGroup:1, order: 30},
+    accessTokenSecret: {group: "Oauth Details", requiredGroup:1, order: 30}
 });
 
 wm.TwitterFeed.description = "A twitter feed.";

@@ -15,7 +15,9 @@
 package com.wavemaker.tools.ws;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -24,6 +26,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.ws.BindingProperties;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.FilterOn;
@@ -119,12 +122,11 @@ public class WebServiceSpringSupport {
     public static void setBindingProperties(DesignServiceManager designServiceMgr, String serviceId, BindingProperties bindingProperties)
         throws JAXBException, IOException, SAXException, ParserConfigurationException {
         if (bindingProperties != null) {
-            Folder serviceRuntimeDirectory = designServiceMgr.getServiceRuntimeFolder(serviceId);
-            Service service = designServiceMgr.getService(serviceId);
-            com.wavemaker.tools.io.File springFile = serviceRuntimeDirectory.getFile(service.getSpringFile());
-
-            Beans beans = SpringConfigSupport.readBeans(springFile);
+            Beans beans = getSpringBeans(designServiceMgr, serviceId);
             Bean bean = beans.getBeanById(serviceId);
+            if(bean == null) {
+                throw new WMRuntimeException("No Bean named [" + serviceId + "] present in the project");
+            }
             Property property = bean.getProperty(BINDING_PROPERTIES_PROPERTY_NAME);
             if (property == null) {
                 property = new Property();
@@ -165,10 +167,83 @@ public class WebServiceSpringSupport {
 
             property.setBean(bindingPropsBean);
 
-            SpringConfigSupport.writeBeans(beans, springFile);
+            SpringConfigSupport.writeBeans(beans, getSpringFile(designServiceMgr, serviceId));
 
-            updateEndpointAddress(bindingProperties, serviceRuntimeDirectory, bean);
+            updateEndpointAddress(bindingProperties, getServiceRuntimeDirectory(designServiceMgr, serviceId), bean);
         }
+    }
+
+    public static void setProperty(DesignServiceManager designServiceMgr, String serviceId, String key, String value)
+            throws JAXBException, IOException, SAXException, ParserConfigurationException {
+        Beans beans = getSpringBeans(designServiceMgr, serviceId);
+        Bean bean = beans.getBeanById(serviceId);
+        if(bean == null) {
+            throw new WMRuntimeException("No Bean named [" + serviceId + "] present in the project");
+        }
+        Property property = bean.getProperty(key);
+        if (property == null) {
+            property = new Property();
+            property.setName(key);
+            bean.addProperty(property);
+        }
+        property.setValue(value);
+
+        SpringConfigSupport.writeBeans(beans, getSpringFile(designServiceMgr, serviceId));
+    }
+
+    public static String getProperty(DesignServiceManager designServiceMgr, String serviceId, String key)
+            throws JAXBException, IOException, SAXException, ParserConfigurationException {
+        Beans beans = getSpringBeans(designServiceMgr, serviceId);
+        Bean bean = beans.getBeanById(serviceId);
+        if(bean == null) {
+            throw new WMRuntimeException("No Bean named [" + serviceId + "] present in the project");
+        }
+        Property property = bean.getProperty(key);
+        return (property != null)? property.getValue() : null;
+    }
+
+    public static Map<String, String> getProperties(DesignServiceManager designServiceMgr, String serviceId)
+            throws JAXBException, IOException, SAXException, ParserConfigurationException {
+        Map<String, String> properties = new HashMap<String, String>();
+        Beans beans = getSpringBeans(designServiceMgr, serviceId);
+        Bean bean = beans.getBeanById(serviceId);
+        if(bean == null) {
+            throw new WMRuntimeException("No Bean named [" + serviceId + "] present in the project");
+        }
+        List<Object> metasAndConstructorArgsAndProperties = bean.getMetasAndConstructorArgsAndProperties();
+        for(Object prop : metasAndConstructorArgsAndProperties) {
+            if(prop instanceof Property) {
+                Property property = (Property) prop;
+                properties.put(property.getName(), property.getValue());
+            }
+        }
+        return properties;
+    }
+
+    private static Beans getSpringBeans(DesignServiceManager designServiceMgr, String serviceId) throws JAXBException, IOException {
+        File springFile = getSpringFile(designServiceMgr, serviceId);
+        return SpringConfigSupport.readBeans(springFile);
+    }
+
+    private static File getSpringFile(DesignServiceManager designServiceMgr, String serviceId) {
+        Folder serviceRuntimeDirectory = getServiceRuntimeDirectory(designServiceMgr, serviceId);
+        Service service = designServiceMgr.getService(serviceId);
+        if(service == null) {
+            throw new WMRuntimeException("No Service [" + serviceId + "] in the project");
+        }
+        File springFile = serviceRuntimeDirectory.getFile(service.getSpringFile());
+        if(!springFile.exists()) {
+            throw new WMRuntimeException("Spring file [" + service.getSpringFile() + "] for the Service [" + serviceId + "] in the project");
+        }
+        return springFile;
+    }
+
+    private static Folder getServiceRuntimeDirectory(DesignServiceManager designServiceMgr, String serviceId) {
+        Folder serviceRuntimeDirectory = designServiceMgr.getServiceRuntimeFolder(serviceId);
+        if(serviceRuntimeDirectory == null) {
+            throw new WMRuntimeException("Runtime Service directory for the serviceId[" + serviceId + "] is not found");
+        }
+        return serviceRuntimeDirectory;
     }
 
     private static void updateEndpointAddress(BindingProperties bindingProperties, Folder serviceFolder, Bean bean)

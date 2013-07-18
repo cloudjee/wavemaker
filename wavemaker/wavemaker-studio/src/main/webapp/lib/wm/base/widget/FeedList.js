@@ -27,7 +27,10 @@ dojo.declare("wm.FeedList", wm.List, {
 	totalItems: "",
 	onselect: null,
 	ondeselect: null,
-        classNames: 'wmfeedlist',
+    classNames: 'wmfeedlist',
+    serviceName: "FeedService",
+    registerFeedService : "registerFeedService",
+    operation: "getFeed",
 	init: function() {
 	    this.inherited(arguments);
 	    if (!dojo.byId("feedcss")) {
@@ -48,19 +51,18 @@ dojo.declare("wm.FeedList", wm.List, {
     },
 	prepare: function() {
 		this.inherited(arguments);
-		if (this.isDesignLoaded() && !wm.services.byName["FeedService"]) {
+		if (this.isDesignLoaded() && !wm.services.byName[this.serviceName]) {
 		    if (studio.isJarMissing("wsdl4j.jar")) {
-			wm.WebService.prototype.showJarDialog();
+                wm.WebService.prototype.showJarDialog();
 
-			/* If we just created the component rather than loaded it from an existing page, destroy it until the environment is setup */
-			if (!studio.project.loadingPage) {
-			    this.destroy();
-			    throw "Missing jar file";
-			    return;
-			}
+                /* If we just created the component rather than loaded it from an existing page, destroy it until the environment is setup */
+                if (!studio.project.loadingPage) {
+                    this.destroy();
+                    throw "Missing jar file";
+                    return;
+                }
 		    } else {
-			studio.webService.requestAsync("registerFeedService", null, 
-						       dojo.hitch(this, "registerFeedServiceSuccess"));
+			    studio.webService.requestSync(this.registerFeedService, null, dojo.hitch(this, "registerFeedServiceSuccess"));
 		    }
 		}
 	},
@@ -139,13 +141,18 @@ dojo.declare("wm.FeedList", wm.List, {
 	},
 	_createGetFeedServiceVariable: function() {
 	    if (this.$.getFeedServiceVariable) {
-		this.getFeedServiceVariable = this.$.getFeedServiceVariable;
+		    this.getFeedServiceVariable = this.$.getFeedServiceVariable;
 	    } else {
-		this.getFeedServiceVariable = new wm.ServiceVariable(
-			{name: "getFeedServiceVariable", owner: this, service: "FeedService", operation: "getFeed"});
+		    this.getFeedServiceVariable = new wm.ServiceVariable({
+                name: "getFeedServiceVariable",
+                owner: this,
+                service: this.serviceName,
+                operation: this.operation
+            });
 	    }
 	    this.getFeedServiceVariable["setData"] = function() {};
 	    this.getFeedServiceVariable["onSuccess"] = dojo.hitch(this, "getFeedServiceVariableSuccess");
+        this.getFeedServiceVariable["onError"] = dojo.hitch(this, "getFeedServiceVariableFailure");
 	},
 	registerFeedServiceSuccess: function(inResult) {
 		this._createGetFeedServiceVariable();
@@ -163,18 +170,32 @@ dojo.declare("wm.FeedList", wm.List, {
 			this.getFeed();
 		}
 	},
+    getParamsForServiceVariable: function() {
+        return [this.url];
+    },
+    validate: function() {
+        if (this.url && this.url !== undefined) {
+            return true;
+        }
+        return false;
+    },
 	getFeed: function() {
-		if (this.url && this.url !== undefined) {
-		    if (!this.getFeedServiceVariable)
-			this._createGetFeedServiceVariable();
-		    this.getFeedServiceVariable.request([this.url]);
-		} else
-			this.clear();
+		if (this.validate()) {
+		    if (!this.getFeedServiceVariable) {
+                this._createGetFeedServiceVariable();
+            }
+		    this.getFeedServiceVariable.request(this.getParamsForServiceVariable());
+		} else {
+            this.clear();
+        }
 	},
 	getFeedServiceVariableSuccess: function(inResult) {
 		this.title = inResult.title;
 		this.renderData(inResult.entries);
 	},
+    getFeedServiceVariableFailure: function(inResult) {
+        this.title = inResult.errorObject.error;
+    },
 	onclick: function(inEvent, inItem) {
 		if (inEvent.target.tagName == 'IMG') {
 			var isCollapsed = inEvent.target.src.match("feedlist_closed.gif");
