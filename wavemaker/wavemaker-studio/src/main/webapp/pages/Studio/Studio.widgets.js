@@ -1,4 +1,5 @@
 /*
+/*
  * Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -178,9 +179,9 @@ height: "29px", width: "420px",
 								   {label: "Manage Deployments...",
 								    idInPage: "deploySettingsItem",
 								    onClick: "settingsDeployClick"},
-								   {label: "Manage CloudFoundry Apps...",
+								  /* {label: "Manage CloudFoundry Apps...",
 								    idInPage: "cloudfoundryManagementItem",
-								    onClick: "cloudFoundryDeploymentsClick"},
+								    onClick: "cloudFoundryDeploymentsClick"},*/
 								   {separator:true},
 								   {label: "Phonegap Build",
 								    idInPage: "phonegapBuildItem",
