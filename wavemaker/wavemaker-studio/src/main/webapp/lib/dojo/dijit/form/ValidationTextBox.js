@@ -92,7 +92,7 @@ dojo.declare(
 			//		Overridable function used to validate the text input against the regular expression.
 			// tags:
 			//		protected
-			/* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+			/* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 			 * WM-4642: WaveMaker added the regExpOptions.
 			 */
 			return (new RegExp("^(?:" + this.regExpGen(constraints) + ")"+(this.required?"":"?")+"$", constraints.regExpOptions || "")).test(value) &&
@@ -116,7 +116,7 @@ dojo.declare(
 		    
 			//return this.validator(this.textbox.value, this.constraints);
 
-		        /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		        /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 			 * WM-3184: WaveMaker replaced above return statement with the caluclation below that says do not show this as invalid
 			 * if its empty and has focus, even if it is invalid
 			 */
@@ -171,7 +171,7 @@ dojo.declare(
 				message = this.getPromptMessage(isFocused); // show the prompt whenever the value is not yet complete
 				this._maskValidSubsetError = !this._hasBeenBlurred || isFocused; // no Incomplete warnings while focused
 /*			}else if(isEmpty){ */
-		        /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		        /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 			 * WaveMaker added because messages onEmpty should only be shown onFocus, not both onFocus 
 			 * and again onBlur
 			 */
@@ -179,7 +179,7 @@ dojo.declare(
 				message = this.getPromptMessage(isFocused); // show the prompt whenever there's no error and no text
 			}
 
-		        /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		        /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 			 * WaveMaker added because messages were firing on hidden editors, showing messages that the user could not deal with */
 		        if (message && wm.isDomShowing(this.domNode))
 			    this.set("message", message);

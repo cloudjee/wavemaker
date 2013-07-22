@@ -67,7 +67,7 @@ dojo.declare("dojox.grid._Events", null, {
 					dojo.stopEvent(e);
 				}
 
-                /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+                /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
                 * WaveMaker: WM-4031: START Fixes for loss of selection of current row when finishing an edit using ENTER.  
                 * Bug caused by calling decorateEvent using a target that is the editor AFTER the editor has been removed
                 * from the document, preventing lookup of the current row.

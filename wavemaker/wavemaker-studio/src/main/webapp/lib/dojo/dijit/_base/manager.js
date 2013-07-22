@@ -251,7 +251,7 @@ dojo.declare("dijit.WidgetSet", null, {
 		var outAry = [];
 	
 		function getChildrenHelper(root){
-		    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 		     * WaveMaker added this exit condition to remove thrown errors on unloading studio in IE 9 
 		     */
 		    if (!root) return outAry;

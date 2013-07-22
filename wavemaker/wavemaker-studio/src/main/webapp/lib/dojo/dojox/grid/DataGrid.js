@@ -525,7 +525,7 @@ dojo.declare("dojox.grid.DataGrid", dojox.grid._Grid, {
 
 	// editing
 	canEdit: function(inCell, inRowIndex){
-         /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+         /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
           * WaveMaker: Adds support for disabling the grid */
 		return this._canEdit && !this.disabled;
 	},
@@ -550,21 +550,21 @@ dojo.declare("dojox.grid.DataGrid", dojox.grid._Grid, {
 			onItem: dojo.hitch(this, function(item){
 				var oldValue = this.store.getValue(item, inAttrName);
 				if(typeof oldValue == 'number'){
-				    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+				    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 				     * WaveMaker: this if statement added so that checkbox editors are handled
 				     * even if the type in the model not a boolean 
 				     */
 				    if (typeof inValue == 'boolean')
 					inValue = inValue ? 1 : 0;
 
-				    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+				    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 				     * WaveMaker: this else if statement added so that date editors whose source data is a long can recognize
 				     * dates as legitimate values and replace them with longs
 				     */
 				    else if (inValue instanceof Date)
 					inValue = inValue.getTime();
 				    else {
-				    /* Copyright (C) 2013 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+				    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 				     * WaveMaker: isNaN now returns null; WM-3991
 				     */
 					inValue = isNaN(inValue) || inValue === null ? null : parseFloat(inValue);

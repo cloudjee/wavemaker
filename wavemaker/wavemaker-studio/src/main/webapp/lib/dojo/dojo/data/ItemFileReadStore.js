@@ -143,7 +143,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 		this._assertIsAttribute(attribute);
 		// Clone it before returning.  refs: #10474
 
-	    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+	    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 	     * Wavemaker Addition helps getValues to treate "." as a subproperty rather than part of the item name */
 	    if (attribute.indexOf(".") != -1) {
 		var parts = attribute.split(/\./);
@@ -634,7 +634,7 @@ dojo.declare("dojo.data.ItemFileReadStore", null,{
 					if(this._jsonFileUrl){
 						throw new Error("dojo.data.ItemFileReadStore:  The json data as specified by: [" + this._jsonFileUrl + "] is malformed.  Items within the list have identifier: [" + identifier + "].  Value collided: [" + identity + "]");
 					}else if(this._jsonData){
-					    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+					    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 					     * Wavemaker Added "not unique" to the error message to help clarify what is wrong */
 						throw new Error("dojo.data.ItemFileReadStore:  The json data provided by the creation arguments is malformed.  Items within the list have identifier: [" + identifier + "].  Value collided/not unique: [" + identity + "]");
 					}

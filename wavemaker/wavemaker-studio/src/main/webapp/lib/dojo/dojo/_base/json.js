@@ -76,7 +76,7 @@ dojo.toJson = function(/*Object*/ it, /*Boolean?*/ prettyPrint, /*String?*/ _ind
 	var newObj;
 	_indentStr = _indentStr || "";
 	
-	/* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+	/* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
      * WaveMaker: Added special meaning to prettyPrint === -1 */
 	var nextIndent = prettyPrint && prettyPrint !== -1 ? _indentStr + dojo.toJsonIndentStr : "";
 	var tf = it.__json__||it.json;
@@ -92,7 +92,7 @@ dojo.toJson = function(/*Object*/ it, /*Boolean?*/ prettyPrint, /*String?*/ _ind
 		// that can be provided by users in the form of .json or .__json__ function.
 		throw new Error("Can't serialize DOM nodes");
 	}
-	/* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+	/* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
      * WaveMaker: Added special meaning to prettyPrint === -1 */
 	var sep = prettyPrint && prettyPrint != -1 ? " " : "";
     var newLine = prettyPrint === -1 && dojo.isArray(it) && it.length > 0 && typeof it[0] == "object" || prettyPrint && prettyPrint !== -1 ? "\n" : "";

@@ -82,7 +82,7 @@ define("dojo/_base/declare", ["dojo/lib/kernel", "dojo/_base/lang", "dojo/_base/
 		return result;
 	}
 
-    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
      * -r30161: WaveMaker changed inherited to call inherited2 in order to simplify stepping through calls to this.inherited 
      * Dojo forums state they plan to adopt similar change in dojo 1.7.
      */

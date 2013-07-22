@@ -454,7 +454,7 @@ dojo.declare(
 				this.set('displayedValue', newvalue);
 			} 
 
-			    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+			    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 			     * WaveMaker: Nothing was being fired WHEN there was this.item, and the user deletes the text so that its now "" */
 		    else if (newvalue === "") {
 				// Update 'value' (ex: KY) according to currently displayed text
@@ -836,7 +836,7 @@ dojo.declare(
 			dojo.forEach(results, function(item, i){
 				var menuitem = this._createOption(item, labelFunc);
 
-			    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+			    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 			     * WaveMaker: Added support for indenting menu items */
 			    if (item.indent)
 				dojo.addClass(menuitem, "indentOption" + ((item.indent === true) ? "" : item.indent)); 
@@ -1106,7 +1106,7 @@ dojo.declare(
 			// description:
 			//		Sets the value of the select.
 
-			    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+			    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 			     * WaveMaker: Added support for updating the item any time the value changes */
 		        this._set("item", null); // value not looked up in store
 		        var self = this;

@@ -76,7 +76,7 @@ dojo.declare(
 	_handleOffsetCoord: "left",
 	_progressPixelSize: "width",
 
-    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
      * WaveMaker: dynamicSlider property added by VMware */
     dynamicSlider: false,
 
@@ -141,7 +141,7 @@ dojo.declare(
 	},
 
 	_setPixelValue: function(/*Number*/ pixelValue, /*Number*/ maxPixels, /*Boolean?*/ priorityChange){
-	    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+	    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 	     * WaveMaker: dynamicSlider property added by VMware */
 	    if (this.dynamicSlider) {
 		var now = new Date().getTime();
@@ -338,7 +338,7 @@ dojo.declare("dijit.form._SliderMover",
 			pixelValue = coordEvent[widget._mousePixelCoord] - abspos[widget._startingPixelCoord];
 		widget._setPixelValue_(widget._isReversed_ ? (abspos[widget._pixelCount]-pixelValue) : pixelValue, abspos[widget._pixelCount], false);
 	},
-    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
      * WaveMaker: Not sure why parent methods call to destroy failed, but seems like the events are successfully disconnected if we call destroy twice,
      * so here's the redundant call.  Symptoms: You click and drag, and then mouse up and it won't stop dragging even when the widget is dismissed. */
     onMouseUp: function(e) {

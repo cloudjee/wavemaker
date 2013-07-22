@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-Local spring modifications.  This file is never altered by VMware software,
+Local spring modifications.  This file is never altered by CloudJee software,
 and is an ideal location for end-users to put any code they need.
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"

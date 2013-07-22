@@ -24,7 +24,7 @@
 			var mp = d._modulePrefixes;
 			return !!(mp[module] && (mp[module].value || mp[module].fixed)); // Boolean
 		},
-		/* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+		/* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
      	 * WaveMaker: Adds support for fixed paths */
 		_modulePathLocked: function(/*String*/module){
 			var mp = d._modulePrefixes;
@@ -77,7 +77,7 @@
 
 
 
-		/* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+		/* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
      	 * WaveMaker: Adds support for fixed paths */
 		var uri = (module && d._modulePathLocked(module.split(/\./)[0]) || (relpath.charAt(0) == '/' || relpath.match(/^\w+:/)) ? "" : d.baseUrl) + relpath;
 		try{
@@ -123,7 +123,7 @@
 			}
 			if(!d.isIE){ contents += "\r\n//@ sourceURL=" + uri; } // debugging assist for Firebug
 
-		    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+		    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
 		     * WaveMaker wrapped the var value statement in try/catch and provides the body of the catch */
 			try{
 			        var value = d["eval"](contents);
@@ -186,7 +186,7 @@
 		d._loaders = [];
 
 		for(var x = 0; x < mll.length; x++){
-		    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+		    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
 		     * WaveMaker added the try/catch block */
 			try {
 				mll[x]();
@@ -438,7 +438,7 @@
 		//		the required namespace object
 		omitModuleCheck = d._global_omit_module_check || omitModuleCheck;
 
-	    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+	    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
 	     * WaveMaker: Added this because for some reason, i18n! is added to all localization requests and isn't properly handled */
 		moduleName = moduleName.replace(/i18n\!/,"");
 
@@ -570,7 +570,7 @@
 
 	dojo.requireAfterIf = d.requireIf;
 
-	/* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+	/* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
      * WaveMaker: Adds support for fixed paths */
 	dojo.registerModulePath = function(/*String*/module, /*String*/prefix, /*Boolean*/isFixed){
 		//	summary:
@@ -834,7 +834,7 @@
 		//domain/xdomain) then don't add the baseUrl.
 		var colonIndex = loc.indexOf(":");
 
-		/* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+		/* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
      	 * WaveMaker: Adds support for fixed paths */
 		if(!d._modulePathLocked(module) && loc.charAt(0) != "/" && (colonIndex == -1 || colonIndex > loc.indexOf("/"))){
 			loc = d.baseUrl + loc;
@@ -882,7 +882,7 @@
 				var exclamationIndex = depName.indexOf("!");
 				if(exclamationIndex > -1){
 					//fool the build system
-				    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+				    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
 				    * BEFORE WAVEMAKER
 					if(depName.substring(0, exclamationIndex) == "i18n"){
 						var match = depName.match(/^?i18n\!(.+)\.nls\.([^\.]+)$/);

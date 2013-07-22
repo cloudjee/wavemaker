@@ -106,7 +106,7 @@ dojo.declare("dojo.dnd.Manager", null, {
 	
 	// mouse event processors
 	onMouseMove: function(e){
-	    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+	    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 	     * WaveMaker: Added this block to test to see if there is no mouse button down, in which case, the user managed to release the mouse without
 	     * it being detected.  Seems to happen a lot.  */
 	    if (e.which === 0) {

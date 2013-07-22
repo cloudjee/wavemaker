@@ -59,7 +59,7 @@ dojo.require("dijit.Editor");
 				this.widgetProps||{},
 				{
 					constraints: dojo.mixin({}, this.constraint) || {}, //TODO: really just for ValidationTextBoxes
-    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
      * WaveMaker added inGrid so that validator node will know to use the grid behavior */
 				    inGrid: true,
 
@@ -172,7 +172,7 @@ dojo.require("dijit.Editor");
 		getWidgetProps: function(inDatum){
 		    if (this.constraint) {
 
-			/* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+			/* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
 			 * WaveMaker added conversion of constraint from number to date */
 		    if (typeof this.constraint.max == "number")
 			this.constraint.max = new Date(this.constraint.max);
@@ -189,7 +189,7 @@ dojo.require("dijit.Editor");
 	};
 
 
-    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
      * WaveMaker added this class */
 	dojo.declare("dojox.grid.cells.NumberTextBox", dgc._Widget, {
 		widgetClass: dijit.form.NumberTextBox

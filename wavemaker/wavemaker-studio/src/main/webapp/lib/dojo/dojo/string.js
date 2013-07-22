@@ -120,7 +120,7 @@ dojo.string.substitute = function(	/*String*/		template,
 			if(format){
 				value = dojo.getObject(format, false, thisObject).call(thisObject, value, key);
 			}
-			    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+			    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 			     * WaveMaker: Added try/catch block to make localization more stable */
 		        try {
 			    return transform(value, key).toString();

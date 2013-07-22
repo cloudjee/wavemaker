@@ -34,7 +34,7 @@ sub searchFolder{
     $file = $folder . "/" . $file;
     if (-d $file) {
       &searchFolder($file, $copyright);
-    } elsif ($file =~ /\.(js|java|css)$/ && $file !~ /\/dojo\// && $file !~ /\/test\// && $file !~ /\/build\//) {
+    } elsif ($file =~ /\.(js|java|css|html)$/) {
       &searchFile($file, $copyright);
     }
   }
@@ -50,17 +50,20 @@ sub searchFile {
   my $f = `cat $file`;
 
  if ($f =~ /Copyright \(C\) 20(\d\d)\-20\d\d (Infoteria Corporation and )?VM[wW]are/) {
-    $f =~ s/Copyright \(C\) 20(\d\d)\-20\d\d (Infoteria Corporation and )?VM[wW]are/Copyright (C) 20$1-2013 ${2}VMware/;
+    $f =~ s/Copyright \(C\) 20(\d\d)\-20\d\d (Infoteria Corporation and )?VM[wW]are/Copyright (C) 2012-2013 CloudJee/g;
     open(FILE, ">$file");
     print FILE $f;
     close(FILE);
-  } elsif ($f =~ /Copyright \(C\) 20(\d\d) (Infoteria Corporation and )?VM[wW]are/ && $f !~ /Copyright \(C\) 2013 (Infoteria Corporation and )?VM[wW]are/) {
-    $f =~ s/Copyright \(C\) 20(\d\d) (Infoteria Corporation and )?VM[wW]are/Copyright (C) 20$1-2013 ${2}VMware/;
+  } if ($f =~ /Copyright \(C\) 20(\d\d) (Infoteria Corporation and )?VM[wW]are/ && $f !~ /Copyright \(C\) 2013 (Infoteria Corporation and )?VM[wW]are/) {
+    $f =~ s/Copyright \(C\) 20(\d\d) (Infoteria Corporation and )?VM[wW]are/Copyright (C) 2012-2013 CloudJee/g;
     open(FILE, ">$file");
     print FILE $f;
     close(FILE);
-  } elsif ($f =~ /Copyright \(C\) (\d+\-)?2013 VM[wW]are/) {
-    ;
+  } if ($f =~ /Copyright \(C\) (\d+\-)?20(\d\d) VM[wW]are/) {
+    $f =~ s/Copyright \(C\) (\d+\-)?20(\d\d) VM[wW]are/Copyright (C) 2012-2013 CloudJee/g;
+    open(FILE, ">$file");
+    print FILE $f;
+    close(FILE);
   } elsif ($f =~ /(Copyright .*)/) { 
     push(@FOREIGN, "$file has foreign copyright: $1");
   } elsif ($f =~ /(Released under .*)/) {

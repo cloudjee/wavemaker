@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2013 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -194,7 +194,7 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
             out.closeEntry();
             is.close();
 
-            String maniFest = "Manifest-Version: 1.0\n" + "Created-By: WaveMaker Studio (VMware Inc.)";
+            String maniFest = "Manifest-Version: 1.0\n" + "Created-By: WaveMaker Studio (CloudJee Inc.)";
             out.putNextEntry(new ZipEntry("META-INF/MANIFEST.MF"));
             org.apache.commons.io.IOUtils.write(maniFest, out);
             out.closeEntry();

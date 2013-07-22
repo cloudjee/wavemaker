@@ -116,7 +116,7 @@ dojo.declare(
 					if(!this.isDisabledDate(value, this.lang)){
 						this._set("value", value);
 
-			    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+			    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 			     * WaveMaker: Added code to change the class of the selected cell when selected via code */
 					    var newCells = dojo.query("[dijitDateValue=" + value.valueOf() + "]", this.domNode);
 					    if (newCells.length) {
@@ -227,7 +227,7 @@ dojo.declare(
 			// Set name of current month and also fill in spacer element with all the month names
 			// (invisible) so that the maximum width will affect layout.   But not on IE6 because then
 			// the center <TH> overlaps the right <TH> (due to a browser bug).
-			    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+			    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 			     * WaveMaker: Added month.getFullYear() to header for cleaner mobile UI */
 			var monthShortNames = this.dateLocaleModule.getNames('months', 'abbr', 'standAlone', this.lang, month);
 			this.monthDropDownButton.containerNode.innerHTML =

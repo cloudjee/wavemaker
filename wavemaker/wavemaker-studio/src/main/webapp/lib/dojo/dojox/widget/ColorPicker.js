@@ -149,7 +149,7 @@ dojo.require("dojo.i18n");
 			}
 			this._started = true;
 			this.set("value", this.value);
-		    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 		     * WaveMaker: Comments out this and the subscription to /dnd/move/... below because it subscribes to ALL dnd/move/... commands
 		     * which means that any other widget that happens to use this will trigger color changes
 			this._mover = new d.dnd.move.boxConstrainedMoveable(this.cursorNode, {
@@ -500,7 +500,7 @@ dojo.require("dojo.i18n");
 			// summary: set the hue picker handle on relative y coordinates
 			var selCenter = (this.PICKER_HUE_SELECTOR_H/2);
 
-		    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 		     * WaveMaker: Got more reliable results from these calculations than the commented out var ypos = calc */
 		        var coor = dojo.coords(this.colorUnderlay);
 		        var ypos = evt.pageY - coor.y - 2;
@@ -527,7 +527,7 @@ dojo.require("dojo.i18n");
 			var satSelCenterH = this.PICKER_SAT_SELECTOR_H/2;
 			var satSelCenterW = this.PICKER_SAT_SELECTOR_W/2;
 
-		    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 		     * WaveMaker: Got better results from these calucations than the commented out newTop/newLeft calcs */
 		    var coor = dojo.coords(this.colorUnderlay);
 		    var newTop = evt.pageY - coor.y;

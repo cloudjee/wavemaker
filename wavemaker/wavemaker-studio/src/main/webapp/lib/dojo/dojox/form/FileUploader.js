@@ -457,7 +457,7 @@ dojo.declare("dojox.form.FileUploader", [dijit._Widget, dijit._Templated, dijit.
 		//		Internal.
 		//		Set up internal dom nodes for button construction.
 		//
-	    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+	    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 	     * WaveMaker changes: Wrapped all width/height/lineHeight styles in Max(0,x) to avoid IE 8 errors */
 		dojo.style(this.domNode, {
 		        width:Math.max(0,this.fhtml.nr.w)+"px",
@@ -731,7 +731,7 @@ dojo.declare("dojox.form.FileUploader", [dijit._Widget, dijit._Templated, dijit.
 			});
 			dojo.style(this.progNode,"display","none");
 		}else{
-	    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+	    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 	     * WaveMaker changes: To avoid IE 8 bugs, insures that w is never less than 0 */
 		        var w = Math.max(0,display * this.fhtml.nr.w);
 			dojo.style(this.progNode, "width", w + "px");

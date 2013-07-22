@@ -3,7 +3,7 @@ define("dijit/_HasDropDown", ["dojo", "dijit", "dijit/_Widget"], function(dojo, 
 dojo.declare("dijit._HasDropDown",
 	null,
 	{
-        /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+        /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
          * WaveMaker: Unfortunate hack to replace input with span to avoid focus issues with mobile that cause keyboards to pop open
          */
         buttonNodeType: wm.isMobile ? "span" : "input",
@@ -85,14 +85,14 @@ dojo.declare("dijit._HasDropDown",
 			//		Callback when the user mousedown's on the arrow icon
 			if(this.disabled || this.readOnly){ return; }
 
-		    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+		    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
 		     * WaveMaker: Added the conditional around stopEvent */
 		    if (e instanceof Event) {
 			dojo.stopEvent(e);
 		    }
 
 			this._docHandler = this.connect(dojo.doc, "onmouseup", "_onDropDownMouseUp");
-		    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+		    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
 		     * WaveMaker: This was misfiring on the ipad, and seems like you always want to open it
 		    if (e.type.match(/touch/i)) {
 			this._opened = false;
@@ -184,7 +184,7 @@ dojo.declare("dijit._HasDropDown",
 			dojo.addClass(this._arrowWrapperNode || this._buttonNode, "dijit" + defaultPos + "ArrowButton");
 		},
 
-		    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+		    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
 		     * WaveMaker: Added handling of mobile and touch; START HERE */
 		postCreate: function(){
 			// summary:
@@ -231,7 +231,7 @@ dojo.declare("dijit._HasDropDown",
 		    this._onDropDownMouseDown(e || {type: "ontouchend"});
 		}
 	    },
-		    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+		    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
 		     * WaveMaker: END OF SECTION: Added handling of mobile and touch */
 
 		destroy: function(){

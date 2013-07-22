@@ -380,7 +380,7 @@ dojo.declare("dijit._WidgetBase", dojo.Stateful, {
 			dun(handle);
 		});
 
-	    /* Copyright (C) 2013 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+	    /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 	     * WaveMaker added all references to self to fix infinite recursion bug
 	     */
 

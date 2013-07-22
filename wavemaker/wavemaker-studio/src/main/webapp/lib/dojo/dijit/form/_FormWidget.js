@@ -172,7 +172,7 @@ dojo.declare("dijit.form._FormWidget", [dijit._Widget, dijit._Templated, dijit._
 		// tags:
 		//		private
 
-	        /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+	        /* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 	         * WaveMaker changed because onChange was firing and causing side-effects when in fact nothing had changed 
 		 */
 	        if (newValue === this._lastValueReported) return;

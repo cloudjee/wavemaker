@@ -19,7 +19,7 @@ Page List
 * EditVariable: A dialog for editing the JSON of a wm.Variable; replaces the plain text box in the property panel that we used to have with something that offers more assistance in validating the results.
 * ExportProjectPage: When the user selects File -> Export from Studio's menu, this asks the user what they want to export.  This dialog is skipped if the user has no custom themes and components that might need to be exported with the project.
 * GridDesigner: This dialog is used to configure the columns of a wm.DojoGrid and wm.List
-* HandleRequiredJars: This dialog prompts the user to install jar files that are missing.  Certain jar files (ojdbc14.jar, db2jcc.jar, wsdl4j.jar) VMware was unable to distribute due to licensing issues. 
+* HandleRequiredJars: This dialog prompts the user to install jar files that are missing.  Certain jar files (ojdbc14.jar, db2jcc.jar, wsdl4j.jar) CloudJee was unable to distribute due to licensing issues.
 * I18nDictionaryEditor: This dialog is used to enter localization dictionary terms for use by scripts.  This edits the same file as is used to localize widgets, but this dictionary editor does not edit widget properties, only script dictionary terms.
 * ImportCloudFoundryDatabase: This is a version of the ImportDatabase that is used when Studio is running in CloudFoundry instead of on localhost.
 * ImportDatabase: Prompts the user to enter information about their database so that Studio can import the data models and save the connection properties.

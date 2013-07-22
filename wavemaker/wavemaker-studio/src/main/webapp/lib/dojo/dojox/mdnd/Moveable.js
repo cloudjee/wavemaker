@@ -83,7 +83,7 @@ dojo.declare(
 		if(this.skip && this.isFormElement(e)){ return; }
 
 
-	/* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
+	/* Copyright (C) 2012-2013 CloudJee, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0
      * WaveMaker: Adds test to see if the user has clicked on vertical scrollbar.  Clicks on scrollbars
      * don't generate reliable mouseup events, and simply should not start a dnd event. */
 		var coords = dojo.coords(e.target);
@@ -91,7 +91,7 @@ dojo.declare(
 		var overflowX = wm.getStyleFromNode(e.target, "overflow-x") || wm.getStyleFromNode(e.target, "overflow");
 		if ((overflowY == "auto" || overflowY == "scroll") && coords.w < 17 + e.offsetX) {return;}
 		if ((overflowX == "auto" || overflowX == "scroll") && coords.h < 17 + e.offsetY) {return;}
-    /* END VMWARE Addition */
+    /* END Addition */
 
 		if(this.autoScroll){
 			this.autoScroll.setAutoScrollNode(this.node);
