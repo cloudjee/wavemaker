@@ -39,6 +39,7 @@ wm.componentList = {
     "wm.gadget.TwitterList": ["studio.build.wm_gadget"],
     "wm.DojoFisheye": ["studio.build.wm_gadget"],
     "wm.Ticker": ["wm.base.widget.Ticker_design"],
+    "wm.TwitterFeed": ["wm.base.widget.TwitterFeed"],
 
     /* MISC EDITORS */
     "wm.OneToMany": ["studio.build.wm_editors"],

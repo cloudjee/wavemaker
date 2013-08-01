@@ -57,6 +57,7 @@ wm.componentList = {
     'wm.gadget.TwitterFollowButton': ["wm.base.widget.gadget.TwitterGadgets"],
     'wm.gadget.TwitterTweetButton': ["wm.base.widget.gadget.TwitterGadgets"],
     'wm.gadget.TwitterList': ["wm.base.widget.gadget.TwitterGadgets"],
+    'wm.TwitterFeed': ["wm.base.widget.TwitterFeed"],
 
     'wm.RichText': ['build.Gzipped.wm_editors', 'build.Gzipped.wm_richTextEditor'],
 

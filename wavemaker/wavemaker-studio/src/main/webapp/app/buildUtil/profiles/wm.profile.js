@@ -744,7 +744,8 @@ dependencies = {
 				"wm.base.widget.gadget.YouTube",
 			        "wm.base.widget.gadget.Facebook",
 			        "wm.base.widget.gadget.TwitterGadgets",
-			        "wm.base.widget.gadget.GoogleMap"
+			        "wm.base.widget.gadget.GoogleMap",
+                "wm.base.widget.TwitterFeed"
 			]
 		},
 		{

@@ -391,8 +391,8 @@ dependencies = {
 		    "wm.base.widget.gadget.TwitterGadgets",
 		    "wm.base.widget.gadget.TwitterGadgets_design",
 		    "wm.base.widget.DojoFisheye",
-		    "wm.base.widget.DojoFisheye_design"
-
+		    "wm.base.widget.DojoFisheye_design",
+            "wm.base.widget.TwitterFeed"
 		]
 	    },
 	    {
