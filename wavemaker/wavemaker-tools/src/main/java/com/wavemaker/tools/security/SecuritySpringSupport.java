@@ -676,10 +676,7 @@ public class SecuritySpringSupport {
     					List<ConstructorArg> authzArgs = authzBean.getConstructorArgs();
     					if (authzArgs.size() > 1) {
     						Value valueElement = authzArgs.get(1).getValueElement();
-    						if (valueElement != null && valueElement.getContent() != null && !valueElement.getContent().isEmpty()) {
-    							String groupSearchBase = valueElement.getContent().get(0);
-    							options.setGroupSearchBase(groupSearchBase);
-    						}
+                            options.setGroupSearchBase(getStringValue(valueElement));
     					}
     					options.setGroupRoleAttribute(getPropertyValueString(authzBean, LDAP_GROUP_ROLE_ATTRIBUTE));
     					options.setGroupSearchFilter(getPropertyValueString(authzBean, LDAP_GROUP_SEARCH_FILTER));
@@ -827,6 +824,7 @@ public class SecuritySpringSupport {
                 userSearchCtorArgs.get(0).setValue(searchBase);
                 userSearchCtorArgs.get(1).setValue("(" + userDnPattern + ")");
                 userSearchCtorArgs.get(2).setRef(CONTEXT_SOURCE);
+                setPropertyValueString(bindAuthBean, "userDnPatterns", userDnPattern);
             } else if (constructorArg.getBean().getClazz().equals(LDAP_AUTHORITIES_POPULATOR_CLASSNAME)) {
                 Bean authzBean = constructorArg.getBean();
                 List<ConstructorArg> authzArgs = authzBean.getConstructorArgs();
@@ -951,9 +949,20 @@ public class SecuritySpringSupport {
             return null;
         }
         Value valueElement = property.getValueElement();
+        return getStringValue(valueElement);
+    }
+
+    private static String getStringValue(Value valueElement) {
+        if (valueElement == null || valueElement.getContent() == null) {
+            return null;
+        }
         if (valueElement.getContent().isEmpty() == false) { // GD: Added this check because sometimes the value in
                                                             // project-security.xml can be null
-            return valueElement.getContent().get(0);
+            String s = valueElement.getContent().get(0);
+            if(SecurityXmlSupport.SPEL_NULL_VALUE.equals(s)) {
+                return null;
+            }
+            return s;
         } else {
             return null;
         }

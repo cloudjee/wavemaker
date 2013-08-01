@@ -38,6 +38,8 @@ import com.wavemaker.tools.security.schema.*;
 
 public class SecurityXmlSupport {
 
+    public static String SPEL_NULL_VALUE = "#{null}";
+
 	static List<UserService.User> getUserSvcUsers(Beans beans){
 		List<UserService.User> demoUsers = null;
 		try{
@@ -201,10 +203,12 @@ public class SecurityXmlSupport {
 	public static void setLdapProviderProps(Beans beans, boolean groupSearchDisabled, String userDnPattern, String groupSearchBase, String groupRoleAttribute, String groupSearchFilter){
 		AuthenticationManager.LdapAuthenticationProvider ldapAuthProvider = getLdapAuthProvider(beans);
 		ldapAuthProvider.setUserSearchFilter("(" + userDnPattern + ")");
+        ldapAuthProvider.setUserDnPattern(userDnPattern);
+        ldapAuthProvider.setGroupSearchBase(SPEL_NULL_VALUE);
 		if(!groupSearchDisabled){
 			ldapAuthProvider.setGroupSearchBase(groupSearchBase);
 			ldapAuthProvider.setGroupSearchFilter(groupSearchFilter);
-			ldapAuthProvider.setGroupRoleAttribute(groupRoleAttribute);			
+			ldapAuthProvider.setGroupRoleAttribute(groupRoleAttribute);
 		}
 	} 
 	
