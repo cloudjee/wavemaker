@@ -1206,7 +1206,7 @@ dojo.declare("wm.studio.Project", null, {
                 }), onError
             ).then(
                 dojo.hitch(this, function() {
-                    studio.setSaveProgressBarMessage(this.pageName + ".html");
+                    studio.setSaveProgressBarMessage(this.pageName + ".a.js");
                     var d = this.savePageData(this.pageName + ".a.js", allPageTxt, false, true);
                     return d;
                 }), onError
