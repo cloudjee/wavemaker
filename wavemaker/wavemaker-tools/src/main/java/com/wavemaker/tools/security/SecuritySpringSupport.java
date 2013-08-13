@@ -103,7 +103,7 @@ public class SecuritySpringSupport {
 
     private static final String USERS_BY_USERNAME_QUERY_PROPERTY = "usersByUsernameQuery";
 
-    private static final String AUTHORITIES_BY_USERNAME_QUERY_PROPERTY = "authoritiesByUsernameQuery";
+    public static final String AUTHORITIES_BY_USERNAME_QUERY_PROPERTY = "authoritiesByUsernameQuery";
 
     private static final String TABLE_MARKER = "table";
 
@@ -519,9 +519,9 @@ public class SecuritySpringSupport {
     	return usersList;
     }
 	
-    static DatabaseOptions constructDatabaseOptions(Beans beans) {
+    public static DatabaseOptions constructDatabaseOptions(Beans beans) {
         DatabaseOptions options = new DatabaseOptions();
-        Bean jdbcDaoBean = beans.getBeanById(JDBC_DAO_IMPL_BEAN_ID);
+        Bean jdbcDaoBean = getJdbcDaoBean(beans);
 
         Property property = jdbcDaoBean.getProperty(DATA_SOURCE_PROPERTY);
         String dataSourceBeanId = property.getRefElement().getBean();
@@ -565,9 +565,13 @@ public class SecuritySpringSupport {
         return options;
     }
 
+    public static Bean getJdbcDaoBean(Beans beans) {
+        return beans.getBeanById(JDBC_DAO_IMPL_BEAN_ID);
+    }
+
     static void updateJdbcDaoImpl(Beans beans, String modelName, String tableName, String unameColumnName, String uidColumnName,
         String uidColumnSqlType, String pwColumnName, String roleColumnName, String rolesByUsernameQuery) {
-        Bean jdbcDaoBean = beans.getBeanById(JDBC_DAO_IMPL_BEAN_ID);
+        Bean jdbcDaoBean = getJdbcDaoBean(beans);
         String clazz = jdbcDaoBean.getClazz();
         if (clazz == null || !clazz.equals(JDBC_DAO_IMPL_BEAN_CLASSNAME)) {
             jdbcDaoBean.setClazz(JDBC_DAO_IMPL_BEAN_CLASSNAME);
@@ -594,7 +598,7 @@ public class SecuritySpringSupport {
     }
 
     static public void resetJdbcDaoImpl(Beans beans) {
-        Bean jdbcDaoBean = beans.getBeanById(JDBC_DAO_IMPL_BEAN_ID);
+        Bean jdbcDaoBean = getJdbcDaoBean(beans);
         Property property = jdbcDaoBean.getProperty(DATA_SOURCE_PROPERTY);
         if (property == null) {
             property = new Property();
@@ -940,7 +944,7 @@ public class SecuritySpringSupport {
         list.setRefElement(refElements);
     }
 
-    private static String getPropertyValueString(Bean bean, String propertyName) {
+    public static String getPropertyValueString(Bean bean, String propertyName) {
     	if(bean == null){
     		return null;
     	}
@@ -968,7 +972,7 @@ public class SecuritySpringSupport {
         }
     }
 
-    private static void setPropertyValueString(Bean bean, String propertyName, String value) {
+    public static void setPropertyValueString(Bean bean, String propertyName, String value) {
         Property property = bean.getProperty(propertyName);
         if (property == null) {
             property = new Property();
