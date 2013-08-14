@@ -60,16 +60,18 @@ public class UpdateUserIdToUsernameForSpringDBSecurity implements UpgradeTask {
 			throw new ConfigurationException("Problem getting project-security.xml file !!!");
 		}
 		Beans beans = getSpringSecurityBeans();
-        DatabaseOptions databaseOptions = SecuritySpringSupport.constructDatabaseOptions(beans);
-        String userNameColumn = databaseOptions.getUnameColumnName();
-        String userIdColumn = databaseOptions.getUidColumnName();
-
         Bean jdbcDaoBean = SecuritySpringSupport.getJdbcDaoBean(beans);
-        String authoritiesByUsernameQuery = SecuritySpringSupport.getPropertyValueString(jdbcDaoBean, SecuritySpringSupport.AUTHORITIES_BY_USERNAME_QUERY_PROPERTY);
+        if(jdbcDaoBean != null) {
+            DatabaseOptions databaseOptions = SecuritySpringSupport.constructDatabaseOptions(beans);
+            String userNameColumn = databaseOptions.getUnameColumnName();
+            String userIdColumn = databaseOptions.getUidColumnName();
 
-        String updatedQuery = updateQuery(userNameColumn, userIdColumn, authoritiesByUsernameQuery);
-        SecuritySpringSupport.setPropertyValueString(jdbcDaoBean, SecuritySpringSupport.AUTHORITIES_BY_USERNAME_QUERY_PROPERTY, updatedQuery);
-        saveSecuritySpringBeans(beans);
+            String authoritiesByUsernameQuery = SecuritySpringSupport.getPropertyValueString(jdbcDaoBean, SecuritySpringSupport.AUTHORITIES_BY_USERNAME_QUERY_PROPERTY);
+
+            String updatedQuery = updateQuery(userNameColumn, userIdColumn, authoritiesByUsernameQuery);
+            SecuritySpringSupport.setPropertyValueString(jdbcDaoBean, SecuritySpringSupport.AUTHORITIES_BY_USERNAME_QUERY_PROPERTY, updatedQuery);
+            saveSecuritySpringBeans(beans);
+        }
     }
 
     private String updateQuery(String userNameColumn, String userIdColumn, String authoritiesByUsernameQuery) {
