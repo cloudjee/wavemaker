@@ -21,6 +21,9 @@ import org.springframework.security.core.userdetails.UserDetails;
  * @author Seung Lee
  */
 public interface WMUserDetails extends UserDetails {
+
+    String getUserId();
+
     /**
      * Returns the user's long name.
      *

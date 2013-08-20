@@ -14,25 +14,15 @@
 
 package com.wavemaker.runtime.security;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Collection;
+import java.util.*;
 
+import org.apache.log4j.Logger;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.cas.authentication.CasAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.apache.log4j.Logger;
 
-import com.wavemaker.runtime.RuntimeAccess;
-import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 
@@ -111,6 +101,13 @@ public class SecurityService {
     public String getUserId() {
         Authentication authentication = getAuthenticatedAuthentication();
         if (authentication != null) {
+            Object principal = authentication.getPrincipal();
+            if(principal instanceof WMUserDetails) {
+                return ((WMUserDetails) principal).getUserId();
+            }
+            /**
+             * the below return statement is to handle all non-db cases.
+             */
             return authentication.getName();
         }
         return null;

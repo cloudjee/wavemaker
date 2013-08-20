@@ -89,7 +89,7 @@ public class EnhancedJdbcDaoImpl extends JdbcDaoImpl {
                 } catch (Exception ex) {
                 }
 
-                WMUserDetails user = new WMUser(userName, password, userName, tenantId, enabled, true, true,
+                WMUserDetails user = new WMUser(userId, userName, password, userName, tenantId, enabled, true, true,
                         true, AuthorityUtils.NO_AUTHORITIES);
 
                 return user;
@@ -110,8 +110,9 @@ public class EnhancedJdbcDaoImpl extends JdbcDaoImpl {
         WMUserDetails wmUserDetails = (WMUserDetails) userFromUserQuery;
         String userLongName = wmUserDetails.getUserLongName();
         int tenantId = wmUserDetails.getTenantId();
+        String userId = wmUserDetails.getUserId();
 
-        return new WMUser(returnUsername, userFromUserQuery.getPassword(), userLongName, tenantId, userFromUserQuery.isEnabled(),
+        return new WMUser(userId, returnUsername, userFromUserQuery.getPassword(), userLongName, tenantId, userFromUserQuery.isEnabled(),
                 true, true, true, combinedAuthorities);
     }
 }

@@ -27,18 +27,19 @@ public class WMUser extends User implements WMUserDetails {
 
     private final String userLongName;
     private final int tenantId;
+    private final String userId;
 
-    public WMUser(String username, String password, String userLongName, int tenantId, Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, authorities);
-        this.userLongName = userLongName;
-        this.tenantId = tenantId;
-
-    }
-    public WMUser(String username, String password, String userLongName, int tenantId, boolean enabled, boolean accountNonExpired,
+    public WMUser(String userId, String username, String password, String userLongName, int tenantId, boolean enabled, boolean accountNonExpired,
                 boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+        this.userId = userId;
         this.userLongName = userLongName;
         this.tenantId = tenantId;
+    }
+
+    @Override
+    public String getUserId() {
+        return this.userId;
     }
 
     @Override
