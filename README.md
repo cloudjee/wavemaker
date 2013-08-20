@@ -38,7 +38,7 @@ In order to build WaveMaker you will need the following applications:
 To clone the WaveMaker repository, use git clone:
 
 <pre>
- git clone https://github.com/SpringSource/wavemaker.git
+ git clone https://github.com/cloudjee/wavemaker.git
 </pre>
  
 To build the complete WaveMaker distribution, including installer, run the maven from the root directory:
@@ -74,10 +74,7 @@ The installer package built will be dependent on your operating system.  The fol
 * Linux (Centos or Ubuntu)
 * Windows
 
-Building the windows installer requires zip file of the jdk to be redistributed be available. This zip file can not be in the public repository and must be provided.
-Set BUILD_JDK_ZIP to the folder containing the zip file.
-e.g. set BUILD_JDK_ZIP=c:\downloads
-The file should be named 'jdk1.6.0_24.zip' and include the folder jdk-1.6.0_24 at the top level of the archive.
+All of these need JAVA in the class path.
 
 
 Importing into Eclipse/STS
