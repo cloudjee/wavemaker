@@ -1,4 +1,4 @@
-VMware WakeMaker 6.6.0 M3
+VMware WakeMaker 6.6.1 M3
 Copyright (C) 2012-2013 CloudJee, Inc. All Rights Reserved.
 
 This product is licensed to you under the Apache License, Version 2.0 (the "License").  
