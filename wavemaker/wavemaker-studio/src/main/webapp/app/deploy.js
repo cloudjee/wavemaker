@@ -379,9 +379,9 @@ Studio.extend({
         this.deploymentDialog.show();
         this.deploymentDialog.page.selectFirst();
     },
-    cloudFoundryDeploymentsClick: function() {
+    cloudJeeDeploymentsClick: function() {
         this.deploymentDialog.setPage("DeploymentDialog"); // insures the dialog is initialized, but does not show it
-        this.deploymentDialog.page.showCloudFoundryAppListDialog();
+        this.deploymentDialog.page.showCloudJeeAppListDialog();
     },
     deploymentHelp: function() {
         window.open(studio.getDictionaryItem("URL_DOCS", {

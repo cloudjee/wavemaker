@@ -21,6 +21,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 
     /* Page Static Variables */
     CF_DEPLOY: "CLOUD_FOUNDRY",
+    CJ_DEPLOY: "CLOUD_JEE",
     TC_DEPLOY: "TOMCAT",
     FILE_DEPLOY: "FILE",
 
@@ -54,16 +55,16 @@ dojo.declare("DeploymentDialog", wm.Page, {
             databaseJNDILayer1: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
                 databaseJNDINameEditor1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}]
             }],
-            databaseCloudFoundryLayer1: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
-                databaseCloudFoundryType1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"MYSQL","readonly":true,"width":"100%"}, {}],
-                databaseCloudFoundryNameEditor1: ["wm.SelectMenu", {allowNone:1, restrictValues: false, "border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true/*, helpText: "Rename your database if you already have a database of that name on CloudFoundry and don't want to reuse that database.  Note: each database is on its own cloud server and counts against your quota"*/}, {},{
+            databaseCloudJeeLayer1: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
+                databaseCloudJeeType1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"MYSQL","readonly":true,"width":"100%"}, {}],
+                databaseCloudJeeNameEditor1: ["wm.SelectMenu", {allowNone:1, restrictValues: false, "border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true/*, helpText: "Rename your database if you already have a database of that name on CloudJee and don't want to reuse that database.  Note: each database is on its own cloud server and counts against your quota"*/}, {},{
                     binding: ["wm.Binding", {}, {}, {
                         wire: ["wm.Wire", {targetProperty: "dataSet", source: "dataServiceListVar"}]
                     }]
                 }],
                 /* Height set from dictionary */
-                databaseCloudFoundryTips1: ["wm.Html", {border: "0", margin: "10,0,0,0", width: "100%", height: "60px"}]/*,
-                databaseCloudFoundryWarnings1: ["wm.Html", {border: "0", margin: "10,0,0,0", padding: "5", border: "1", borderColor: "red", width: "100%", height: "60px", showing: false}]*/
+                databaseCloudJeeTips1: ["wm.Html", {border: "0", margin: "10,0,0,0", width: "100%", height: "60px"}]/*,
+                databaseCloudJeeWarnings1: ["wm.Html", {border: "0", margin: "10,0,0,0", padding: "5", border: "1", borderColor: "red", width: "100%", height: "60px", showing: false}]*/
             }]
         }]
         }]
@@ -110,13 +111,13 @@ dojo.declare("DeploymentDialog", wm.Page, {
         var jndiLayerChildren = layersChildren.databaseJNDILayer1[3];
         jndiLayerChildren.databaseJNDINameEditor1[1].caption = this.getDictionaryItem("DBBOX_JNDINAME_CAPTION");
 
-        var cloudfoundryLayerChildren = layersChildren.databaseCloudFoundryLayer1[3];
-        cloudfoundryLayerChildren.databaseCloudFoundryType1[1].caption = this.getDictionaryItem("DBBOX_CFTYPE_CAPTION");
-        cloudfoundryLayerChildren.databaseCloudFoundryNameEditor1[1].caption = this.getDictionaryItem("DBBOX_CFNAME_CAPTION");
-        cloudfoundryLayerChildren.databaseCloudFoundryNameEditor1[1].helpText = this.getDictionaryItem("DBBOX_CFNAME_HELP");
-        cloudfoundryLayerChildren.databaseCloudFoundryTips1[1].html = this.getDictionaryItem("CF_DB_NODATA_WARNING");
-        cloudfoundryLayerChildren.databaseCloudFoundryTips1[1].height = this.getDictionaryItem("CF_DB_NODATA_WARNING_HEIGHT");
-        /*cloudfoundryLayerChildren.databaseCloudFoundryWarnings1[1].html = this.getDictionaryItem("CF_MULTIPLE_DB_WARNING");*/
+        var cloudfoundryLayerChildren = layersChildren.databaseCloudJeeLayer1[3];
+        cloudfoundryLayerChildren.databaseCloudJeeType1[1].caption = this.getDictionaryItem("DBBOX_CFTYPE_CAPTION");
+        cloudfoundryLayerChildren.databaseCloudJeeNameEditor1[1].caption = this.getDictionaryItem("DBBOX_CFNAME_CAPTION");
+        cloudfoundryLayerChildren.databaseCloudJeeNameEditor1[1].helpText = this.getDictionaryItem("DBBOX_CFNAME_HELP");
+        cloudfoundryLayerChildren.databaseCloudJeeTips1[1].html = this.getDictionaryItem("CF_DB_NODATA_WARNING");
+        cloudfoundryLayerChildren.databaseCloudJeeTips1[1].height = this.getDictionaryItem("CF_DB_NODATA_WARNING_HEIGHT");
+        /*cloudfoundryLayerChildren.databaseCloudJeeWarnings1[1].html = this.getDictionaryItem("CF_MULTIPLE_DB_WARNING");*/
     },
     selectFirst: function() {
         this.initDeploymentListVar();
@@ -199,8 +200,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
         switch (this.deploymentList.selectedItem.getValue("dataValue").deploymentType) {
         case this.TC_DEPLOY:
             return this.generateTomcatDeploymentStruct();
-        case this.CF_DEPLOY:
-            return this.generateCloudFoundryDeploymentStruct();
+        case this.CJ_DEPLOY:
+            return this.generateCloudJeeDeploymentStruct();
         case this.FILE_DEPLOY:
             return this.generateFileDeploymentStruct();
         }
@@ -223,12 +224,12 @@ dojo.declare("DeploymentDialog", wm.Page, {
         data.databases = this.generateStandardDatabaseStruct();
         return data;
     },
-    generateCloudFoundryDeploymentStruct: function() { /* Start from the  original data as it contains the deploymentId and perhaps other data we haven't bothered to put into the form */
+    generateCloudJeeDeploymentStruct: function() { /* Start from the  original data as it contains the deploymentId and perhaps other data we haven't bothered to put into the form */
         var data = this.deploymentList.selectedItem.getValue("dataValue");
-        data.applicationName = this.cfNameEditor.getDataValue();
-        data.name = this.cfDeploymentNameEditor.getDataValue();
-        data.target = this.cfHostEditor.getDataValue();
-        data.deploymentUrl = this.cfUrlEditor.getDataValue();
+        data.applicationName = this.cjNameEditor.getDataValue();
+        data.name = this.cjDeploymentNameEditor.getDataValue();
+        data.target = this.cjHostEditor.getDataValue();
+        data.deploymentUrl = this.cjUrlEditor.getDataValue();
 
         /* Delete the old databases and replace it with a new databases structure */
         var databases = data.databases = [];
@@ -236,7 +237,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         dojo.forEach(this.currentDatabaseBoxes, dojo.hitch(this, function(box, i) {
             databases.push({
                 dataModelId: box.dataModel.name,
-                dbName: this["databaseCloudFoundryNameEditor" + (i + 1)].getDataValue(),
+                dbName: this["databaseCloudJeeNameEditor" + (i + 1)].getDataValue(),
                 connectionUrl: this.getTargetUrl(data),// used to store db type, not because its required
                 username: null,
                 password: null,
@@ -276,26 +277,26 @@ dojo.declare("DeploymentDialog", wm.Page, {
         }));
         return databases;
     },
-    cfGetUrlbuttonClick: function(inSender){
+    cjGetUrlbuttonClick: function(inSender){
         try{
-        this.cfUrlEditor.clear();
-        var data = this.generateCloudFoundryDeploymentStruct();
+        this.cjUrlEditor.clear();
+        var data = this.generateCloudJeeDeploymentStruct();
         studio.beginWait(this.getDictionaryItem("WAIT_GENERATE"));
         studio.deploymentService.requestAsync("getDeploymentURL", [data],
                         dojo.hitch(this, function(inResult) {
-                            this.cfGetUrlSuccess(inResult,false);
+                            this.cjGetUrlSuccess(inResult,false);
                         }),
-                        dojo.hitch(this, "cfGetUrlFailed"));
+                        dojo.hitch(this, "cjGetUrlFailed"));
         } catch(e) {
-          console.error('ERROR IN cfGetUrlbuttonClick: ' + e);
+          console.error('ERROR IN cjGetUrlbuttonClick: ' + e);
       }
       },
-    cfGetUrlSuccess: function(inResult){
-        this.cfUrlEditor.setDataValue(inResult.replace(/^https/,"http"));
+    cjGetUrlSuccess: function(inResult){
+        this.cjUrlEditor.setDataValue(inResult.replace(/^https/,"http"));
         studio.endWait();
     },
 
-    cfGetUrlFailed: function(inResult){
+    cjGetUrlFailed: function(inResult){
         studio.endWait();
         app.toastError(this.getDictionaryItem("TOAST_GENERATE_FAIL"));
     },
@@ -429,21 +430,21 @@ dojo.declare("DeploymentDialog", wm.Page, {
               studio.endWait();
               app.confirm(this.getDictionaryItem("CONFIRM_DEPLOY_HEADER") + this.generateDeploymentHTMLSynopsis(inData), false,
                 dojo.hitch(this, function() {
-                  if (inData.deploymentType == this.CF_DEPLOY) {
-                      this.cloudFoundryDeployConfirmed(inData);
+                  if (inData.deploymentType == this.CJ_DEPLOY) {
+                      this.cloudJeeDeployConfirmed(inData);
                       this.cleanupCFDeployCheckboxes();
                   } else {
                       this.deploy2(inData);
                   }
                 }),
                 dojo.hitch(this, function() {
-                  if (inData.deploymentType == this.CF_DEPLOY) {
+                  if (inData.deploymentType == this.CJ_DEPLOY) {
                       this.cleanupCFDeployCheckboxes();
                   }
                 })
               );
               app.confirmDialog.setWidth("450px");
-              if (inData.deploymentType == this.CF_DEPLOY) {
+              if (inData.deploymentType == this.CJ_DEPLOY) {
                   this._updateSchemaCheckboxes = {};
                   this._updateSchemaCheckboxesValue = {};
                   var databases = {};
@@ -452,7 +453,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
                   if (this.currentDatabaseBoxes.length) {
                       dojo.forEach(this.currentDatabaseBoxes, function(dataBox) {
                         var id = dataBox.name.match(/(\d+)$/)[1];
-                          var databaseEditor = this["databaseCloudFoundryNameEditor" + id];
+                          var databaseEditor = this["databaseCloudJeeNameEditor" + id];
                           databases[dataBox.dataModel.dataModelName] = {updateSchema: databaseEditor.selectedItem.isEmpty(),
                                                                         name: databaseEditor.getDataValue()};
                           if (!databaseEditor.selectedItem.isEmpty()) showCheckboxes = true;
@@ -528,7 +529,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
       }));
       delete this._updateSchemaCheckboxes;
   },
-  cloudFoundryDeployConfirmed: function(inData) {
+  cloudJeeDeployConfirmed: function(inData) {
         //this._updateSchema = this._updateSchemaCheckbox ? this._updateSchemaCheckbox.getChecked() : this._updateSchemaCheckboxValue;
 
         var updateSchema = {};
@@ -551,7 +552,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         studio.endWait(); // in case beginWait was called before confirmToken was called
         this.showCFLogin(inCallback, inTargetUrl);
     } else {
-        this.cloudFoundryService.requestAsync("listApps", [inToken,inTargetUrl],
+        this.cloudJeeService.requestAsync("listApps", [inToken,inTargetUrl],
                           dojo.hitch(this, function(inData) {
                               inCallback(inToken);
                           }),
@@ -569,9 +570,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
             this.loginDialogTargetEditor.setDataValue("https://api.cloudfoundry.com");
             this.loginDialogTargetEditor.setReadonly(false);
         }
-        this.cfLoginDialog.show();
+        this.cjLoginDialog.show();
         this.loginDialogUserEditor.focus();
-        this.cfLoginDialogSuccessHandler = inCallback;
+        this.cjLoginDialogSuccessHandler = inCallback;
     },
     deploy2: function(inData) {
         this._deployData = inData;
@@ -595,7 +596,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
                     version: studio.application.getFullVersionNumber()
                 }));
                 break;
-            case this.CF_DEPLOY:
+            case this.CJ_DEPLOY:
                 app.alert(this.getDictionaryItem("ALERT_DEPLOY_SUCCESS", {
                     url: inResult,
                     version: studio.application.getFullVersionNumber()
@@ -641,7 +642,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
             return;
         } else if (inResult.match(/^ERROR\:.*Not enough memory/)) {
             var memory = inResult.match(/\d+[MG]/);
-            this.manageCloudFoundryButtonClick();
+            this.manageCloudJeeButtonClick();
             app.alert(this.getDictionaryItem("ALERT_CF_OUT_OF_MEMORY", {
                 memory: memory[0] || "unknown"
             }));
@@ -649,7 +650,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
             app.alert(this.getDictionaryItem("ALERT_CF_NAME_TAKEN", {
                 name: inData.deploymentUrl
             }));
-            this.cfUrlEditor.setInvalid();
+            this.cjUrlEditor.setInvalid();
         } else {
             this.deployFailed({
                 message: inResult
@@ -723,8 +724,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
           nameEditor = this.tcDeploymentNameEditor;
           break;
 
-      case this.cloudFoundryLayer:
-          nameEditor = this.cfDeploymentNameEditor;
+      case this.cloudJeeLayer:
+          nameEditor = this.cjDeploymentNameEditor;
           break;
       case this.appFileLayer:
           nameEditor = this.appFileLayer;
@@ -738,7 +739,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
       }
   },
     getTargetUrl: function(inData) {
-        if (inData.deploymentType == this.CF_DEPLOY) {
+        if (inData.deploymentType == this.CJ_DEPLOY) {
             return inData.deploymentUrl;
         } else if (inData.deploymentType == this.TC_DEPLOY) {
             return "http://" + inData.host + ":" + inData.port + "/" + inData.applicationName;
@@ -756,8 +757,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
         var name = data.name;
         var target = this.getTargetUrl(inData);
         var type = "";
-        if (data.deploymentType == this.CF_DEPLOY) {
-            type = "CloudFoundry";
+        if (data.deploymentType == this.CJ_DEPLOY) {
+            type = "CloudJee";
         } else if (data.deploymentType == this.TC_DEPLOY) {
             type = "Tomcat";
         } else if (data.deploymentType == this.FILE_DEPLOY) {
@@ -917,9 +918,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
             this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
             this.newTomcatDeploy();
             break;
-        case "cf":
+        case "cj":
             this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
-            this.newCloudFoundryDeploy();
+            this.newCloudJeeDeploy();
             break;
         case "files":
             this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
@@ -1054,7 +1055,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
                             databaseName: c.dataModelName
                         }));
                         /*if (nonHSQLDBCount > 1) {
-                this["databaseCloudFoundryWarnings" + nonHSQLDBCount].setShowing(true);
+                this["databaseCloudJeeWarnings" + nonHSQLDBCount].setShowing(true);
                 }*/
                         this.currentDatabaseBoxes.push(box);
                     } else {
@@ -1071,7 +1072,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         return this.currentDatabaseBoxes;
     },
 	generatePortMappingBox: function() {
-		if (this.deploymentList.selectedItem.getValue("dataValue.deploymentType") === this.CF_DEPLOY ||
+		if (this.deploymentList.selectedItem.getValue("dataValue.deploymentType") === this.CJ_DEPLOY ||
 			!studio.application.isSSLUsed) {
 			if (this.currentPortMappingBox) this.currentPortMappingBox.hide();
 			return null;
@@ -1240,14 +1241,14 @@ dojo.declare("DeploymentDialog", wm.Page, {
         var boxes = this.generateDataModelBoxes();
         this.populateDataModelBoxes(inData.databases);
     },
-    newCloudFoundryDeploy: function() {
+    newCloudJeeDeploy: function() {
         this.editLayer.activate();
         this.owner.owner.show();
-        this.cloudFoundryLayer.activate();
-        var targetName = this.setUniqueDeploymentName("CloudFoundry 1", this.cfDeploymentNameEditor, this.CF_DEPLOY);
-        this.cfHostEditor.setDataValue("https://api.cloudfoundry.com");
-        this.cfNameEditor.setDataValue(studio.project.projectName);
-        this.cfUrlEditor.setDataValue("http://" + studio.project.projectName + "." + this.cfHostEditor.getDataValue().replace(/^.*?api\./,""));
+        this.cloudJeeLayer.activate();
+        var targetName = this.setUniqueDeploymentName("CloudJee 1", this.cjDeploymentNameEditor, this.CJ_DEPLOY);
+        this.cjHostEditor.setDataValue("https://api.cloudfoundry.com");
+        this.cjNameEditor.setDataValue(studio.project.projectName);
+        this.cjUrlEditor.setDataValue("http://" + studio.project.projectName + "." + this.cjHostEditor.getDataValue().replace(/^.*?api\./,""));
 
 		var boxes = this.generateDataModelBoxes();
         dojo.forEach(boxes, dojo.hitch(this, function(b, i) {
@@ -1258,11 +1259,11 @@ dojo.declare("DeploymentDialog", wm.Page, {
             }));
             this["databaseLayers" + (i + 1)].setLayerIndex(2);
             if (studio.isCloud()) {
-                this["databaseCloudFoundryNameEditor" + (i + 1)].setDataValue(dataModel.dataModelName);
+                this["databaseCloudJeeNameEditor" + (i + 1)].setDataValue(dataModel.dataModelName);
             } else {
-                this["databaseCloudFoundryNameEditor" + (i + 1)].setDataValue(connection.db);
+                this["databaseCloudJeeNameEditor" + (i + 1)].setDataValue(connection.db);
             }
-            this["databaseCloudFoundryType" + (i + 1)].setDataValue(connection.dbtype);
+            this["databaseCloudJeeType" + (i + 1)].setDataValue(connection.dbtype);
             this["databaseConnectionEditor" + (i + 1)].hide();
         }));
         
@@ -1277,15 +1278,15 @@ dojo.declare("DeploymentDialog", wm.Page, {
         });
     },
 
-    populateCloudFoundryDeploy: function(inData) {
+    populateCloudJeeDeploy: function(inData) {
         this.editLayer.activate();
-        this.cloudFoundryLayer.activate();
+        this.cloudJeeLayer.activate();
 
-        this.cfDeploymentNameEditor.setDataValue(inData.name);
-        this.cfDeploymentTypeEditor.setDataValue("CloudFoundry");
-        this.cfNameEditor.setDataValue(inData.applicationName);
-        this.cfHostEditor.setDataValue(inData.target);
-        this.cfUrlEditor.setDataValue(inData.deploymentUrl);
+        this.cjDeploymentNameEditor.setDataValue(inData.name);
+        this.cjDeploymentTypeEditor.setDataValue("CloudJee");
+        this.cjNameEditor.setDataValue(inData.applicationName);
+        this.cjHostEditor.setDataValue(inData.target);
+        this.cjUrlEditor.setDataValue(inData.deploymentUrl);
         var boxes = this.generateDataModelBoxes();
         dojo.forEach(boxes, dojo.hitch(this, function(b, i) {
             var dataModel = b.dataModel;
@@ -1295,10 +1296,10 @@ dojo.declare("DeploymentDialog", wm.Page, {
             }));
             this["databaseLayers" + (i + 1)].setLayerIndex(2);
             if (inDbData) {
-                this["databaseCloudFoundryNameEditor" + (i + 1)].setDataValue(inDbData.dbName);
+                this["databaseCloudJeeNameEditor" + (i + 1)].setDataValue(inDbData.dbName);
                 this["databaseConnectionEditor" + (i + 1)].hide();
             } else {
-                this["databaseCloudFoundryNameEditor" + (i + 1)].setDataValue(dataModel.name);
+                this["databaseCloudJeeNameEditor" + (i + 1)].setDataValue(dataModel.name);
                 this["databaseConnectionEditor" + (i + 1)].hide();
             }
         }));
@@ -1306,7 +1307,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         if (this.portMappingPanel) this.portMappingPanel.hide();
 
         this.editPanel.reflow();            
-        var target = this.cfHostEditor.getDataValue();
+        var target = this.cjHostEditor.getDataValue();
         var token = this.getTokenCookie(target);
         this.confirmToken(token, target, dojo.hitch(this, "loadDatabaseServices"));
     },
@@ -1379,8 +1380,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
             this.populateTomcatDeploy(data);
             this.manageUndeployButton.hide();
             break;
-        case this.CF_DEPLOY:
-            this.populateCloudFoundryDeploy(data);
+        case this.CJ_DEPLOY:
+            this.populateCloudJeeDeploy(data);
             this.manageUndeployButton.show();
             break;
         case this.FILE_DEPLOY:
@@ -1404,21 +1405,21 @@ dojo.declare("DeploymentDialog", wm.Page, {
 
 
     /* Handling for the cloudfoundry login dialog */
-    cfLoginCancelClick: function() {
-        this.cloudFoundryAppListDialog.hide();
-        this.cfLoginDialog.hide();
+    cjLoginCancelClick: function() {
+        this.cloudJeeAppListDialog.hide();
+        this.cjLoginDialog.hide();
     },
-    cfLoginOkClick: function() {
+    cjLoginOkClick: function() {
     studio.beginWait(this.getDictionaryItem("WAIT_LOGGING_IN"));
-    this.cloudFoundryService.requestAsync(
+    this.cloudJeeService.requestAsync(
         "login",
         [this.loginDialogUserEditor.getDataValue(), this.loginDialogPasswordEditor.getDataValue(), this._deployData && this._deployData.target ? this._deployData.target : this.loginDialogTargetEditor.getDataValue()],
         dojo.hitch(this, function(inData) {
             this.setTokenCookie(this.loginDialogTargetEditor.getDataValue(), inData);
             studio.endWait();
-            this.cfLoginDialog.hide();
-            if (this.cfLoginDialogSuccessHandler) {
-                this.cfLoginDialogSuccessHandler(inData);
+            this.cjLoginDialog.hide();
+            if (this.cjLoginDialogSuccessHandler) {
+                this.cjLoginDialogSuccessHandler(inData);
             }
             }),
             dojo.hitch(this, function(inError) {
@@ -1441,19 +1442,19 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
 
 
-    refreshCloudFoundryAppList: function(optionalCallback, inOptionalTargetUrl) {
+    refreshCloudJeeAppList: function(optionalCallback, inOptionalTargetUrl) {
     if (inOptionalTargetUrl) {
         this.loginDialogTargetEditor.setDataValue(inOptionalTargetUrl);
     }
     var token = this.getTokenCookie(this.loginDialogTargetEditor.getDataValue());
     this.confirmToken(inOptionalTargetUrl ? token : null, inOptionalTargetUrl, dojo.hitch(this, function(inToken) {
         token = inToken;
-        this.deploymentLoadingDialog.widgetToCover = this.cloudFoundryAppList;
+        this.deploymentLoadingDialog.widgetToCover = this.cloudJeeAppList;
         this.deploymentLoadingDialog.show();
-        this.cloudFoundryService.requestAsync("listApps", [token,this.loginDialogTargetEditor.getDataValue()],
+        this.cloudJeeService.requestAsync("listApps", [token,this.loginDialogTargetEditor.getDataValue()],
                           dojo.hitch(this, function(inResult) {
 
-                              this.populateCloudFoundryAppList(inResult, optionalCallback);
+                              this.populateCloudJeeAppList(inResult, optionalCallback);
                           }),
                           dojo.hitch(this, function(inError) {
                               app.alert(inError);
@@ -1461,19 +1462,19 @@ dojo.declare("DeploymentDialog", wm.Page, {
                           }));
     }));
     },
-    populateCloudFoundryAppList: function(inResult, optionalCallback) {
+    populateCloudJeeAppList: function(inResult, optionalCallback) {
     var results = [];
     for (var i = 0; i < inResult.length; i++) {
         results.push({id: inResult[i].name, name: "<a href='http://" + inResult[i].uris[0] +"' target='_NewWindow'>" + inResult[i].name + "</a>", state: inResult[i].state, services: inResult[i].services ? inResult[i].services.join(", ") : ""});
     }
-    this.cachedCloudFoundryDeploymentList = inResult;
-    this.cloudFoundryAppList.renderData(results);
+    this.cachedCloudJeeDeploymentList = inResult;
+    this.cloudJeeAppList.renderData(results);
     this.deploymentLoadingDialog.hide();
     if (optionalCallback)
         optionalCallback();
     },
-    cloudFoundryUndeployFromListButtonClick: function() {
-    var selectedItem = this.cloudFoundryAppList._data[this.cloudFoundryAppList.getSelectedIndex()];
+    cloudJeeUndeployFromListButtonClick: function() {
+    var selectedItem = this.cloudJeeAppList._data[this.cloudJeeAppList.getSelectedIndex()];
     if (!selectedItem) return;
     var name = selectedItem.id;
     if (!name) return;
@@ -1482,7 +1483,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         "archiveType": null,
         "databases": null,
         "deploymentId": null,
-        "deploymentType": this.CF_DEPLOY,
+        "deploymentType": this.CJ_DEPLOY,
         "host": null,
         "name": name,
         "port": 0,
@@ -1498,7 +1499,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         studio.deploymentService.requestAsync("undeploy", [inData,this.deleteServicesCheckbox.getChecked()],
                           dojo.hitch(this, function(inResult) {
                               studio.endWait();
-                              this.refreshCloudFoundryAppList(null,this.loginDialogTargetEditor.getDataValue());
+                              this.refreshCloudJeeAppList(null,this.loginDialogTargetEditor.getDataValue());
                           }),
                           dojo.hitch(this, function(inError) {
                               studio.endWait();
@@ -1506,8 +1507,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
                           }));
     }));
     },
-    cloudFoundryStartFromListButtonClick: function() {
-    var selectedItem = this.cloudFoundryAppList._data[this.cloudFoundryAppList.getSelectedIndex()];
+    cloudJeeStartFromListButtonClick: function() {
+    var selectedItem = this.cloudJeeAppList._data[this.cloudJeeAppList.getSelectedIndex()];
     if (!selectedItem) return;
     var name = selectedItem.id;
     if (!name) return;
@@ -1522,10 +1523,10 @@ dojo.declare("DeploymentDialog", wm.Page, {
     studio.beginWait(this.getDictionaryItem("WAIT_START"));
     this.confirmToken(inData.token, inData.target, dojo.hitch(this, function(inToken) {
         inData.token = inToken;
-        this.cloudFoundryService.requestAsync("startApplication", [inData.token, inData.target, inData.applicationName],
+        this.cloudJeeService.requestAsync("startApplication", [inData.token, inData.target, inData.applicationName],
                           dojo.hitch(this, function(inResult) {
                               studio.endWait();
-                              this.refreshCloudFoundryAppList(null,this.loginDialogTargetEditor.getDataValue());
+                              this.refreshCloudJeeAppList(null,this.loginDialogTargetEditor.getDataValue());
                           }),
                           dojo.hitch(this, function(inError) {
                               studio.endWait();
@@ -1533,8 +1534,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
                           }));
     }));
     },
-    cloudFoundryStopFromListButtonClick: function() {
-    var selectedItem = this.cloudFoundryAppList._data[this.cloudFoundryAppList.getSelectedIndex()];
+    cloudJeeStopFromListButtonClick: function() {
+    var selectedItem = this.cloudJeeAppList._data[this.cloudJeeAppList.getSelectedIndex()];
     if (!selectedItem) return;
     var name = selectedItem.id;
     if (!name) return;
@@ -1549,10 +1550,10 @@ dojo.declare("DeploymentDialog", wm.Page, {
     studio.beginWait(this.getDictionaryItem("WAIT_STOP"));
     this.confirmToken(inData.token, inData.target, dojo.hitch(this, function(inToken) {
         inData.token = inToken;
-        this.cloudFoundryService.requestAsync("stopApplication", [inData.token, inData.target, inData.applicationName],
+        this.cloudJeeService.requestAsync("stopApplication", [inData.token, inData.target, inData.applicationName],
                           dojo.hitch(this, function(inResult) {
                               studio.endWait();
-                              this.refreshCloudFoundryAppList(null,this.loginDialogTargetEditor.getDataValue());
+                              this.refreshCloudJeeAppList(null,this.loginDialogTargetEditor.getDataValue());
                           }),
                           dojo.hitch(this, function(inError) {
                               studio.endWait();
@@ -1560,14 +1561,14 @@ dojo.declare("DeploymentDialog", wm.Page, {
                           }));
     }));
     },
-    cloudFoundryAppListCloseButtonClick: function() {
-        this.cloudFoundryAppListDialog.hide();
+    cloudJeeAppListCloseButtonClick: function() {
+        this.cloudJeeAppListDialog.hide();
     },
-    showCloudFoundryAppListDialog: function(optionalCallback, optionalTargetUrl) {
-        this.cloudFoundryAppListDialog.show();
-        this.refreshCloudFoundryAppList(optionalCallback, optionalTargetUrl);
+    showCloudJeeAppListDialog: function(optionalCallback, optionalTargetUrl) {
+        this.cloudJeeAppListDialog.show();
+        this.refreshCloudJeeAppList(optionalCallback, optionalTargetUrl);
     },
-    manageCloudFoundryButtonClick: function() {
+    manageCloudJeeButtonClick: function() {
         var data = this.deploymentList.selectedItem.getValue("dataValue");
         var selectName;
         if (data) {
@@ -1575,25 +1576,25 @@ dojo.declare("DeploymentDialog", wm.Page, {
         } else if (this._deployData) {
             selectName = this._deployData.target;
         }
-        this.showCloudFoundryAppListDialog(dojo.hitch(this, function() {
+        this.showCloudJeeAppListDialog(dojo.hitch(this, function() {
             if (data) {
-                for (var i = 0; i < this.cachedCloudFoundryDeploymentList.length; i++) {
-                    if (this.cachedCloudFoundryDeploymentList[i].name == data.applicationName) {
-                        var item = this.cloudFoundryAppList.getItem(i);
-                        this.cloudFoundryAppList.eventSelect(item);
+                for (var i = 0; i < this.cachedCloudJeeDeploymentList.length; i++) {
+                    if (this.cachedCloudJeeDeploymentList[i].name == data.applicationName) {
+                        var item = this.cloudJeeAppList.getItem(i);
+                        this.cloudJeeAppList.eventSelect(item);
                         break;
                     }
                 }
             }
         }), selectName);
     },
-    cloudFoundryTargetChange: function(inSender, inDisplayValue, inDataValue) {
+    cloudJeeTargetChange: function(inSender, inDisplayValue, inDataValue) {
         if (inDisplayValue.match(/^https\:\/\/api\./)) {
             var hostname = (inDisplayValue||"").substring("https://api.".length);
-            this.cfUrlEditor.setDataValue((this.cfUrlEditor.getDataValue() || "").replace(/\..*$/,"." + hostname));
+            this.cjUrlEditor.setDataValue((this.cjUrlEditor.getDataValue() || "").replace(/\..*$/,"." + hostname));
         }
     },
-    cloudFoundryApplicationNameChanged: function() {
+    cloudJeeApplicationNameChanged: function() {
 
     },
     loadDatabaseServices: function() {

@@ -28,6 +28,7 @@
 						<configuration>
 							<sources>
 								<source>services/cloudFoundryService/src</source>
+                                <source>services/cloudJeeService/src</source>
 								<source>services/dataService/src</source>
 								<source>services/deploymentService/src</source>
 								<source>services/javaService/src</source>
@@ -59,6 +60,12 @@
 										<exclude>**/*.java</exclude>
 									</excludes>
 								</resource>
+                                <resource>
+                                    <directory>services/cloudJeeService/src</directory>
+                                    <excludes>
+                                        <exclude>**/*.java</exclude>
+                                    </excludes>
+                                </resource>
 								<resource>
 									<directory>services/cloudServerService/src</directory>
 									<excludes>

@@ -29,7 +29,7 @@ dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
 
     update: function(inImportDataModel) {
         this.cloudFoundryService.requestAsync("listDatabaseServices", ["", ""], dojo.hitch(this, function(inResult) {
-            this.populateCloudFoundryAppList(inResult);
+            this.populateCloudJeeAppList(inResult);
         }), dojo.hitch(this, function(inError) {
             app.alert(inError);
         }));
@@ -37,7 +37,7 @@ dojo.declare("ImportCloudFoundryDatabase", wm.Page, {
     cancelBtnClick: function(inSender) {
         this.owner.owner.hide();
     },
-    populateCloudFoundryAppList: function(inResult) {
+    populateCloudJeeAppList: function(inResult) {
         this.serviceListVar.setData(inResult);
     },
     selectedServiceChange: function(inSender) {

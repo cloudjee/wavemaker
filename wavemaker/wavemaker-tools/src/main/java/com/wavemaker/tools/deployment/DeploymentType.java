@@ -20,5 +20,5 @@ package com.wavemaker.tools.deployment;
  */
 public enum DeploymentType {
 
-    TOMCAT, CLOUD_FOUNDRY, FILE
+    TOMCAT, CLOUD_FOUNDRY, FILE, CLOUD_JEE
 }

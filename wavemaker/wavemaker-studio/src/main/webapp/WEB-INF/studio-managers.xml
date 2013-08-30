@@ -88,6 +88,12 @@
         <property name="dataModelManager" ref="dataModelManager" />
         <property name="webAppAssembler" ref="webAppAssembler"/>
     </bean>
+    <bean id="cloudJeeDeploymentTarget"
+          class="com.wavemaker.tools.deployment.cloudjee.CloudJeeDeploymentTarget"
+          scope="singleton" lazy-init="true">
+        <property name="dataModelManager" ref="dataModelManager" />
+        <property name="webAppAssembler" ref="webAppAssembler"/>
+    </bean>
     
     <bean id="webAppAssembler" class="com.wavemaker.tools.deployment.cloudfoundry.WebAppAssembler">
         <property name="fileSystem" ref="fileSystem"/>
@@ -99,6 +105,7 @@
             <map>
                 <entry key="TOMCAT" value-ref="tomcatDeploymentTarget" />
                 <entry key="CLOUD_FOUNDRY" value-ref="cloudFoundryDeploymentTarget" />
+                <entry key="CLOUD_JEE" value-ref="cloudJeeDeploymentTarget" />
             </map>
         </property>
     </bean>
@@ -391,6 +398,14 @@
             <property name="projectCompiler" ref="projectCompiler"/>
             <property name="deploymentTargetManager" ref="deploymentTargetManager"/>
 			<property name="designServiceManager" ref="designServiceManager"/>
+        </bean>
+        <bean id="cjDeploymentManager" class="com.wavemaker.tools.project.CloudJeeDeploymentManager"
+              scope="singleton" lazy-init="true">
+            <property name="projectManager" ref="projectManager" />
+            <property name="fileSystem" ref="fileSystem" />
+            <property name="projectCompiler" ref="projectCompiler"/>
+            <property name="deploymentTargetManager" ref="deploymentTargetManager"/>
+            <property name="designServiceManager" ref="designServiceManager"/>
         </bean>
         
         <bean id="waveMakerSecurityFilter" class="com.wavemaker.tools.security.CloudFoundrySecurityFilter"/>
