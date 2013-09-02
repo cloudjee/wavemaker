@@ -36,7 +36,10 @@ import com.wavemaker.tools.deployment.cloudfoundry.WebAppAssembler;
 import com.wavemaker.tools.deployment.cloudfoundry.archive.ContentModifier;
 import com.wavemaker.tools.deployment.cloudfoundry.archive.ModifiedContentApplicationArchive;
 import com.wavemaker.tools.deployment.cloudfoundry.archive.StringReplaceContentModifier;
+import com.wavemaker.tools.io.local.LocalFile;
+import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.Project;
+import com.wavemaker.tools.service.cloujeewrapper.CloudJeeClient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cloudfoundry.client.lib.CloudApplication;
@@ -119,11 +122,11 @@ public class CloudJeeDeploymentTarget implements DeploymentTarget {
 
     @Override
     public void validateDeployment(DeploymentInfo deploymentInfo) throws DeploymentStatusException {
-        CloudFoundryClient client = getClient(deploymentInfo);
-        createApplication(client, deploymentInfo, true);
+        CloudJeeClient client = getClient(deploymentInfo);
+        /*createApplication(client, deploymentInfo, true);*/
     }
 
-    @Deprecated
+/*    @Deprecated
     String deploy(File webapp, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
         try {
             validateWar(webapp);
@@ -133,23 +136,20 @@ public class CloudJeeDeploymentTarget implements DeploymentTarget {
         } catch (IOException e) {
             throw new WMRuntimeException(e);
         }
-    }
+    }*/
 
     @Override
     public String deploy(Project project, DeploymentInfo deploymentInfo, File tempWebAppRoot) throws DeploymentStatusException {
-        ApplicationArchive applicationArchive;
-        if (tempWebAppRoot == null) {
-            applicationArchive = this.webAppAssembler.assemble(project);
-            applicationArchive = modifyApplicationArchive(applicationArchive);
-        } else {
-            //try {
-            //    this.webAppAssembler.prepareForAssemble(new LocalFolder(tempWebAppRoot));
-            //} catch (IOException ex) {
-            //    throw new DeploymentStatusException(ex.getMessage());
-            //}
-            applicationArchive = this.webAppAssembler.assemble(project.getProjectName(), new FileSystemResource(tempWebAppRoot));
+        LocalFile warFile = (LocalFile)project.getRootFolder().getFile(DeploymentManager.DIST_DIR_DEFAULT + project.getProjectName() + ".war");
+        CloudJeeClient client =   getClient(deploymentInfo);
+        try {
+            String response = client.deploy(warFile.getLocalFile(), deploymentInfo.getApplicationName());
+            return response;
+        } catch (Exception e) {
+            throw new WMRuntimeException(e);
         }
-        return doDeploy(applicationArchive, deploymentInfo);
+
+
     }
 
     /**
@@ -164,8 +164,8 @@ public class CloudJeeDeploymentTarget implements DeploymentTarget {
         try {
             ApplicationArchive applicationArchive = this.webAppAssembler.assemble(project);
             applicationArchive = modifyApplicationArchive(applicationArchive);
-            return doDeploy(applicationArchive, getSelfDeploymentInfo(project), false);
-        } catch (DeploymentStatusException e) {
+            return " " ;//doDeploy(applicationArchive, getSelfDeploymentInfo(project), false);
+        } catch (Exception e) {
             throw new WMRuntimeException(e.getMessage(), e);
         }
     }
@@ -242,37 +242,9 @@ public class CloudJeeDeploymentTarget implements DeploymentTarget {
         }
     }
 
-    private String doDeploy(ApplicationArchive applicationArchive, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
-        return doDeploy(applicationArchive, deploymentInfo, true);
-    }
 
-    private String doDeploy(ApplicationArchive applicationArchive, DeploymentInfo deploymentInfo, boolean checkExist)
-        throws DeploymentStatusException {
-        try {
-            CloudFoundryClient client = getClient(deploymentInfo);
-            String url = createApplication(client, deploymentInfo, checkExist);
-            log.info("Preparing: " + url);
-            setupServices(client, deploymentInfo);
-            uploadAppliation(client, deploymentInfo.getApplicationName(), applicationArchive);
-            try {
-                CloudApplication application = client.getApplication(deploymentInfo.getApplicationName());
-                if (application.getState().equals(CloudApplication.AppState.STARTED)) {
-                    doRestart(deploymentInfo, client);
-                } else {
-                    doStart(deploymentInfo, client);
-                }
-            } catch (CloudFoundryException ex) {
-                throw new DeploymentStatusException("ERROR: Could not start application. " + ex.getDescription(), ex);
-            }
-            if (!url.startsWith("http://")) {
-                url = "http://" + url;
-            }
-            return url;
-        } catch (HttpServerErrorException e) {
-            throw new DeploymentStatusException("ERROR: Clould not deploy application due to remote exception\n" + e.getMessage() + "\n\n"
-                + e.getStatusText());
-        }
-    }
+
+
 
     private Boolean appNameInUse(CloudFoundryClient client, String appName) {
         try {
@@ -444,12 +416,12 @@ public class CloudJeeDeploymentTarget implements DeploymentTarget {
 
     @Override
     public void undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) throws DeploymentStatusException {
-        CloudFoundryClient client = getClient(deploymentInfo);
+        CloudJeeClient client = getClient(deploymentInfo);
         log.info("Deleting application " + deploymentInfo.getApplicationName());
         Timer timer = new Timer();
         timer.start();
-        try {
-            if (deleteServices) {
+        /*try {
+           if (deleteServices) {
                 CloudApplication app = client.getApplication(deploymentInfo.getApplicationName());
                 for (String service : app.getServices()) {
                     client.deleteService(service);
@@ -463,7 +435,7 @@ public class CloudJeeDeploymentTarget implements DeploymentTarget {
             } else {
                 throw ex;
             }
-        }
+        }*/
     }
 
     private void doRestart(DeploymentInfo deploymentInfo, CloudFoundryClient client) {
@@ -482,17 +454,17 @@ public class CloudJeeDeploymentTarget implements DeploymentTarget {
         log.info("Application " + deploymentInfo.getApplicationName() + " started successfully in " + timer.stop() + "ms");
     }
 
-    private CloudFoundryClient getClient(DeploymentInfo deploymentInfo) {
-        Assert.hasText(deploymentInfo.getToken(), "CloudFoundry login token not supplied.");
-        String url = deploymentInfo.getTarget();
+    private CloudJeeClient getClient(DeploymentInfo deploymentInfo) {
+        Assert.hasText(deploymentInfo.getToken(), "CloudJee login token not supplied.");
+       /* String url = deploymentInfo.getTarget();
         if (!StringUtils.hasText(url)) {
             url = DEFAULT_URL;
-        }
+        }*/
         try {
-            CloudFoundryClient client = new CloudFoundryClient(deploymentInfo.getToken(), url);
+            CloudJeeClient client = new CloudJeeClient(deploymentInfo.getToken());
             return client;
-        } catch (MalformedURLException e) {
-            throw new WMRuntimeException("CloudFoundry target URL is invalid. Attempted: " + url, e);
+        } catch (Exception e) {
+            throw new WMRuntimeException("CloudjeeToken is invalid", e);
         }
     }
 

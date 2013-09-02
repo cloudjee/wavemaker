@@ -200,7 +200,7 @@ public class DeploymentService {
     public String deploy(DeploymentInfo deploymentInfo) throws IOException {
         File tempWebAppRoot = null;
         try {
-            if (deploymentInfo.getDeploymentType() != DeploymentType.FILE && deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
+            if (deploymentInfo.getDeploymentType() != DeploymentType.FILE && deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_JEE) {
                 this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).validateDeployment(deploymentInfo);
             }
 

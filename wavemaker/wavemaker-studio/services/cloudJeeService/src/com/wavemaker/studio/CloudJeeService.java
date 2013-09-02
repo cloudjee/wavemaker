@@ -14,15 +14,36 @@
 
 package com.wavemaker.studio;
 
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.net.URI;
+import java.security.SecureRandom;
+import java.util.*;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+
+
+import javax.net.ssl.X509TrustManager;
+import java.security.cert.X509Certificate;
 import javax.servlet.http.Cookie;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
+import javax.ws.rs.core.UriBuilder;
 
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.api.representation.Form;
+import com.wavemaker.json.JSONArray;
+import com.wavemaker.json.JSONObject;
+import com.wavemaker.json.JSONUnmarshaller;
+import com.wavemaker.tools.service.cloujeewrapper.CloudJeeApplication;
+import com.wavemaker.tools.service.cloujeewrapper.CloudJeeClient;
+import org.apache.commons.lang.WordUtils;
 import org.cloudfoundry.client.lib.CloudApplication;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.cloudfoundry.client.lib.CloudFoundryException;
@@ -52,42 +73,44 @@ public class CloudJeeService {
 
     private final SharedSecretPropagation propagation = new SharedSecretPropagation();
 
+
     public String login(String username, String password, String target) {
-        try {
-            return new CloudFoundryClient(username, password, target).login();
-        } catch (Throwable ex) {
-            throw new WMRuntimeException("CloudFoundry login failed.", ex);
+        try{
+        CloudJeeClient client = new CloudJeeClient();
+        String token = client.authenticate(username, password);
+        return token;
+        }catch (Throwable ex) {
+            throw new WMRuntimeException("CloudJee login failed.", ex);
         }
     }
+    public List<CloudJeeApplication> listApps(String token, String target) {
+        try{
+            CloudJeeClient client = new CloudJeeClient(token);
+            String response = client.list();
+            JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(response);
+            return parseResponse(jsonReq);
 
-    public List<CloudApplication> listApps(String token, String target) {
-        return execute(token, target, "Failed to retrieve CloudFoundry application list.", new CloudFoundryCallable<List<CloudApplication>>() {
-
-            @Override
-            public List<CloudApplication> call(CloudFoundryClient client) {
-                return client.getApplications();
-            }
-        });
+        }catch (Throwable ex) {
+            throw new WMRuntimeException("CloudJee list apps failed.", ex);
+        }
     }
     
     public void stopApplication (String token, String target, final String applicationName) {
-    	execute(token, target, "Failed to stop application.", new CloudFoundryRunnable() {
-
-    		@Override 
-    		public void run(CloudFoundryClient client){
-    			client.stopApplication(applicationName);
-    		}
-    	});
+        CloudJeeClient client = new CloudJeeClient(token);
+        try {
+            client.stop(applicationName);
+        } catch (Exception e) {
+            throw new WMRuntimeException("CloudJee Stop application failed.", e);
+        }
     }
 
     public void startApplication (String token, String target, final String applicationName) {
-    	execute(token, target, "Failed to start application.", new CloudFoundryRunnable() {
-
-    		@Override 
-    		public void run(CloudFoundryClient client){
-    			client.startApplication(applicationName);
-    		}
-    	});
+        CloudJeeClient client = new CloudJeeClient(token);
+        try {
+            client.start(applicationName);
+        } catch (Exception e) {
+            throw new WMRuntimeException("CloudJee start application failed.", e);
+        }
     }
     
     public List<CloudService> listServices(String token, String target) {
@@ -245,7 +268,35 @@ public class CloudJeeService {
         }
         return WMAppContext.getInstance().getCloudEnvironment().getInstanceInfo().getName();
     }
+    private URI getURIFromString(String uri) {
+        return UriBuilder.fromUri(uri).build();
+    }
 
+    private List<CloudJeeApplication> parseResponse(JSONObject jsonObj){
+        try {
+            List<CloudJeeApplication> apps = new ArrayList<CloudJeeApplication>();
+            JSONObject block = (JSONObject) jsonObj.get("success");
+            JSONObject body = null;
+            if (block != null && (body = (JSONObject) block.get("body")) != null) {
+                JSONArray objects = (JSONArray) body.get("objects");
+                Class cls = null;
+                cls = Class.forName("com.wavemaker.tools.service.cloujeewrapper.CloudJeeApplication");
+                CloudJeeApplication app = (CloudJeeApplication) cls.newInstance();
+                for (Object obj : objects) {
+                    HashMap<String, String> map = (HashMap<String, String>) obj;
+                    for (String key : map.keySet()) {
+                        Method method = cls.getDeclaredMethod("set" + WordUtils.capitalize(key), String.class);
+                        method.invoke(app, map.get(key));
+                    }
+                }
+                apps.add(app);
+            }
+
+            return apps;
+        } catch (Exception e) {
+            throw new WMRuntimeException(e);
+        }
+    }
     private static interface CloudFoundryCallable<V> {
 
         V call(CloudFoundryClient client);
@@ -255,5 +306,6 @@ public class CloudJeeService {
 
         void run(CloudFoundryClient client);
     };
+
 
 }
