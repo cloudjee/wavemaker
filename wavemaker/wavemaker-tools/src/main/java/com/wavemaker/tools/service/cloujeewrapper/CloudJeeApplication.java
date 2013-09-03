@@ -37,12 +37,12 @@ public class CloudJeeApplication {
         this.appState = appState;
     }
 
-    public String getCreateAt() {
-        return createAt;
+    public String getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateAt(String createAt) {
-        this.createAt = createAt;
+    public void setCreatedAt(String createAt) {
+        this.createdAt = createAt;
     }
 
     public String getInstanceGroupName() {
@@ -61,11 +61,11 @@ public class CloudJeeApplication {
         this.name = name;
     }
 
-    public boolean isSslEnabled() {
+    public Boolean isSslEnabled() {
         return sslEnabled;
     }
 
-    public void setSslEnabled(boolean sslEnabled) {
+    public void setSslEnabled(Boolean sslEnabled) {
         this.sslEnabled = sslEnabled;
     }
 
@@ -97,10 +97,10 @@ public class CloudJeeApplication {
     String appFileName;
     String appId;
     String appState;
-    String createAt;
+    String createdAt;
     String instanceGroupName;
     String name;
-    boolean sslEnabled;
+    Boolean sslEnabled;
     String tenantId;
     String updatedAt;
     String url;

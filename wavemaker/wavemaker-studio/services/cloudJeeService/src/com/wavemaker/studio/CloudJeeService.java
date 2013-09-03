@@ -65,6 +65,7 @@ import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecretPropag
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
 import com.wavemaker.tools.deployment.DeploymentDB;
 import com.wavemaker.tools.deployment.cloudfoundry.CloudFoundryDeploymentTarget;
+import com.wavemaker.tools.service.cloujeewrapper.CloudJeeApplication;
 
 @ExposeToClient
 public class CloudJeeService {
@@ -281,15 +282,25 @@ public class CloudJeeService {
                 JSONArray objects = (JSONArray) body.get("objects");
                 Class cls = null;
                 cls = Class.forName("com.wavemaker.tools.service.cloujeewrapper.CloudJeeApplication");
-                CloudJeeApplication app = (CloudJeeApplication) cls.newInstance();
+
                 for (Object obj : objects) {
-                    HashMap<String, String> map = (HashMap<String, String>) obj;
+                    CloudJeeApplication app = (CloudJeeApplication) cls.newInstance();
+                    HashMap<String, Object> map = (HashMap<String, Object>) obj;
                     for (String key : map.keySet()) {
-                        Method method = cls.getDeclaredMethod("set" + WordUtils.capitalize(key), String.class);
-                        method.invoke(app, map.get(key));
+                        Object value = map.get(key);
+                        if(value instanceof Boolean){
+                            Method method = cls.getDeclaredMethod("set" + WordUtils.capitalize(key), Boolean.class);
+                            method.invoke(app, value);
+                        }
+                        else{
+                            Method method = cls.getDeclaredMethod("set" + WordUtils.capitalize(key), String.class);
+                            method.invoke(app, value);
+                        }
+
                     }
+                    apps.add(app);
                 }
-                apps.add(app);
+
             }
 
             return apps;
