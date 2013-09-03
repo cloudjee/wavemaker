@@ -1465,7 +1465,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     populateCloudJeeAppList: function(inResult, optionalCallback) {
     var results = [];
     for (var i = 0; i < inResult.length; i++) {
-        results.push({id: inResult[i].name, name: "<a href='http://" + inResult[i].url +"' target='_NewWindow'>" + inResult[i].name + "</a>", state: inResult[i].appState, services: inResult[i].services ? inResult[i].services.join(", ") : ""});
+        results.push({id: inResult[i].name, name: "<a href=" + inResult[i].url +" target='_NewWindow'>" + inResult[i].name + "</a>", state: inResult[i].appState, services: inResult[i].services ? inResult[i].services.join(", ") : ""});
     }
     this.cachedCloudJeeDeploymentList = inResult;
     this.cloudJeeAppList.renderData(results);

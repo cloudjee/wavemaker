@@ -25,17 +25,17 @@ DeploymentDialog.widgets = {
 	buttonBar5: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 		cloudJeeStartFromListButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Start","margin":"4"}, {"onclick":"cloudJeeStartFromListButtonClick"}, {
 		binding: ["wm.Binding", {}, {}, {
-		    wire: ["wm.Wire", {"expression":"Boolean(${cloudJeeAppList.emptySelection} || ${cloudJeeAppList.selectedItem.data.state} === 'STARTED')","targetProperty":"disabled"}, {}]
+		    wire: ["wm.Wire", {"expression":"Boolean(${cloudJeeAppList.emptySelection} || ${cloudJeeAppList.selectedItem.data.state} === 'STARTED' || ${cloudJeeAppList.selectedItem.data.state} === 'UNDEPLOYED')","targetProperty":"disabled"}, {}]
 		}]
 	    }],
 	    cloudJeeStopFromListButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Stop","margin":"4"}, {"onclick":"cloudJeeStopFromListButtonClick"}, {
 		binding: ["wm.Binding", {}, {}, {
-		    wire: ["wm.Wire", {"expression":"Boolean(${cloudJeeAppList.emptySelection} || ${cloudJeeAppList.selectedItem.data.state} === 'STOPPED' || ${cloudJeeAppList.selectedItem.data.id}.search('wavemaker-studio') !== -1)","targetProperty":"disabled"}, {}]
+		    wire: ["wm.Wire", {"expression":"Boolean(${cloudJeeAppList.emptySelection} || ${cloudJeeAppList.selectedItem.data.state} === 'STOPPED' ||  ${cloudJeeAppList.selectedItem.data.state} === 'UNDEPLOYED' || ${cloudJeeAppList.selectedItem.data.id}.search('wavemaker-studio') !== -1)","targetProperty":"disabled"}, {}]
 		}]
 	    }],
 	    cloudJeeUndeployFromListButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Undeploy","margin":"4"}, {"onclick":"cloudJeeUndeployFromListButtonClick"}, {
 		binding: ["wm.Binding", {}, {}, {
-		    wire: ["wm.Wire", {"source":"cloudJeeAppList.emptySelection","targetProperty":"disabled"}, {}]
+		    wire: ["wm.Wire", {"expression":"Boolean(${cloudJeeAppList.emptySelection} ||  ${cloudJeeAppList.selectedItem.data.state} === 'UNDEPLOYED')","targetProperty":"disabled"}, {}, {}]
 		}]
 	    }],
 	    cloudJeeAppListDialogCloseButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Close","margin":"4"}, {"onclick":"cloudJeeAppListCloseButtonClick"}]
@@ -87,7 +87,7 @@ DeploymentDialog.widgets = {
 	    }]
 	}],
 	buttonBar2: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-	    cloudJeeRegisterLink: ["wm.Label", {caption: "Get an account", link: "http://cloudfoundry.com/signup/cfwavemaker", width: "100px", height: "100%"}],
+	    cloudJeeRegisterLink: ["wm.Label", {caption: "Get an account", link: "https://apps.mywavemaker.com/login/signup", width: "100px", height: "100%"}],
 	    loginSpacer: ["wm.Spacer", {width: "100%"}],
 	    cjLoginCancelButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Cancel","margin":"4"}, {onclick: "cjLoginCancelClick"}],
 	    cjLogonOkButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"OK","margin":"4"}, {onclick: "cjLoginOkClick"}, {

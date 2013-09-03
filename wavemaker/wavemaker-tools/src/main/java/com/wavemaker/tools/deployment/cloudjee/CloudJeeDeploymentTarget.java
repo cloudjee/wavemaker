@@ -420,6 +420,11 @@ public class CloudJeeDeploymentTarget implements DeploymentTarget {
         log.info("Deleting application " + deploymentInfo.getApplicationName());
         Timer timer = new Timer();
         timer.start();
+        try {
+            client.undeploy(deploymentInfo.getApplicationName());
+        } catch (Exception e) {
+            throw new WMRuntimeException(e);
+        }
         /*try {
            if (deleteServices) {
                 CloudApplication app = client.getApplication(deploymentInfo.getApplicationName());
