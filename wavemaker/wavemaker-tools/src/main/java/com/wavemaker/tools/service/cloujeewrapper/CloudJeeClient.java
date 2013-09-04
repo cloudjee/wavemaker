@@ -2,8 +2,11 @@ package com.wavemaker.tools.service.cloujeewrapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -18,6 +21,11 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.api.representation.Form;
+import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.json.JSONArray;
+import com.wavemaker.json.JSONObject;
+import com.wavemaker.json.JSONUnmarshaller;
+import org.apache.commons.lang.WordUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
@@ -131,7 +139,8 @@ public class CloudJeeClient extends BaseTest {
 		System.out.println("ResponseCode: "
 				+ response.getStatusLine().getStatusCode());
 
-		return readResponse(response);
+        JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(readResponse(response));
+        return getUrl(jsonReq);
 
 	}
 	
@@ -162,7 +171,7 @@ public class CloudJeeClient extends BaseTest {
 
 	}
 
-    public String list() throws Exception {
+    public List<CloudJeeApplication> list() throws Exception {
 		DefaultHttpClient httpclient = CreateHttpClient
 				.createHttpClientConnection();
 		HttpGet httpget = new HttpGet(ConfigProperties.LIST);
@@ -170,7 +179,9 @@ public class CloudJeeClient extends BaseTest {
 		HttpResponse response = httpclient.execute(httpget);
 		System.out.println("ResponseCode: "
 				+ response.getStatusLine().getStatusCode());
-		return readResponse(response);
+        String resultJson  = readResponse(response);
+        JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(resultJson);
+		return parseResponse(jsonReq);
 	}
 
     public String undeploy(String appName) throws Exception{
@@ -182,9 +193,60 @@ public class CloudJeeClient extends BaseTest {
 		System.out.println("ResponseCode: "
 				+ response.getStatusLine().getStatusCode());
 		return readResponse(response);
-	}
-	
-	
+
+    }
+
+    private List<CloudJeeApplication> parseResponse(JSONObject jsonObj){
+        try {
+            List<CloudJeeApplication> apps = new ArrayList<CloudJeeApplication>();
+            JSONObject block = (JSONObject) jsonObj.get("success");
+            JSONObject body = null;
+            if (block != null && (body = (JSONObject) block.get("body")) != null) {
+                JSONArray objects = (JSONArray) body.get("objects");
+                Class cls = null;
+                cls = Class.forName("com.wavemaker.tools.service.cloujeewrapper.CloudJeeApplication");
+
+                for (Object obj : objects) {
+                    CloudJeeApplication app = (CloudJeeApplication) cls.newInstance();
+                    HashMap<String, Object> map = (HashMap<String, Object>) obj;
+                    for (String key : map.keySet()) {
+                        Object value = map.get(key);
+                        if(value instanceof Boolean){
+                            Method method = cls.getDeclaredMethod("set" + WordUtils.capitalize(key), Boolean.class);
+                            method.invoke(app, value);
+                        }
+                        else{
+                            Method method = cls.getDeclaredMethod("set" + WordUtils.capitalize(key), String.class);
+                            method.invoke(app, value);
+                        }
+
+                    }
+                    apps.add(app);
+                }
+
+            }
+
+            return apps;
+        } catch (Exception e) {
+            throw new WMRuntimeException(e);
+        }
+    }
+
+    private String getUrl(JSONObject jsonObj) {
+        String url="";
+        try {
+            List<CloudJeeApplication> apps = new ArrayList<CloudJeeApplication>();
+            JSONObject block = (JSONObject) jsonObj.get("success");
+            JSONObject body = null;
+            if (block != null && (body = (JSONObject) block.get("body")) != null) {
+                url = (String) body.get("url");
+            }
+
+        } catch (Exception e) {
+            throw new WMRuntimeException(e);
+        }
+        return url;
+    }
 
 
 }

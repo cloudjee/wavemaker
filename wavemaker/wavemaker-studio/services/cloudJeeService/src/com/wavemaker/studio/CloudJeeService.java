@@ -87,13 +87,14 @@ public class CloudJeeService {
     public List<CloudJeeApplication> listApps(String token, String target) {
         try{
             CloudJeeClient client = new CloudJeeClient(token);
-            String response = client.list();
-            JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(response);
-            return parseResponse(jsonReq);
-
+            return client.list();
         }catch (Throwable ex) {
             throw new WMRuntimeException("CloudJee list apps failed.", ex);
         }
+    }
+
+    public String username(String token){
+        return "dsowmya1234";
     }
     
     public void stopApplication (String token, String target, final String applicationName) {
@@ -273,41 +274,7 @@ public class CloudJeeService {
         return UriBuilder.fromUri(uri).build();
     }
 
-    private List<CloudJeeApplication> parseResponse(JSONObject jsonObj){
-        try {
-            List<CloudJeeApplication> apps = new ArrayList<CloudJeeApplication>();
-            JSONObject block = (JSONObject) jsonObj.get("success");
-            JSONObject body = null;
-            if (block != null && (body = (JSONObject) block.get("body")) != null) {
-                JSONArray objects = (JSONArray) body.get("objects");
-                Class cls = null;
-                cls = Class.forName("com.wavemaker.tools.service.cloujeewrapper.CloudJeeApplication");
 
-                for (Object obj : objects) {
-                    CloudJeeApplication app = (CloudJeeApplication) cls.newInstance();
-                    HashMap<String, Object> map = (HashMap<String, Object>) obj;
-                    for (String key : map.keySet()) {
-                        Object value = map.get(key);
-                        if(value instanceof Boolean){
-                            Method method = cls.getDeclaredMethod("set" + WordUtils.capitalize(key), Boolean.class);
-                            method.invoke(app, value);
-                        }
-                        else{
-                            Method method = cls.getDeclaredMethod("set" + WordUtils.capitalize(key), String.class);
-                            method.invoke(app, value);
-                        }
-
-                    }
-                    apps.add(app);
-                }
-
-            }
-
-            return apps;
-        } catch (Exception e) {
-            throw new WMRuntimeException(e);
-        }
-    }
     private static interface CloudFoundryCallable<V> {
 
         V call(CloudFoundryClient client);

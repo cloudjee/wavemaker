@@ -277,7 +277,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         }));
         return databases;
     },
-    cjGetUrlbuttonClick: function(inSender){
+    /*cjGetUrlbuttonClick: function(inSender){
         try{
         this.cjUrlEditor.clear();
         var data = this.generateCloudJeeDeploymentStruct();
@@ -290,7 +290,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         } catch(e) {
           console.error('ERROR IN cjGetUrlbuttonClick: ' + e);
       }
-      },
+      },   */
     cjGetUrlSuccess: function(inResult){
         this.cjUrlEditor.setDataValue(inResult.replace(/^https/,"http"));
         studio.endWait();
@@ -567,8 +567,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
             this.loginDialogTargetEditor.setDataValue(inTargetUrl);
             this.loginDialogTargetEditor.setReadonly(true);
         } else {
-            this.loginDialogTargetEditor.setDataValue("https://api.cloudfoundry.com");
-            this.loginDialogTargetEditor.setReadonly(false);
+            this.loginDialogTargetEditor.setDataValue("https://apps.wavemaker.com");
+            this.loginDialogTargetEditor.setReadonly(true);
         }
         this.cjLoginDialog.show();
         this.loginDialogUserEditor.focus();
@@ -1246,9 +1246,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.owner.owner.show();
         this.cloudJeeLayer.activate();
         var targetName = this.setUniqueDeploymentName("CloudJee 1", this.cjDeploymentNameEditor, this.CJ_DEPLOY);
-        this.cjHostEditor.setDataValue("https://api.cloudfoundry.com");
+        this.cjHostEditor.setDataValue("");
         this.cjNameEditor.setDataValue(studio.project.projectName);
-        this.cjUrlEditor.setDataValue("http://" + studio.project.projectName + "." + this.cjHostEditor.getDataValue().replace(/^.*?api\./,""));
+        this.cjUrlEditor.setDataValue("");
 
 		var boxes = this.generateDataModelBoxes();
         dojo.forEach(boxes, dojo.hitch(this, function(b, i) {
@@ -1421,6 +1421,24 @@ dojo.declare("DeploymentDialog", wm.Page, {
             if (this.cjLoginDialogSuccessHandler) {
                 this.cjLoginDialogSuccessHandler(inData);
             }
+            var that = this;
+            this.cloudJeeService.requestAsync("username",[inData],
+              dojo.hitch(this, function(inName){
+                      this.cjHostEditor.setDataValue("https://" + inName + ".apps.mywavemaker.com");
+                      this.cjUrlEditor.setDataValue("https://" + inName + ".apps.mywavemaker.com/" + studio.project.projectName);
+
+              }),
+              dojo.hitch(this, function(inError) {
+                              studio.endWait();
+                              var message = inError.message;
+                              if (message.match(/^403/)) {
+                                  app.toastError(this.getDictionaryItem("INVALID_USER_PASS"));
+                              } else {
+                                  app.toastError(message);
+                              }
+               }));
+
+
             }),
             dojo.hitch(this, function(inError) {
                 studio.endWait();

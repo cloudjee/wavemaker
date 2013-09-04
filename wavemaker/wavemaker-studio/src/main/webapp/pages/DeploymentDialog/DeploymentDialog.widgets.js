@@ -68,7 +68,7 @@ DeploymentDialog.widgets = {
 		chooseDeploymentLabel: ["wm.Label", {"align":"center","border":"0","caption":"Choose the target for this deployment","padding":"4","width":"100%"}, {}],
 		tomcatRadio: ["wm.RadioButton", {"caption":"Tomcat Server","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"tc","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","startChecked":true,"width":"100%"}, {onDblClick: "onNewDeployOk"}],
 		/*cloudfoundryRadio: ["wm.RadioButton", {"caption":"Cloud Jee","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"cf","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","width":"100%"}, {onDblClick: "onNewDeployOk"}],*/
-		cloudjeeRadio: ["wm.RadioButton", {"caption":"Cloud JEE","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"cj","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","width":"100%"}, {onDblClick: "onNewDeployOk"}],
+		cloudjeeRadio: ["wm.RadioButton", {"caption":"Cloud Jee","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"cj","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","width":"100%"}, {onDblClick: "onNewDeployOk"}],
 		appfilesRadio: ["wm.RadioButton", {"caption":"Application Files (WAR/EAR)","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"files","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","width":"100%"}, {onDblClick: "onNewDeployOk"}]
 	    }]
 	}],
@@ -81,7 +81,7 @@ DeploymentDialog.widgets = {
         mainPanel4: ["wm.studio.DialogMainPanel", {autoScroll:true},{}, {
 	    loginMainPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","margin":"5,20,5,20","verticalAlign":"top","width":"100%"}, {}, {
 		loginDialogInstructionLabel: ["wm.Label", {"align":"center","border":"0","caption":"Enter your Cloud Jee Account Info","padding":"4","width":"100%"}, {}],
-		loginDialogTargetEditor: ["wm.Text", {changeOnKey:1,captionSize: "150px", "emptyValue":"emptyString", "caption":"Cloud Jee target","captionAlign":"left","displayValue":"https://api.cloudfoundry.com","width":"100%"}, {onEnterKeyPress: "cjLogonOkButton.click"}],
+		loginDialogTargetEditor: ["wm.Text", {changeOnKey:1,captionSize: "150px", "emptyValue":"emptyString", "caption":"Cloud Jee target","captionAlign":"left","readonly":true, "displayValue":"https://apps.mywavemaker.com","width":"100%"}, {onEnterKeyPress: "cjLogonOkButton.click"}],
 		loginDialogUserEditor: ["wm.Text", {changeOnKey:1,captionSize: "150px", "emptyValue":"emptyString", "caption":"Account name","captionAlign":"left","displayValue":"","width":"100%"}, {onEnterKeyPress: "cjLogonOkButton.click"}],
 		loginDialogPasswordEditor: ["wm.Text", {changeOnKey:1,captionSize: "150px", "emptyValue":"emptyString", "caption":"Password","captionAlign":"left","displayValue":"","password":true,"width":"100%"}, {onEnterKeyPress: "cjLogonOkButton.click"}]
 	    }]
@@ -138,13 +138,13 @@ DeploymentDialog.widgets = {
 				cloudJeeLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
 				    cjDeploymentNameEditor: ["wm.Text", {"border":"0","caption":"Deployment name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"New Cloud Jee Deployment","width":"100%", required: true}, {onchange: "deploymentNameChange"}],
 				    cjDeploymentTypeEditor: ["wm.Text", {"border":"0","caption":"Type","captionAlign":"left","captionSize":"140px","readonly":true,"width":"100%"}, {}],
-				    cjHostEditor: ["wm.Text", {"border":"0","caption":"Cloud Jee target","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"https://api.cloudfoundry.com","width":"100%", required: true}, {onchange: "cloudJeeTargetChange"}],
+				    cjHostEditor: ["wm.Text", {"border":"0","caption":"Cloud Jee target","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"https://apps.mywavemaker.com","width":"100%","readonly":true, required: true}, {onchange: "cloudJeeTargetChange"}],
 				    cjNameEditor: ["wm.Text", {"border":"0","caption":"Application name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {onchange: "cloudJeeApplicationNameChanged"}],
 					cjUrlpanel: ["wm.Panel", {"height":"30px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
-				    cjUrlEditor: ["wm.Text", {"border":"0","caption":"URL","captionAlign":"left","captionSize":"140px","displayValue":"http://.cloudfoundry.com","readonly":false,"width":"100%", required:1}, {}, {
+				    cjUrlEditor: ["wm.Text", {"border":"0","caption":"URL","captionAlign":"left","captionSize":"140px","displayValue":"http://.mywavemaker.com","readonly":true,"width":"100%", required:1}, {}, {
 
-				    }],
-					cjGetUrlbutton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"hint":"\"Generate a URL using the project name and a random number\"", "caption":"Generate URL","margin":"4,4,4,8", "width": "112px"}, {"onclick":"cjGetUrlbuttonClick"}]
+				    }]//,
+					//cjGetUrlbutton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"hint":"\"Generate a URL using the project name and a random number\"", "caption":"Generate URL","margin":"4,4,4,8", "width": "112px"}, {"onclick":"cjGetUrlbuttonClick"}]
 					}]
 				}],
 				appFileLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
