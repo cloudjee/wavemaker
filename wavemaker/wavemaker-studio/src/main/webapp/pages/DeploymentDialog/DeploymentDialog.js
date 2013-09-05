@@ -57,13 +57,10 @@ dojo.declare("DeploymentDialog", wm.Page, {
             }],
             databaseCloudJeeLayer1: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
                 databaseCloudJeeType1: ["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"MYSQL","readonly":true,"width":"100%"}, {}],
-                databaseCloudJeeNameEditor1: ["wm.SelectMenu", {allowNone:1, restrictValues: false, "border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true/*, helpText: "Rename your database if you already have a database of that name on CloudJee and don't want to reuse that database.  Note: each database is on its own cloud server and counts against your quota"*/}, {},{
-                    binding: ["wm.Binding", {}, {}, {
-                        wire: ["wm.Wire", {targetProperty: "dataSet", source: "dataServiceListVar"}]
-                    }]
-                }],
+                databaseCloudJeeNameEditor1:["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","readonly":true,"width":"100%"}, {}],
+
                 /* Height set from dictionary */
-                databaseCloudJeeTips1: ["wm.Html", {border: "0", margin: "10,0,0,0", width: "100%", height: "60px"}]/*,
+                databaseCloudJeeTips1: ["wm.Html", {border: "0", margin: "10,0,0,0", width: "100%", height: "60px","showing":false}]/*,
                 databaseCloudJeeWarnings1: ["wm.Html", {border: "0", margin: "10,0,0,0", padding: "5", border: "1", borderColor: "red", width: "100%", height: "60px", showing: false}]*/
             }]
         }]
@@ -237,10 +234,10 @@ dojo.declare("DeploymentDialog", wm.Page, {
         dojo.forEach(this.currentDatabaseBoxes, dojo.hitch(this, function(box, i) {
             databases.push({
                 dataModelId: box.dataModel.name,
-                dbName: this["databaseCloudJeeNameEditor" + (i + 1)].getDataValue(),
-                connectionUrl: this.getTargetUrl(data),// used to store db type, not because its required
-                username: null,
-                password: null,
+                dbName: box.dataConnection.db,
+                connectionUrl: "jdbc\:mysql\://localhost\:3306/test",//this.getTargetUrl(data),// used to store db type, not because its required
+                username: "root",
+                password: "root",
                 jndiName: null
             });
         }));
@@ -454,9 +451,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
                       dojo.forEach(this.currentDatabaseBoxes, function(dataBox) {
                         var id = dataBox.name.match(/(\d+)$/)[1];
                           var databaseEditor = this["databaseCloudJeeNameEditor" + id];
-                          databases[dataBox.dataModel.dataModelName] = {updateSchema: databaseEditor.selectedItem.isEmpty(),
+                          databases[dataBox.dataModel.dataModelName] = {updateSchema: false, /*databaseEditor.selectedItem.isEmpty()*/
                                                                         name: databaseEditor.getDataValue()};
-                          if (!databaseEditor.selectedItem.isEmpty()) showCheckboxes = true;
+                          if (databaseEditor.selectedItem && !databaseEditor.selectedItem.isEmpty()) showCheckboxes = true;
                       }, this);
                   } else if (inData.databases && inData.databases.length) {
                       dojo.forEach(inData.databases, function(d) {
@@ -1249,6 +1246,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.cjHostEditor.setDataValue("");
         this.cjNameEditor.setDataValue(studio.project.projectName);
         this.cjUrlEditor.setDataValue("");
+        this.cjDeploymentTypeEditor.setDataValue("CloudJee");
 
 		var boxes = this.generateDataModelBoxes();
         dojo.forEach(boxes, dojo.hitch(this, function(b, i) {
@@ -1263,6 +1261,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
             } else {
                 this["databaseCloudJeeNameEditor" + (i + 1)].setDataValue(connection.db);
             }
+
+            this["databaseCloudJeeNameEditor" + (i + 1)].setDataValue(connection.db);
             this["databaseCloudJeeType" + (i + 1)].setDataValue(connection.dbtype);
             this["databaseConnectionEditor" + (i + 1)].hide();
         }));
@@ -1288,6 +1288,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.cjHostEditor.setDataValue(inData.target);
         this.cjUrlEditor.setDataValue(inData.deploymentUrl);
         var boxes = this.generateDataModelBoxes();
+
         dojo.forEach(boxes, dojo.hitch(this, function(b, i) {
             var dataModel = b.dataModel;
             var inDbData;
@@ -1427,6 +1428,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
                       this.cjHostEditor.setDataValue("https://" + inName + ".apps.mywavemaker.com");
                       this.cjUrlEditor.setDataValue("https://" + inName + ".apps.mywavemaker.com/" + studio.project.projectName);
 
+
+
               }),
               dojo.hitch(this, function(inError) {
                               studio.endWait();
@@ -1483,7 +1486,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     populateCloudJeeAppList: function(inResult, optionalCallback) {
     var results = [];
     for (var i = 0; i < inResult.length; i++) {
-        results.push({id: inResult[i].name, name: "<a href=" + inResult[i].url +" target='_NewWindow'>" + inResult[i].name + "</a>", state: inResult[i].appState, services: inResult[i].services ? inResult[i].services.join(", ") : ""});
+        results.push({id: inResult[i].name, name: "<a href=" + inResult[i].url +" target='_NewWindow'>" + inResult[i].name + "</a>", state: inResult[i].appState/*, services: inResult[i].services ? inResult[i].services.join(", ") : ""*/});
     }
     this.cachedCloudJeeDeploymentList = inResult;
     this.cloudJeeAppList.renderData(results);
@@ -1514,7 +1517,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     studio.beginWait(this.getDictionaryItem("WAIT_UNDEPLOY"));
     this.confirmToken(inData.token, inData.target, dojo.hitch(this, function(inToken) {
         inData.token = inToken;
-        studio.deploymentService.requestAsync("undeploy", [inData,this.deleteServicesCheckbox.getChecked()],
+        studio.deploymentService.requestAsync("undeploy", [inData,false/*this.deleteServicesCheckbox.getChecked()*/],
                           dojo.hitch(this, function(inResult) {
                               studio.endWait();
                               this.refreshCloudJeeAppList(null,this.loginDialogTargetEditor.getDataValue());

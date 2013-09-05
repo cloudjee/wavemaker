@@ -94,7 +94,12 @@ public class CloudJeeService {
     }
 
     public String username(String token){
-        return "dsowmya1234";
+        try{
+            CloudJeeClient client = new CloudJeeClient(token);
+            return client.accountInfo();
+        }catch (Throwable ex) {
+            throw new WMRuntimeException("CloudJee account info failed.", ex);
+        }
     }
     
     public void stopApplication (String token, String target, final String applicationName) {

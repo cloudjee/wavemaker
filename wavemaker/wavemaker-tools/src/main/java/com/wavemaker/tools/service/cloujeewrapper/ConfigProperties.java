@@ -43,6 +43,7 @@ public class ConfigProperties {
 	public static final String START;
 	public static final String STOP;
 	public static final String LIST;
+    public static final String ACCOUNTINFO;
 	
 	private static Properties properties = new Properties();
 
@@ -69,6 +70,7 @@ public class ConfigProperties {
 		START = properties.getProperty("start");
 		STOP = properties.getProperty("stop");
 		LIST = properties.getProperty("list");
+        ACCOUNTINFO = properties.getProperty("accountInfo");
 	}
 
 	public static void init() {

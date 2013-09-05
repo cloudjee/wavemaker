@@ -184,6 +184,19 @@ public class CloudJeeClient extends BaseTest {
 		return parseResponse(jsonReq);
 	}
 
+    public String accountInfo() throws Exception {
+        DefaultHttpClient httpclient = CreateHttpClient
+                .createHttpClientConnection();
+        HttpGet httpget = new HttpGet(ConfigProperties.ACCOUNTINFO);
+        httpget.setHeader("Cookie", auth);
+        HttpResponse response = httpclient.execute(httpget);
+        System.out.println("ResponseCode: "
+                + response.getStatusLine().getStatusCode());
+        String resultJson  = readResponse(response);
+        JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(resultJson);
+        return (String)jsonReq.get("appDomainName");
+    }
+
     public String undeploy(String appName) throws Exception{
 		DefaultHttpClient httpclient = CreateHttpClient
 				.createHttpClientConnection();
@@ -240,6 +253,8 @@ public class CloudJeeClient extends BaseTest {
             JSONObject body = null;
             if (block != null && (body = (JSONObject) block.get("body")) != null) {
                 url = (String) body.get("url");
+            } else if((block=(JSONObject) jsonObj.get("exceptionObject")) != null){
+                 url =  (String) block.get("cause");
             }
 
         } catch (Exception e) {
