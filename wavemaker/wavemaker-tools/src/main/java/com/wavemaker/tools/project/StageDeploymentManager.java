@@ -77,6 +77,8 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
 
     public static final ResourceFilter DEFAULT_EXCLUDES = FilterOn.antPattern("**/.svn/**");
 
+    public boolean isCloudJee =false;
+
     protected void buildWar(LocalFolder projectDir, Folder buildDir, File warFile, boolean includeEar, StudioFileSystem fileSystem)
         throws WMRuntimeException { // projectDir: dplstaging //buildDir: fileutils
 
@@ -228,7 +230,13 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         buildWebAppClassesDir.createIfMissing();
 
         // CopyRuntimeJarsTask
-        NewCopyRuntimeJarsTask task = new NewCopyRuntimeJarsTask();
+        NewCopyRuntimeJarsTask task = null;
+
+       if(isCloudJee){
+            task =  new NewCopyRuntimeJarsTask(isCloudJee);
+        } else{
+            task =  new NewCopyRuntimeJarsTask();
+        }
         task.setTodir(buildWebAppLibDir);
         LocalFolder studioWebAppLibDir = (LocalFolder) ((Folder) properties.get(STUDIO_WEBAPPROOT_PROPERTY)).getFolder("WEB-INF/lib");
         task.setFrom(studioWebAppLibDir);

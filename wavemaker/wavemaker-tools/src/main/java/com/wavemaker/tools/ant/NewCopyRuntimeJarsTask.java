@@ -14,9 +14,11 @@
 
 package com.wavemaker.tools.ant;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -25,6 +27,7 @@ import java.util.jar.Manifest;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.tools.ant.Task;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.common.WMRuntimeException;
@@ -56,6 +59,15 @@ public class NewCopyRuntimeJarsTask extends Task {
     private boolean verbose = false;
 
     private Project wmProject;
+    private boolean isCloudJee = false;
+
+
+     public NewCopyRuntimeJarsTask(boolean isCloudJee){
+         this.isCloudJee = isCloudJee;
+     }
+
+    public NewCopyRuntimeJarsTask() {
+    }
 
     /**
      * Get the wavemaker runtime jar file, ensuring that it exists.
@@ -148,6 +160,12 @@ public class NewCopyRuntimeJarsTask extends Task {
         File runtimeJarFile = getRuntimeJarFile();
 
         List<String> runtimeJarNames = getReferencedClassPathJars(runtimeJarFile, true);
+
+        if(isCloudJee){
+           List<String> cjList =  getCjeeList();
+           runtimeJarNames.removeAll(cjList);
+
+        }
         String[] runtimeJarNamesArr = runtimeJarNames.toArray(new String[runtimeJarNames.size()]);
 
         Resources<com.wavemaker.tools.io.File> projectJars = getProjectJarFileSet();
@@ -207,6 +225,24 @@ public class NewCopyRuntimeJarsTask extends Task {
             included = FilterOn.antPattern("**/*.*");
             partnerWebInfNode.find().include(included).exclude(StageDeploymentManager.DEFAULT_EXCLUDES).files().copyTo(this.todir.getParent());
         }
+    }
+
+    private List<String> getCjeeList(){
+        List<String> cjJars = new ArrayList<String>();
+        try {
+            ClassPathResource cjFileList =  new ClassPathResource("com/wavemaker/tools/service/cloudjeefilelist.properties");
+            BufferedReader bf = new BufferedReader(new InputStreamReader(cjFileList.getInputStream()));
+            String jarName ="";
+
+            while((jarName = bf.readLine()) !=null){
+                jarName = jarName.trim();
+                cjJars.add(jarName);
+
+            }
+        } catch (IOException e) {
+           throw new WMRuntimeException(e);
+        }
+          return cjJars;
     }
 
     public void setProjectRoot(File projectRoot) {

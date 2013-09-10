@@ -91,7 +91,7 @@ public class ServiceDeploymentManager {
             projectRoot.copyContentsTo(stagingProjectDirFolder);
             DesignServiceManager mgr = DesignTimeUtils.getDSMForProjectRoot(stagingProjectDirFolder);
             prepareForDeployment(info, mgr, type);
-            return buildWar(mgr.getProjectManager(), getWarFile(), tempWebAppRoot, includeEar);
+            return buildWar(info, mgr.getProjectManager(), getWarFile(), tempWebAppRoot, includeEar);
         } catch (Exception ex) {
             throw new ConfigurationException(ex);
         } finally {
@@ -145,7 +145,7 @@ public class ServiceDeploymentManager {
         return this.projectMgr.getCurrentProject().getRootFolder();
     }
 
-    private com.wavemaker.tools.io.File buildWar(ProjectManager projectMgr, com.wavemaker.tools.io.File warFile, java.io.File tempWebAppRoot,
+    private com.wavemaker.tools.io.File buildWar(DeploymentInfo info, ProjectManager projectMgr, com.wavemaker.tools.io.File warFile, java.io.File tempWebAppRoot,
         boolean includeEar) throws IOException {
         // call into existing deployment code to generate war
         // would be super nice to refactor this
@@ -153,7 +153,7 @@ public class ServiceDeploymentManager {
         if (WMAppContext.getInstance().isCloudFoundry()) {
             deploymentMgr = new CloudFoundryDeploymentManager();
         } else {
-            deploymentMgr = new LocalDeploymentManager();
+            deploymentMgr = new LocalDeploymentManager(info.getDeploymentType() == DeploymentType.CLOUD_JEE);
         }
         deploymentMgr.setProjectManager(projectMgr);
         deploymentMgr.setStudioConfiguration(this.studioConfiguration);

@@ -99,6 +99,7 @@ public class CloudJeeDeploymentManager extends StageDeploymentManager {
         LocalFolder buildDir = new LocalFolder(tempWebAppRoot);
         Folder dist = warFile.getParent();
         dist.createIfMissing();
+        isCloudJee = true;
         buildWar(getProjectDir(), buildDir, warFile, includeEar, this.projectManager.getFileSystem());
         return warFile;
     }
