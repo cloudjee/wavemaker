@@ -215,7 +215,12 @@ public class CloudJeeClient extends BaseTest {
             JSONObject block = (JSONObject) jsonObj.get("success");
             JSONObject body = null;
             if (block != null && (body = (JSONObject) block.get("body")) != null) {
-                JSONArray objects = (JSONArray) body.get("objects");
+                JSONArray objects = new JSONArray();
+
+                if(((JSONArray) body.get("objects")) != null){
+                    objects = (JSONArray) body.get("objects");
+                }
+
                 Class cls = null;
                 cls = Class.forName("com.wavemaker.tools.service.cloujeewrapper.CloudJeeApplication");
 
