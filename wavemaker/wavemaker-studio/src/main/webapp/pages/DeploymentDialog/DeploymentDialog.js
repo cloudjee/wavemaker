@@ -227,6 +227,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         data.name = this.cjDeploymentNameEditor.getDataValue();
         data.target = this.cjHostEditor.getDataValue();
         data.deploymentUrl = this.cjUrlEditor.getDataValue();
+        data.token = this.getTokenCookie(data.target);
 
         /* Delete the old databases and replace it with a new databases structure */
         var databases = data.databases = [];
@@ -755,7 +756,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         var target = this.getTargetUrl(inData);
         var type = "";
         if (data.deploymentType == this.CJ_DEPLOY) {
-            type = "CloudJee";
+            type = "WaveMaker Cloud";
         } else if (data.deploymentType == this.TC_DEPLOY) {
             type = "Tomcat";
         } else if (data.deploymentType == this.FILE_DEPLOY) {
@@ -766,7 +767,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         html += "<tr><td style='width:100px;vertical-align:top'>" + this.getDictionaryItem("SYNOPSIS_NAME") + "</td><td>" + name + "</td></tr>";
         if (target) html += "<tr><td>" + this.getDictionaryItem("SYNOPSIS_TARGET") + "</td><td>" + target + "</td></tr>";
         html += "<tr><td>" + this.getDictionaryItem("SYNOPSIS_TYPE") + "</td><td>" + type + "</td></tr>";
-        dojo.forEach(data.databases, dojo.hitch(this, function(database, i) {
+        /*dojo.forEach(data.databases, dojo.hitch(this, function(database, i) {
             var connection;
             if (database.jndiName) {
                 html += "<tr><td>" + database.dataModelId + "</td><td>JNDI:" + database.jndiName + "</td></tr>";
@@ -784,7 +785,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
                     html += "<tr><td>" + database.dataModelId + "</td><td>" + database.dbName + "</td></tr>";
                 }
             }
-        }));
+        }));*/
         return html;
     },
   deleteButtonClick: function(inSender) {
@@ -1246,7 +1247,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.cjHostEditor.setDataValue("");
         this.cjNameEditor.setDataValue(studio.project.projectName);
         this.cjUrlEditor.setDataValue("");
-        this.cjDeploymentTypeEditor.setDataValue("CloudJee");
+        this.cjDeploymentTypeEditor.setDataValue("WaveMaker Cloud");
 
 		var boxes = this.generateDataModelBoxes();
         dojo.forEach(boxes, dojo.hitch(this, function(b, i) {
@@ -1283,7 +1284,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.cloudJeeLayer.activate();
 
         this.cjDeploymentNameEditor.setDataValue(inData.name);
-        this.cjDeploymentTypeEditor.setDataValue("CloudJee");
+        this.cjDeploymentTypeEditor.setDataValue("WaveMaker Cloud");
         this.cjNameEditor.setDataValue(inData.applicationName);
         this.cjHostEditor.setDataValue(inData.target);
         this.cjUrlEditor.setDataValue(inData.deploymentUrl);
@@ -1428,7 +1429,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
                       this.cjHostEditor.setDataValue("https://" + inName + ".apps.mywavemaker.com");
                       this.cjUrlEditor.setDataValue("https://" + inName + ".apps.mywavemaker.com/" + studio.project.projectName);
 
-
+                       this.setTokenCookie(this.cjHostEditor.getDataValue(), inData);
 
               }),
               dojo.hitch(this, function(inError) {
