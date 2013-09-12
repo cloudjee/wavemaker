@@ -238,7 +238,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
                 dbName: box.dataConnection.db,
                 connectionUrl: "jdbc\:mysql\://localhost\:3306/test",//this.getTargetUrl(data),// used to store db type, not because its required
                 username: "root",
-                password: "root",
+                password: "cloudjee123",
                 jndiName: null
             });
         }));
