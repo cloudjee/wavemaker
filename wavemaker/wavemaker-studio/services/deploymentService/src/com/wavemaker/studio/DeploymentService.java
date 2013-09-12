@@ -189,6 +189,19 @@ public class DeploymentService {
         return SUCCESS;
     }
 
+    public String deployWar(DeploymentInfo deploymentInfo){
+        File tempWebAppRoot = null;
+        String ret = "";
+        try {
+            ret = this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).deploy(
+                    this.serviceDeploymentManager.getProjectManager().getCurrentProject(), deploymentInfo, tempWebAppRoot);
+        } catch (DeploymentStatusException e) {
+            ret = e.getStatusMessage();
+        }
+
+        return ret;
+    }
+
     /**
      * Deploy the current project to a specific target (identified by the {@link DeploymentInfo} parameter.
      * 
@@ -210,7 +223,7 @@ public class DeploymentService {
                 if (!f.exists()) {
                     throw new AssertionError("Application archive file doesn't exist at " + f.toString());
                 }
-                if (deploymentInfo.getDeploymentType() == DeploymentType.FILE) {
+                if (deploymentInfo.getDeploymentType() == DeploymentType.FILE || deploymentInfo.getDeploymentType() == DeploymentType.CLOUD_JEE) {
                     return SUCCESS;
                 }
             }

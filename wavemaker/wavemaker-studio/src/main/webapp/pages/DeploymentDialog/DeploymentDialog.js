@@ -574,11 +574,16 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
     deploy2: function(inData) {
         this._deployData = inData;
-        studio.beginWait(this.getDictionaryItem("WAIT_DEPLOY", {
+        /*studio.beginWait(this.getDictionaryItem("WAIT_DEPLOY", {
             deploymentName: inData.name
-        }));
+        })); */
+        studio.beginWait("Exporting War....")
         studio.deploymentService.requestAsync("deploy", [inData], dojo.hitch(this, function(inResult) {
-            this.deploySuccess(inResult, inData);
+            //this.deploySuccess(inResult, inData);
+            studio.beginWait("Deploying....");
+             studio.deploymentService.requestAsync("deployWar", [inData], dojo.hitch(this, function(inResult) {
+                      this.deploySuccess(inResult, inData);
+              }), dojo.hitch(this, "deployFailed"));
         }), dojo.hitch(this, "deployFailed"));
         var type = inData.deploymentType;
         if (type == this.FILE_DEPLOY) type = inData.archiveType;
