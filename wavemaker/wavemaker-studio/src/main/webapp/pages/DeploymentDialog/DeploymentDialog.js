@@ -1261,7 +1261,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.editLayer.activate();
         this.owner.owner.show();
         this.cloudJeeLayer.activate();
-        var targetName = this.setUniqueDeploymentName("CloudJee 1", this.cjDeploymentNameEditor, this.CJ_DEPLOY);
+        var targetName = this.setUniqueDeploymentName("Wavemaker Cloud 1", this.cjDeploymentNameEditor, this.CJ_DEPLOY);
         this.cjHostEditor.setDataValue("");
         this.cjNameEditor.setDataValue(studio.project.projectName);
         this.cjUrlEditor.setDataValue("");

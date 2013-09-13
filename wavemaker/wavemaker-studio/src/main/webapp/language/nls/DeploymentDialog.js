@@ -25,7 +25,7 @@ CONFIRM_UNDEPLOY: "Are you sure you want to undeploy ${projectName} ?<br>Note: S
 WAIT_SAVE: "Saving...",
 WAIT_DEPLOY: "Deploying ${deploymentName}; this may take a few minutes...",
 WAIT_CJ_BUILDWAR: "Exporting ${warName}...; this may take a few minutes...",
-WAIT_CJ_DEPLOY: "Deploying ${warName} to Wavemaker Cloud; this may take a few minutes...",
+WAIT_CJ_DEPLOY: "Deploying ${warName} to WaveMaker Cloud; this may take a few minutes...",
 WAIT_GENERATE: "Generating...",
 TOAST_GENERATE_FAIL: "Unable to generate",
 TOAST_SAVE_SUCCESS: "Deployment saved",
