@@ -574,17 +574,30 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
     deploy2: function(inData) {
         this._deployData = inData;
-        /*studio.beginWait(this.getDictionaryItem("WAIT_DEPLOY", {
-            deploymentName: inData.name
-        })); */
-        studio.beginWait("Exporting War....")
+
+        if(inData.deploymentType == this.CJ_DEPLOY){
+            studio.beginWait(this.getDictionaryItem("WAIT_CJ_BUILDWAR", {
+                 warName: inData.applicationName + ".war"
+            }));
+        }else{
+            studio.beginWait(this.getDictionaryItem("WAIT_DEPLOY", {
+                deploymentName: inData.name
+            }));
+        }
+
         studio.deploymentService.requestAsync("deploy", [inData], dojo.hitch(this, function(inResult) {
-            //this.deploySuccess(inResult, inData);
-            studio.beginWait("Deploying....");
-             studio.deploymentService.requestAsync("deployWar", [inData], dojo.hitch(this, function(inResult) {
-                      this.deploySuccess(inResult, inData);
-              }), dojo.hitch(this, "deployFailed"));
+            if(inData.deploymentType == this.CJ_DEPLOY){
+                 studio.beginWait(this.getDictionaryItem("WAIT_CJ_DEPLOY", {
+                    warName: inData.applicationName + ".war"
+                  }));
+                 studio.deploymentService.requestAsync("deployWar", [inData], dojo.hitch(this, function(inResult) {
+                          this.deploySuccess(inResult, inData);
+                  }), dojo.hitch(this, "deployFailed"));
+              } else{
+                this.deploySuccess(inResult, inData);
+              }
         }), dojo.hitch(this, "deployFailed"));
+
         var type = inData.deploymentType;
         if (type == this.FILE_DEPLOY) type = inData.archiveType;
         studio.trackerImage.setSource("http://wavemaker.com/img/blank.gif?op=" + type + "&v=" + escape(wm.studioConfig.studioVersion) + "&r=" + String(Math.random(new Date().getTime())).replace(/\D/, "").substring(0, 8));
@@ -1625,11 +1638,11 @@ dojo.declare("DeploymentDialog", wm.Page, {
 
     },
     loadDatabaseServices: function() {
-            this.dataServiceListService.requestAsync("listDatabaseServices", [studio.isCloud() ? "" : this.getTokenCookie(this.loginDialogTargetEditor.getDataValue()),studio.isCloud() ? "" : this.loginDialogTargetEditor.getDataValue()],
+            /*this.dataServiceListService.requestAsync("listDatabaseServices", [studio.isCloud() ? "" : this.getTokenCookie(this.loginDialogTargetEditor.getDataValue()),studio.isCloud() ? "" : this.loginDialogTargetEditor.getDataValue()],
                 dojo.hitch(this, function(inResult) {
                     this.dataServiceListVar.setData(inResult);
                 })
-            );
+            ); */
     },
     CFTOKEN_COOKIE: "Studio.DeploymentDialog.CFTOKEN",
     getTokenCookie: function(inTargetUrl) {

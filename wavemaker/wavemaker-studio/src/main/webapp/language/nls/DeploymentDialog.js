@@ -24,6 +24,8 @@ CONFIRM_DEPLOY_HEADER: "Please confirm that you want to deploy using the followi
 CONFIRM_UNDEPLOY: "Are you sure you want to undeploy ${projectName} ?<br>Note: Stopping running appliations can be used to free memory for more deployments without undeploying applications.", 
 WAIT_SAVE: "Saving...",
 WAIT_DEPLOY: "Deploying ${deploymentName}; this may take a few minutes...",
+WAIT_CJ_BUILDWAR: "Exporting ${warName}...; this may take a few minutes...",
+WAIT_CJ_DEPLOY: "Deploying ${warName} to Wavemaker Cloud; this may take a few minutes...",
 WAIT_GENERATE: "Generating...",
 TOAST_GENERATE_FAIL: "Unable to generate",
 TOAST_SAVE_SUCCESS: "Deployment saved",
