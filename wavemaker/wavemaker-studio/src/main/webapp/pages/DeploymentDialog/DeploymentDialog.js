@@ -31,6 +31,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     cfDatabaseNameList: [],
     _currentDeploymentIndex: -1,
 	currentPortMappingBox: null,
+	progressDialogMsg: "",
 
     /* Extra Widgets */
     hsqldbBox: {
@@ -576,21 +577,40 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this._deployData = inData;
 
         if(inData.deploymentType == this.CJ_DEPLOY){
-            studio.beginWait(this.getDictionaryItem("WAIT_CJ_BUILDWAR", {
+            /*studio.beginWait(this.getDictionaryItem("WAIT_CJ_BUILDWAR", {
                  warName: inData.applicationName + ".war"
+            })); */
+
+            studio.saveDialogProgress.setProgress(0);
+            studio.saveDialogLabel.setCaption(this.getDictionaryItem("WAIT_CJ_BUILDWAR", {
+                  warName: inData.applicationName + ".war"
             }));
+            progressDialogMsg =   studio.progressDialog.title;
+            studio.progressDialog.setTitle("Deploying...");
+            studio.progressDialog.show();
+
+
         }else{
             studio.beginWait(this.getDictionaryItem("WAIT_DEPLOY", {
                 deploymentName: inData.name
             }));
         }
-
+        studio.saveDialogProgress.setProgress(1);
         studio.deploymentService.requestAsync("deploy", [inData], dojo.hitch(this, function(inResult) {
             if(inData.deploymentType == this.CJ_DEPLOY){
-                 studio.beginWait(this.getDictionaryItem("WAIT_CJ_DEPLOY", {
+
+                 /*studio.beginWait(this.getDictionaryItem("WAIT_CJ_DEPLOY", {
                     warName: inData.applicationName + ".war"
-                  }));
+                  }));*/
+                  for(var j=2; j<=50;j++){
+                    studio.saveDialogProgress.setProgress(j);
+                  }
+                  studio.saveDialogLabel.setCaption(this.getDictionaryItem("WAIT_CJ_DEPLOY", {
+                                    warName: inData.applicationName + ".war"
+                              }))
+
                  studio.deploymentService.requestAsync("deployWar", [inData], dojo.hitch(this, function(inResult) {
+                         studio.saveDialogProgress.setProgress(100);
                           this.deploySuccess(inResult, inData);
                   }), dojo.hitch(this, "deployFailed"));
               } else{
@@ -613,6 +633,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
                 }));
                 break;
             case this.CJ_DEPLOY:
+                studio.progressDialog.setTitle(progressDialogMsg);
+                studio.progressDialog.hide();
+
                 app.alert(this.getDictionaryItem("ALERT_DEPLOY_SUCCESS", {
                     url: inResult,
                     version: studio.application.getFullVersionNumber()
@@ -675,6 +698,10 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
     deployFailed: function(inError) {
         studio.endWait();
+        if(progressDialogMsg != ""){
+            studio.progressDialog.setTitle(progressDialogMsg);
+        }
+        studio.progressDialog.hide();
         app.alert(this.getDictionaryItem("TOAST_DEPLOY_FAILED", {
             error: inError.message
         }));
@@ -1261,7 +1288,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.editLayer.activate();
         this.owner.owner.show();
         this.cloudJeeLayer.activate();
-        var targetName = this.setUniqueDeploymentName("Wavemaker Cloud 1", this.cjDeploymentNameEditor, this.CJ_DEPLOY);
+        var targetName = this.setUniqueDeploymentName("WaveMaker Cloud 1", this.cjDeploymentNameEditor, this.CJ_DEPLOY);
         this.cjHostEditor.setDataValue("");
         this.cjNameEditor.setDataValue(studio.project.projectName);
         this.cjUrlEditor.setDataValue("");
@@ -1424,10 +1451,22 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
 
 
-    /* Handling for the cloudfoundry login dialog */
+    /* Handling for the wavemaker cloud login dialog */
     cjLoginCancelClick: function() {
         this.cloudJeeAppListDialog.hide();
         this.cjLoginDialog.hide();
+    },
+    singUpDialog: function(){
+         this.cloudJeeAppListDialog.hide();
+         this.cjLoginDialog.hide();
+         this.cjSignupDialog.show();
+    },
+    singupLoginCancelClick: function(){
+        this.cjSignupDialog.clearData();
+        this.cjSignupDialog.hide();
+    },
+    signupLoginOkClick: function(){
+
     },
     cjLoginOkClick: function() {
     studio.beginWait(this.getDictionaryItem("WAIT_LOGGING_IN"));
