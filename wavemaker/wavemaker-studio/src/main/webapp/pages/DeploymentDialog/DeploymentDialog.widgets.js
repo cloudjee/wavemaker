@@ -87,7 +87,7 @@ DeploymentDialog.widgets = {
 	    }]
 	}],
 	buttonBar2: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-	    cloudJeeRegisterLink: ["wm.Label", {caption: "Sign Up", /*link: "https://apps.mywavemaker.com/login/signup",*/ width: "100px", height: "100%"},{onclick: "singUpDialog"}],
+	    cloudJeeRegisterLink: ["wm.Label", {caption: "Sign Up", link: "https://apps.mywavemaker.com/login/signup", width: "100px", height: "100%"}/*,{onclick: "singUpDialog"}*/],
 	    loginSpacer: ["wm.Spacer", {width: "100%"}],
 	    cjLoginCancelButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Cancel","margin":"4"}, {onclick: "cjLoginCancelClick"}],
 	    cjLogonOkButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"OK","margin":"4"}, {onclick: "cjLoginOkClick"}, {
@@ -101,7 +101,7 @@ DeploymentDialog.widgets = {
         signupmainPanel4: ["wm.studio.DialogMainPanel", {autoScroll:true},{}, {
         signupMainPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","margin":"5,20,5,20","verticalAlign":"top","width":"100%"}, {}, {
         signupDialogInstructionLabel: ["wm.Label", {"align":"center","border":"0","caption":"Sign Up for WaveMaker Cloud Account","padding":"4","width":"100%"}, {}],
-        loginDialogUserEditor: ["wm.Text", {changeOnKey:1,captionSize: "150px", "emptyValue":"emptyString", "caption":"Email Id","captionAlign":"left","displayValue":"","width":"100%"}, {onEnterKeyPress: "cjLogonOkButton.click"}],
+        signupDialogUserEditor: ["wm.Text", {changeOnKey:1,captionSize: "150px", "emptyValue":"emptyString", "caption":"Email Id","captionAlign":"left","displayValue":"","width":"100%"}, {onEnterKeyPress: "cjLogonOkButton.click"}],
 
         }]
     }],

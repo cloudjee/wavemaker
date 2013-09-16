@@ -1466,6 +1466,15 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.cjSignupDialog.hide();
     },
     signupLoginOkClick: function(){
+    studio.beginWait(this.getDictionaryItem("WAIT_LOGGING_IN"));
+    this.cloudJeeService.requestAsync("signup",[this.signupDialogUserEditor.getDataValue()],
+          dojo.hitch(this, function(response){
+                  studio.endWait();
+
+          }),
+          dojo.hitch(this, function(inError) {
+                          studio.endWait();
+           }));
 
     },
     cjLoginOkClick: function() {
