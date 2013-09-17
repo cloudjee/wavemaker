@@ -14,6 +14,7 @@
 DeploymentDialog.widgets = {
     dataServiceListService: ["wm.JsonRpcService", {service: "cloudJeeService", sync: true}, {}],
     dataServiceListVar: ["wm.Variable", {isList:1, type: "EntryData"}],
+    dbTypeVar: ["wm.Variable", {"type":"BooleanData"}, {}],
 
     cloudJeeService: ["wm.JsonRpcService", {service: "cloudJeeService", sync: true}, {}],
     deploymentLoadingDialog: ["wm.LoadingDialog", {}],
@@ -68,7 +69,7 @@ DeploymentDialog.widgets = {
 		chooseDeploymentLabel: ["wm.Label", {"align":"center","border":"0","caption":"Choose the target for this deployment","padding":"4","width":"100%"}, {}],
 		tomcatRadio: ["wm.RadioButton", {"caption":"Local  Server (Tomcat)","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"tc","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","startChecked":true,"width":"100%"}, {onDblClick: "onNewDeployOk"}],
 		/*cloudfoundryRadio: ["wm.RadioButton", {"caption":"Cloud Jee","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"cf","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","width":"100%"}, {onDblClick: "onNewDeployOk"}],*/
-		cloudjeeRadio: ["wm.RadioButton", {"caption":"WaveMaker Cloud (CloudJee)<sup style=\"font-size:8px; color:#A02727;\">NEW!</sup>","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"cj","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","width":"100%"}, {onDblClick: "onNewDeployOk"}],
+		cloudjeeRadio: ["wm.RadioButton", {"caption":"WaveMaker Cloud (CloudJee)<sup style=\"font-size:8px; color:#A02727;\">&nbsp;NEW!</sup>","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"cj","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","width":"100%"}, {onDblClick: "onNewDeployOk"}],
 		appfilesRadio: ["wm.RadioButton", {"caption":"Application Files (WAR/EAR)","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"files","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","width":"100%"}, {onDblClick: "onNewDeployOk"}]
 	    }]
 	}],
@@ -187,7 +188,7 @@ DeploymentDialog.widgets = {
 	    buttonBarMarginSpacer: ["wm.Spacer", {"height":"48px","width":"184px"}, {}],
 	    deployButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Deploy Now","margin":"4","width":"120px"}, {"onclick":"deployButtonClick"}, {
 		binding: ["wm.Binding", {}, {}, {
-		    wire: ["wm.Wire", {"source":"editPanel.invalid","targetProperty":"disabled"}, {}]
+		    wire: ["wm.Wire", {"expression":"Boolean(${editPanel.invalid} || ${dbTypeVar.dataValue} == true)","targetProperty":"disabled"}, {}]
 		}]
 	    }],
 	    manageUndeployButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Manage WaveMaker Cloud Apps","margin":"4","width":"200px", showing: false}, {"onclick":"manageCloudJeeButtonClick"}],

@@ -107,8 +107,9 @@ public class CloudJeeClient extends BaseTest {
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
                 .post(ClientResponse.class, formData);
         //Assert.(response.getClientResponseStatus().getStatusCode(), 302); // Found
-
-
+        if(response.getClientResponseStatus().getStatusCode() != 302){
+            throw new WMRuntimeException("Invalid Credentials");
+        }
         setAuthCookie(response);
         client.setFollowRedirects(true);
         List<String> cookies = response.getHeaders().get("Set-Cookie");

@@ -32,6 +32,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     _currentDeploymentIndex: -1,
 	currentPortMappingBox: null,
 	progressDialogMsg: "",
+	alertTitle: "",
 
     /* Extra Widgets */
     hsqldbBox: {
@@ -465,7 +466,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
                       });
                   }
                   /* Was a label, but in order to get the nice tooltips, changed it into a readonly editor */
-                  this._alertLabel = new wm.Text({
+                  /*this._alertLabel = new wm.Text({
                       owner: this,
                       parent: app.confirmDialog.containerWidget.c$[0],
                       showing: showCheckboxes,
@@ -494,7 +495,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
                           name: "confirmUpdateSchemaCheckbox" + inName
                       });
                       this._updateSchemaCheckboxes[inName] = c;
-                  }));
+                  }));  */
                   /*
               this._updateSchemaCheckbox = new wm.Checkbox({owner: this,
                                     parent: app.confirmDialog.containerWidget.c$[0],
@@ -532,13 +533,13 @@ dojo.declare("DeploymentDialog", wm.Page, {
         //this._updateSchema = this._updateSchemaCheckbox ? this._updateSchemaCheckbox.getChecked() : this._updateSchemaCheckboxValue;
 
         var updateSchema = {};
-        wm.forEachProperty(this._updateSchemaCheckboxes, dojo.hitch(this, function(inCheckbox, inName) {
+        /*wm.forEachProperty(this._updateSchemaCheckboxes, dojo.hitch(this, function(inCheckbox, inName) {
             updateSchema[inName] = inCheckbox.getChecked();
         }));
         var d = inData.databases;
         for (var i = 0; i < d.length; i++) {
             d[i].updateSchema = updateSchema[d[i].dataModelId];
-        }
+        }  */
 
         if (!inData.token) inData.token = this.getTokenCookie(inData.target);
         this.confirmToken(inData.token, inData.target, dojo.hitch(this, function(inToken) {
@@ -640,6 +641,12 @@ dojo.declare("DeploymentDialog", wm.Page, {
                     url: inResult,
                     version: studio.application.getFullVersionNumber()
                 }));
+                alertTitle = app.alertDialog.title;
+                app.alertDialog.setTitle("Successful Deployment");
+
+               app.alertDialog.connectOnce(app.alertDialog, "onClose", function() {
+                         app.alertDialog.setTitle(alertTitle)
+                     });
                 break;
             case this.FILE_DEPLOY:
                 app.alert(this.getDictionaryItem("ALERT_FILE_DEPLOY_SUCCESS", {
@@ -959,14 +966,17 @@ dojo.declare("DeploymentDialog", wm.Page, {
         switch (groupvalue) {
         case "tc":
             this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
+            this.dbTypeVar.clearData();
             this.newTomcatDeploy();
             break;
         case "cj":
             this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
+            this.dbTypeVar.clearData();
             this.newCloudJeeDeploy();
             break;
         case "files":
             this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
+            this.dbTypeVar.clearData();
             this.newAppFileDeploy();
             break;
         }
@@ -1298,9 +1308,13 @@ dojo.declare("DeploymentDialog", wm.Page, {
         dojo.forEach(boxes, dojo.hitch(this, function(b, i) {
             var dataModel = b.dataModel;
             var connection = b.dataConnection;
-            if (connection.dbtype.toLowerCase() != "mysql" && connection.dbtype.toLowerCase() != "postgresql") app.alert(this.getDictionaryItem("ALERT_INVALID_DB_TYPE", {
-                name: connection.dbtype
-            }));
+            if (connection.dbtype.toLowerCase() != "mysql" /*&& connection.dbtype.toLowerCase() != "postgresql"*/){
+                this.dbTypeVar.setValue("dataValue", true);
+                /*app.alert(this.getDictionaryItem("ALERT_INVALID_DB_TYPE", {
+                     name: connection.dbtype
+                 }));*/
+
+            }
             this["databaseLayers" + (i + 1)].setLayerIndex(2);
             if (studio.isCloud()) {
                 this["databaseCloudJeeNameEditor" + (i + 1)].setDataValue(dataModel.dataModelName);
@@ -1478,7 +1492,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 
     },
     cjLoginOkClick: function() {
-    studio.beginWait(this.getDictionaryItem("WAIT_LOGGING_IN"));
+    studio.beginWait(this.getDictionaryItem("WAIT_LOGGING_IN"), false, "wmCJWaitThrobber");
     this.cloudJeeService.requestAsync(
         "login",
         [this.loginDialogUserEditor.getDataValue(), this.loginDialogPasswordEditor.getDataValue(), this._deployData && this._deployData.target ? this._deployData.target : this.loginDialogTargetEditor.getDataValue()],

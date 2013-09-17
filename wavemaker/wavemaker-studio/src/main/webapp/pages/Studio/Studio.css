@@ -1058,6 +1058,11 @@ div .StudioGrid td,
 	height: 40px;
 	padding-bottom: 8px;
 }
+.wmWaitDialog .wmCJWaitThrobber {
+    background: url(images/cj_loader.gif) center no-repeat;
+    height: 40px;
+    padding-bottom: 8px;
+}
 
 .Studio-dialog {
 	cursor: wait;

@@ -1275,15 +1275,16 @@ dojo.declare("Studio", wm.Page, {
         });
     },
         waitMsg: null,
-    beginWait: function(inMsg, inNoThrobber) {
+    beginWait: function(inMsg, inNoThrobber, className) {
             if (!this.waitMsg) this.waitMsg = {};
         if (!inMsg)
             return;
         this.dialog.setWidth("242px");
         this.dialog.setHeight("115px");
+        var cname =  className ? className : "wmWaitThrobber";
         this.dialog.containerNode.innerHTML = [
             '<table class="wmWaitDialog"><tr><td>',
-                inNoThrobber ? '' : '<div class="wmWaitThrobber">&nbsp;</div>',
+                inNoThrobber ? '' : '<div class=' +cname +'>&nbsp;</div>',
                 '<div class="wmWaitMessage">',
             inMsg,//inMsg || this.getDictionaryItem("DIALOG_WAIT_MESSAGE"),
                 '</div>',
