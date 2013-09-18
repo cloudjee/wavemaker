@@ -1595,7 +1595,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
     app.confirm(this.getDictionaryItem("CONFIRM_UNDEPLOY", {projectName:name}), false, dojo.hitch(this, function(inData){this.undeploy(data);}), function(){return;});
     },
     undeploy: function(inData) {
-    studio.beginWait(this.getDictionaryItem("WAIT_UNDEPLOY"));
+    //studio.beginWait(this.getDictionaryItem("WAIT_UNDEPLOY"));
+    studio.beginWait(this.getDictionaryItem("WAIT_UNDEPLOY"), false, "wmCJWaitThrobber");
     this.confirmToken(inData.token, inData.target, dojo.hitch(this, function(inToken) {
         inData.token = inToken;
         studio.deploymentService.requestAsync("undeploy", [inData,false/*this.deleteServicesCheckbox.getChecked()*/],
@@ -1622,7 +1623,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
     this.startApp(data);
     },
     startApp: function(inData) {
-    studio.beginWait(this.getDictionaryItem("WAIT_START"));
+    //studio.beginWait(this.getDictionaryItem("WAIT_START"));
+    studio.beginWait(this.getDictionaryItem("WAIT_START"), false, "wmCJWaitThrobber");
+
     this.confirmToken(inData.token, inData.target, dojo.hitch(this, function(inToken) {
         inData.token = inToken;
         this.cloudJeeService.requestAsync("startApplication", [inData.token, inData.target, inData.applicationName],
@@ -1649,7 +1652,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
     this.stopApp(data);
     },
     stopApp: function(inData) {
-    studio.beginWait(this.getDictionaryItem("WAIT_STOP"));
+    //studio.beginWait(this.getDictionaryItem("WAIT_STOP"));
+    studio.beginWait(this.getDictionaryItem("WAIT_STOP"), false, "wmCJWaitThrobber");
     this.confirmToken(inData.token, inData.target, dojo.hitch(this, function(inToken) {
         inData.token = inToken;
         this.cloudJeeService.requestAsync("stopApplication", [inData.token, inData.target, inData.applicationName],

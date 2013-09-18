@@ -195,7 +195,7 @@ DeploymentDialog.widgets = {
 	    buttonBarMarginSpacer1: ["wm.Spacer", {"height":"48px","width":"100%"}, {}],
 	    saveButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Save","margin":"4"}, {"onclick":"saveButtonClick"}, {
 		binding: ["wm.Binding", {}, {}, {
-		    wire: ["wm.Wire", {"source":"editPanel.invalid","targetProperty":"disabled"}, {}]
+		    wire: ["wm.Wire", {"expression":"Boolean(${editPanel.invalid} || ${dbTypeVar.dataValue} == true)","targetProperty":"disabled"}, {}]
 		}]
 	    }],
 	    closeButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Close","margin":"4"}, {"onclick":"closeButtonClick"}],

@@ -1282,8 +1282,9 @@ dojo.declare("Studio", wm.Page, {
         this.dialog.setWidth("242px");
         this.dialog.setHeight("115px");
         var cname =  className ? className : "wmWaitThrobber";
+        var waitDaialog =   className ? "cjWaitDialog" : "";
         this.dialog.containerNode.innerHTML = [
-            '<table class="wmWaitDialog"><tr><td>',
+            '<table class="wmWaitDialog '+waitDaialog+'"><tr><td>',
                 inNoThrobber ? '' : '<div class=' +cname +'>&nbsp;</div>',
                 '<div class="wmWaitMessage">',
             inMsg,//inMsg || this.getDictionaryItem("DIALOG_WAIT_MESSAGE"),
