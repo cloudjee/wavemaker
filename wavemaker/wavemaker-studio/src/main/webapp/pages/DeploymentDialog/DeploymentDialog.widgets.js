@@ -66,7 +66,7 @@ DeploymentDialog.widgets = {
         mainPanel3: ["wm.studio.DialogMainPanel", {autoScroll:true, layoutKind: "left-to-right"},{}, {
 	    iconOrMarginPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"96px"}, {}],
 	    chooseDeploymentPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
-		chooseDeploymentLabel: ["wm.Label", {"align":"center","border":"0","caption":"Choose the target for this deployment","padding":"4","width":"100%"}, {}],
+		chooseDeploymentLabel: ["wm.Label", {"border":"0","caption":"Choose the target for this deployment","padding":"4","width":"100%"}, {}],
 		tomcatRadio: ["wm.RadioButton", {"caption":"Local  Server (Tomcat)","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"tc","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","startChecked":true,"width":"100%"}, {onDblClick: "onNewDeployOk"}],
 		/*cloudfoundryRadio: ["wm.RadioButton", {"caption":"Cloud Jee","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"cf","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","width":"100%"}, {onDblClick: "onNewDeployOk"}],*/
 		cloudjeeRadio: ["wm.RadioButton", {"caption":"WaveMaker Cloud (CloudJee)<sup style=\"font-size:8px; color:#A02727;\">&nbsp;NEW!</sup>","captionAlign":"left","captionPosition":"right","captionSize":"100%","checkedValue":"cj","displayValue":"","minEditorWidth":"30","radioGroup":"deploymentType","width":"100%"}, {onDblClick: "onNewDeployOk"}],
@@ -81,7 +81,7 @@ DeploymentDialog.widgets = {
     cjLoginDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "height":"200px","title":"WaveMaker Cloud Account","width":"400px","containerWidgetId":"mainPanel4","buttonBarId":"buttonBar2"}, {}, {
         mainPanel4: ["wm.studio.DialogMainPanel", {autoScroll:true},{}, {
 	    loginMainPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","margin":"5,20,5,20","verticalAlign":"top","width":"100%"}, {}, {
-		loginDialogInstructionLabel: ["wm.Label", {"align":"center","border":"0","caption":"Enter your WaveMaker Cloud Account","padding":"4","width":"100%"}, {}],
+		loginDialogInstructionLabel: ["wm.Label", {"align":"center","border":"0","caption":"Login to your WaveMaker Cloud Account","padding":"4","width":"100%"}, {}],
 		loginDialogTargetEditor: ["wm.Text", {changeOnKey:1,captionSize: "150px", "emptyValue":"emptyString", "caption":"WaveMaker Cloud target","captionAlign":"left","readonly":true, "displayValue":"https://apps.mywavemaker.com","width":"100%"}, {onEnterKeyPress: "cjLogonOkButton.click"}],
 		loginDialogUserEditor: ["wm.Text", {changeOnKey:1,captionSize: "150px", "emptyValue":"emptyString", "caption":"Email Id","captionAlign":"left","displayValue":"","width":"100%"}, {onEnterKeyPress: "cjLogonOkButton.click"}],
 		loginDialogPasswordEditor: ["wm.Text", {changeOnKey:1,captionSize: "150px", "emptyValue":"emptyString", "caption":"Password","captionAlign":"left","displayValue":"","password":true,"width":"100%"}, {onEnterKeyPress: "cjLogonOkButton.click"}]
