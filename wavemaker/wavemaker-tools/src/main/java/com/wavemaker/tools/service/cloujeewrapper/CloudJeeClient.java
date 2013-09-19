@@ -261,6 +261,15 @@ public class CloudJeeClient extends BaseTest {
                 url = (String) body.get("url");
             } else if((block=(JSONObject) jsonObj.get("exceptionObject")) != null){
                  url =  (String) block.get("cause");
+            }else if((block=(JSONObject) jsonObj.get("errors")) != null){
+                JSONArray errors =  (JSONArray) block.get("error");
+                for(int i=0; i < errors.size(); i++){
+                    JSONObject errObj = (JSONObject)errors.get(i);
+                    String msg = null;
+                    if((msg = (String)errObj.get("message")) != null){
+                        url = url+"\n" + msg;
+                    }
+                }
             }
 
         } catch (Exception e) {
