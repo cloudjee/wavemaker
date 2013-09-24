@@ -201,7 +201,7 @@ dojo.declare("wm.TreeNode", null, {
 		// img class (check if last or root)
 		var ic = (isLast ? this.classes.lastLeaf : this.classes.leaf);
 		if (isRoot)
-			ic = (isLast ? this.classes.rootLastLeaf : this.classes.rootLeaf);
+			ic = (isRoot ? this.classes.rootLastLeaf : this.classes.rootLeaf);
 		if (i && i.className != ic)
 			i.className = ic;
 		// node class
