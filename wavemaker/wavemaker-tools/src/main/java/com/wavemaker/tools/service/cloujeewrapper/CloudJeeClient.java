@@ -1,5 +1,6 @@
 package com.wavemaker.tools.service.cloujeewrapper;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -141,7 +142,7 @@ public class CloudJeeClient extends BaseTest {
 				+ response.getStatusLine().getStatusCode());
 
         JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(readResponse(response));
-        return getUrl(jsonReq);
+        return getContent(jsonReq, "url");
 
 	}
 	
@@ -195,7 +196,7 @@ public class CloudJeeClient extends BaseTest {
                 + response.getStatusLine().getStatusCode());
         String resultJson  = readResponse(response);
         JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(resultJson);
-        return (String)jsonReq.get("appDomainName");
+        return getContent(jsonReq, "tenantDomainName");
     }
 
     public String undeploy(String appName) throws Exception{
@@ -210,9 +211,25 @@ public class CloudJeeClient extends BaseTest {
 
     }
 
+    public String signUp(String email) throws Exception {
+        DefaultHttpClient httpclient = CreateHttpClient
+                .createHttpClientConnection();
+        HttpGet httpget = new HttpGet(ConfigProperties.SIGNUP + email);
+        httpget.setHeader("Content-Type","application/json");
+        HttpResponse response = httpclient.execute(httpget);
+        System.out.println("ResponseCode: "
+                + response.getStatusLine().getStatusCode());
+        String resultJson  = readResponse(response);
+        JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(resultJson);
+        return getContent(jsonReq, "tenantDomainName");
+
+    }
+
+
     private List<CloudJeeApplication> parseResponse(JSONObject jsonObj){
+        List<CloudJeeApplication> apps = new ArrayList<CloudJeeApplication>();
         try {
-            List<CloudJeeApplication> apps = new ArrayList<CloudJeeApplication>();
+
             JSONObject block = (JSONObject) jsonObj.get("success");
             JSONObject body = null;
             if (block != null && (body = (JSONObject) block.get("body")) != null) {
@@ -251,23 +268,22 @@ public class CloudJeeClient extends BaseTest {
         }
     }
 
-    private String getUrl(JSONObject jsonObj) {
-        String url="";
+    private String getContent(JSONObject jsonObj, String keyName) {
+        String content="";
         try {
-            List<CloudJeeApplication> apps = new ArrayList<CloudJeeApplication>();
             JSONObject block = (JSONObject) jsonObj.get("success");
             JSONObject body = null;
             if (block != null && (body = (JSONObject) block.get("body")) != null) {
-                url = (String) body.get("url");
+                content = (String) body.get(keyName);
             } else if((block=(JSONObject) jsonObj.get("exceptionObject")) != null){
-                 url =  (String) block.get("cause");
+                content =  (String) block.get("cause");
             }else if((block=(JSONObject) jsonObj.get("errors")) != null){
                 JSONArray errors =  (JSONArray) block.get("error");
                 for(int i=0; i < errors.size(); i++){
                     JSONObject errObj = (JSONObject)errors.get(i);
                     String msg = null;
                     if((msg = (String)errObj.get("message")) != null){
-                        url = url+"\n" + msg;
+                        content = content+"\n" + msg;
                     }
                 }
             }
@@ -275,7 +291,7 @@ public class CloudJeeClient extends BaseTest {
         } catch (Exception e) {
             throw new WMRuntimeException(e);
         }
-        return url;
+        return content;
     }
 
 

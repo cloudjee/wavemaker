@@ -1470,24 +1470,30 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.cloudJeeAppListDialog.hide();
         this.cjLoginDialog.hide();
     },
-    singUpDialog: function(){
+    signUpDialog: function(){
          this.cloudJeeAppListDialog.hide();
          this.cjLoginDialog.hide();
          this.cjSignupDialog.show();
     },
-    singupLoginCancelClick: function(){
+    signupLoginCancelClick: function(){
         this.cjSignupDialog.clearData();
         this.cjSignupDialog.hide();
     },
     signupLoginOkClick: function(){
     studio.beginWait(this.getDictionaryItem("WAIT_LOGGING_IN"));
-    this.cloudJeeService.requestAsync("signup",[this.signupDialogUserEditor.getDataValue()],
+    this.cloudJeeService.requestAsync("signUp",[this.signupDialogUserEditor.getDataValue()],
           dojo.hitch(this, function(response){
                   studio.endWait();
+                  this.cjSignupDialog.hide();
+                  app.alert(response);
 
           }),
           dojo.hitch(this, function(inError) {
-                          studio.endWait();
+               studio.endWait();
+               this.cjSignupDialog.hide();
+               var message = inError.message;
+               app.toastError(message);
+
            }));
 
     },
