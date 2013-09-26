@@ -1,8 +1,10 @@
 package com.wavemaker.tools.service.cloujeewrapper;
 
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -212,16 +214,40 @@ public class CloudJeeClient extends BaseTest {
     }
 
     public String signUp(String email) throws Exception {
-        DefaultHttpClient httpclient = CreateHttpClient
-                .createHttpClientConnection();
-        HttpGet httpget = new HttpGet(ConfigProperties.SIGNUP + email);
-        httpget.setHeader("Content-Type","application/json");
-        HttpResponse response = httpclient.execute(httpget);
-        System.out.println("ResponseCode: "
-                + response.getStatusLine().getStatusCode());
-        String resultJson  = readResponse(response);
-        JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(resultJson);
-        return getContent(jsonReq, "tenantDomainName");
+        Client client = getClient();
+        client.addFilter(new LoggingFilter(System.out));
+
+        client.setFollowRedirects(false);
+
+        WebResource service = client.resource(getURIFromString(ConfigProperties.SIGNUP));
+        Form formData = new Form();
+        formData.add("emailId", email);
+
+
+        ClientResponse response = service.header("Host", ConfigProperties.HOST_NAME)
+                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+                .post(ClientResponse.class, formData);
+        //Assert.(response.getClientResponseStatus().getStatusCode(), 302); // Found
+        /*if(response.getClientResponseStatus().getStatusCode() != 302){
+            throw new WMRuntimeException("Invalid Credentials");
+        }*/
+
+        BufferedReader bf = new BufferedReader(new InputStreamReader(response.getEntityInputStream()));
+        String responseVal = "", res="";
+
+        try {
+            while(( res = bf.readLine()) !=null){
+                responseVal = responseVal + res;
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        client.setFollowRedirects(true);
+        JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(responseVal);
+        return getContent(jsonReq, "$");
 
     }
 

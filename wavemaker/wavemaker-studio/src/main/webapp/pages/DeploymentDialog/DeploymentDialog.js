@@ -1480,7 +1480,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.cjSignupDialog.hide();
     },
     signupLoginOkClick: function(){
-    studio.beginWait(this.getDictionaryItem("WAIT_LOGGING_IN"));
+    studio.beginWait(this.getDictionaryItem("WAIT_SINGNING_UP"));
     this.cloudJeeService.requestAsync("signUp",[this.signupDialogUserEditor.getDataValue()],
           dojo.hitch(this, function(response){
                   studio.endWait();
