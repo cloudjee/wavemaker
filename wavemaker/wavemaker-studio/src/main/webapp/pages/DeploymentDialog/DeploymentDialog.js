@@ -62,7 +62,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
                 databaseCloudJeeNameEditor1:["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","readonly":true,"width":"100%"}, {}],
 
                 /* Height set from dictionary */
-                databaseCloudJeeTips1: ["wm.Html", {border: "0", margin: "10,0,0,0", width: "100%", height: "60px","showing":false}]/*,
+                databaseCloudJeeTips1: ["wm.Html", {border: "0", margin: "10,0,0,0", width: "100%", height: "60px","showing":true}]/*,
                 databaseCloudJeeWarnings1: ["wm.Html", {border: "0", margin: "10,0,0,0", padding: "5", border: "1", borderColor: "red", width: "100%", height: "60px", showing: false}]*/
             }]
         }]
@@ -114,8 +114,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
         cloudfoundryLayerChildren.databaseCloudJeeType1[1].caption = this.getDictionaryItem("DBBOX_CFTYPE_CAPTION");
         cloudfoundryLayerChildren.databaseCloudJeeNameEditor1[1].caption = this.getDictionaryItem("DBBOX_CFNAME_CAPTION");
         cloudfoundryLayerChildren.databaseCloudJeeNameEditor1[1].helpText = this.getDictionaryItem("DBBOX_CFNAME_HELP");
-        cloudfoundryLayerChildren.databaseCloudJeeTips1[1].html = this.getDictionaryItem("CF_DB_NODATA_WARNING");
-        cloudfoundryLayerChildren.databaseCloudJeeTips1[1].height = this.getDictionaryItem("CF_DB_NODATA_WARNING_HEIGHT");
+        cloudfoundryLayerChildren.databaseCloudJeeTips1[1].html = this.getDictionaryItem("CJ_DB_NODATA_WARNING");
+        cloudfoundryLayerChildren.databaseCloudJeeTips1[1].height = this.getDictionaryItem("CJ_DB_NODATA_WARNING_HEIGHT");
         /*cloudfoundryLayerChildren.databaseCloudJeeWarnings1[1].html = this.getDictionaryItem("CF_MULTIPLE_DB_WARNING");*/
     },
     selectFirst: function() {
@@ -1310,9 +1310,11 @@ dojo.declare("DeploymentDialog", wm.Page, {
             var connection = b.dataConnection;
             if (connection.dbtype.toLowerCase() != "mysql" /*&& connection.dbtype.toLowerCase() != "postgresql"*/){
                 this.dbTypeVar.setValue("dataValue", true);
+
                 /*app.alert(this.getDictionaryItem("ALERT_INVALID_DB_TYPE", {
                      name: connection.dbtype
                  }));*/
+                 this["databaseCloudJeeTips" + (i+1)].setHtml(this.getDictionaryItem("CJ_NON_MYSQL_WARNING",{dbName: connection.dbtype}));
 
             }
             this["databaseLayers" + (i + 1)].setLayerIndex(2);
@@ -1325,6 +1327,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
             this["databaseCloudJeeNameEditor" + (i + 1)].setDataValue(connection.db);
             this["databaseCloudJeeType" + (i + 1)].setDataValue(connection.dbtype);
             this["databaseConnectionEditor" + (i + 1)].hide();
+
         }));
         
         if (this.portMappingPanel) this.portMappingPanel.hide();
@@ -1363,6 +1366,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
                 this["databaseCloudJeeNameEditor" + (i + 1)].setDataValue(dataModel.name);
                 this["databaseConnectionEditor" + (i + 1)].hide();
             }
+            this["databaseCloudJeeType" + (i + 1)].setDataValue(b.dataConnection.dbtype);
         }));
 
         if (this.portMappingPanel) this.portMappingPanel.hide();
@@ -1486,6 +1490,12 @@ dojo.declare("DeploymentDialog", wm.Page, {
                   studio.endWait();
                   this.cjSignupDialog.hide();
                   app.alert(response);
+                  var beforeAlertTitle = app.alertDialog.title;
+                  app.alertDialog.setTitle("Signup Response");
+
+                  app.alertDialog.connectOnce(app.alertDialog, "onClose", function() {
+                          app.alertDialog.setTitle(beforeAlertTitle)
+                  });
 
           }),
           dojo.hitch(this, function(inError) {

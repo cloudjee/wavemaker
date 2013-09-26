@@ -30,7 +30,7 @@ TOAST_DEPLOY_SUCCESS: "<center>Proyecto desplegado a<br/><br/><a target='_NewWin
 TOAST_DEPLOY_FAILED: "Error desplegando: ${error}",
 TOAST_FILE_GENERATION_SUCCESS: "Sus archivos han sido generados y no podran ser descargados por su navegadorn.",
 WAIT_LOGGING_IN: "Iniciar sesion en...",
-WAIT_SINGNING_UP: "Singning up...",
+WAIT_SINGNING_UP: "Signing up...",
 ALERT_CF_NAME_TAKEN:  "${name} ya esta en uso por otro usuario; por favor eliga otro nombre",
 ALERT_INVALID_DB_TYPE: "Despliegue de ${name} base de datos a CloudFoundry no es aun soportado",
 DELETING: "Eliminando...",
