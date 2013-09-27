@@ -98,7 +98,7 @@ DeploymentDialog.widgets = {
 			}]
 	}]
     }],
-    cjSignupDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "height":"150px","title":"WaveMaker Cloud Account","width":"400px","containerWidgetId":"mainPanel4","buttonBarId":"buttonBar2"}, {}, {
+    cjSignupDialog: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, "height":"150px","title":"WaveMaker Cloud Account SignUp","width":"400px","containerWidgetId":"mainPanel4","buttonBarId":"buttonBar2"}, {}, {
         signupmainPanel4: ["wm.studio.DialogMainPanel", {autoScroll:true},{}, {
         signupMainPanel: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","margin":"5,20,5,20","verticalAlign":"top","width":"100%"}, {}, {
         signupDialogInstructionLabel: ["wm.Label", {"align":"center","border":"0","caption":"Sign Up for WaveMaker Cloud Account","padding":"4","width":"100%"}, {}],
@@ -111,7 +111,7 @@ DeploymentDialog.widgets = {
  	    singupLoginCancelButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Cancel","margin":"4"}, {onclick: "signupLoginCancelClick"}],
  	    signupLogonOkButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"OK","margin":"4"}, {onclick: "signupLoginOkClick"}, {
  	    binding: ["wm.Binding", {}, {}, {
-        					wire: ["wm.Wire", {"expression":"( ${signupDialogUserEditor.dataValue} === \"\" )","targetProperty":"disabled"}, {}]
+        					wire: ["wm.Wire", {"expression":"( ${signupDialogUserEditor.dataValue} === \"\")","targetProperty":"disabled"}, {}]
         	}]
 
 

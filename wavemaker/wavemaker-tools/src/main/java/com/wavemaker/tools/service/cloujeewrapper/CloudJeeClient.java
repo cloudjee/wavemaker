@@ -198,7 +198,7 @@ public class CloudJeeClient extends BaseTest {
                 + response.getStatusLine().getStatusCode());
         String resultJson  = readResponse(response);
         JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(resultJson);
-        return getContent(jsonReq, "tenantDomainName");
+        return  getContent(jsonReq, "tenantDomainName") + "." + ConfigProperties.ACCOUNTTARGETSUFFIX;
     }
 
     public String undeploy(String appName) throws Exception{
@@ -249,6 +249,9 @@ public class CloudJeeClient extends BaseTest {
         JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(responseVal);
         return getContent(jsonReq, "$");
 
+    }
+    public String loginTarget() {
+        return ConfigProperties.LOGINTARGET;
     }
 
 
@@ -319,6 +322,7 @@ public class CloudJeeClient extends BaseTest {
         }
         return content;
     }
+
 
 
 }

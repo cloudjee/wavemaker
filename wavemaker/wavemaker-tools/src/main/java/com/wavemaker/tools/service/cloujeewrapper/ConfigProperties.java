@@ -7,9 +7,14 @@
  */
 package com.wavemaker.tools.service.cloujeewrapper;
 
+import com.wavemaker.runtime.RuntimeAccess;
 import org.springframework.core.io.ClassPathResource;
 
+import javax.servlet.ServletContext;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 
@@ -45,6 +50,9 @@ public class ConfigProperties {
 	public static final String LIST;
     public static final String ACCOUNTINFO;
     public static final String SIGNUP;
+    public static final String ACCOUNTTARGETSUFFIX;
+    public static final String LOGINTARGET;
+
 	
 	private static Properties properties = new Properties();
 
@@ -73,13 +81,17 @@ public class ConfigProperties {
 		LIST = properties.getProperty("list");
         ACCOUNTINFO = properties.getProperty("accountInfo");
         SIGNUP = properties.getProperty("signUp");
+        ACCOUNTTARGETSUFFIX = properties.getProperty("accountTargetSuffix");
+        LOGINTARGET = properties.getProperty("loginTarget");
 	}
 
 	public static void init() {
 		try {
-
-            ClassPathResource cjProperties=  new ClassPathResource("com/wavemaker/tools/service/cloudjeeconfig.properties");
-			properties.load(cjProperties.getInputStream());
+            //ClassPathResource cjProperties=  new ClassPathResource("com/wavemaker/tools/service/cloudjeeconfig.properties");
+            ServletContext context = RuntimeAccess.getInstance().getSession().getServletContext();
+            String webinf = context.getRealPath("WEB-INF");
+            InputStream is = new FileInputStream(webinf + File.separator + "wavemakercloudconfig.properties");
+			properties.load(is);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

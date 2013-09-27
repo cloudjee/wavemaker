@@ -103,6 +103,16 @@ public class CloudJeeService {
 
     }
 
+    public String  loginTarget(){
+        try{
+            CloudJeeClient client = new CloudJeeClient();
+            return client.loginTarget();
+        }catch (Throwable ex) {
+            throw new WMRuntimeException("Fetching Login Target failed.", ex);
+        }
+
+    }
+
     public String username(String token){
         try{
             CloudJeeClient client = new CloudJeeClient(token);

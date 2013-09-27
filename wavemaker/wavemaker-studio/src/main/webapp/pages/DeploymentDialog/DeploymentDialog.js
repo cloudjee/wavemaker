@@ -566,13 +566,28 @@ dojo.declare("DeploymentDialog", wm.Page, {
         if (inTargetUrl) {
             this.loginDialogTargetEditor.setDataValue(inTargetUrl);
             this.loginDialogTargetEditor.setReadonly(true);
+            showLogin(inCallback);
         } else {
-            this.loginDialogTargetEditor.setDataValue("https://apps.wavemaker.com");
-            this.loginDialogTargetEditor.setReadonly(true);
+
+            this.cloudJeeService.requestAsync("loginTarget", [],
+                  dojo.hitch(this, function(inData) {
+                       this.loginDialogTargetEditor.setDataValue(inData);
+                       this.loginDialogTargetEditor.setReadonly(true);
+                       this.showLogin(inCallback);
+                  }),
+                  dojo.hitch(this, function(inData) {
+                      studio.endWait(); // in case beginWait was called before confirmToken was called
+
+                  }));
+
         }
+
+    },
+    showLogin: function(inCallback){
         this.cjLoginDialog.show();
         this.loginDialogUserEditor.focus();
         this.cjLoginDialogSuccessHandler = inCallback;
+
     },
     deploy2: function(inData) {
         this._deployData = inData;
@@ -1484,8 +1499,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.cjSignupDialog.hide();
     },
     signupLoginOkClick: function(){
-    studio.beginWait(this.getDictionaryItem("WAIT_SINGNING_UP"));
-    this.cloudJeeService.requestAsync("signUp",[this.signupDialogUserEditor.getDataValue()],
+    studio.beginWait(this.getDictionaryItem("WAIT_SINGNING_UP"),false, "wmCJWaitThrobber");
+    this.cloudJeeService.requestAsync("signUp",[this.signupDialogUserEditor.getDataValue().trim()],
           dojo.hitch(this, function(response){
                   studio.endWait();
                   this.cjSignupDialog.hide();
@@ -1522,8 +1537,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
             var that = this;
             this.cloudJeeService.requestAsync("username",[inData],
               dojo.hitch(this, function(inName){
-                      this.cjHostEditor.setDataValue("https://" + inName + ".apps.mywavemaker.com");
-                      this.cjUrlEditor.setDataValue("https://" + inName + ".apps.mywavemaker.com/" + studio.project.projectName);
+                      this.cjHostEditor.setDataValue("https://" + inName);
+                      this.cjUrlEditor.setDataValue("https://" + inName + "/" + studio.project.projectName);
 
                        this.setTokenCookie(this.cjHostEditor.getDataValue(), inData);
 
