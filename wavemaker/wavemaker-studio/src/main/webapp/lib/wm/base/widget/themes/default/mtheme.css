@@ -1,4 +1,3 @@
-
 /*
  *  Copyright (C) 2010-2013 VMware, Inc. All rights reserved.
  *
@@ -204,8 +203,6 @@ user-select: none;
 	margin: 0;
 	padding: 0;
 	list-style-type: none;
-	background: url(images/treeimages.png) repeat-y;
-        background-position: 0px 100%;
         width: 18px;
 }
 
@@ -217,6 +214,13 @@ user-select: none;
 	margin: 0;
 	padding: 0 0 0 20px;
 	white-space: nowrap;
+    	position: relative; /*for moving the child up to hide the extra dot lines*/
+    	top: -4px;	
+}
+
+.wmtree-branch{
+	background: url(images/treeimages.png) repeat-y;
+    	background-position: 0px 100%;
 }
 
 .wmtree-root-leaf, .wmtree-leaf, .wmtree-last-leaf, .wmtree-root-last-leaf {
@@ -242,14 +246,27 @@ user-select: none;
 }
 
 .wmtree-last-item {
-        width: 12px;
+ /*       width: 12px;
 	background-image: url(images/treeimages.png);
         background-position: -84px 0px;
-/*	background-image: url(images/tree_half_bar.gif);*/
+	background-image: url(images/tree_half_bar.gif);
 	background-repeat:  no-repeat;
-	vertical-align: top;
+	vertical-align: top; Marking the end of the child 
+	height:7px;*/
 }
 
+.wmtree-disabled .wmtree-root-leaf, .wmtree-disabled .wmtree-root-last-leaf, .wmtree-disabled .wmtree-last-item {
+	background-color: #C8C8C8;
+}
+
+.wmtree-leaf {
+        width: 18px;
+	background-image: url(images/treeimages.png);
+      /*  background-position: -104px 0px; */
+        background-position: -84px 0px;
+	background-repeat:  no-repeat;
+/*	background: url(images/tree_leaf.gif) no-repeat;*/
+}
 .wmtree-disabled .wmtree-root-leaf, .wmtree-disabled .wmtree-root-last-leaf, .wmtree-disabled .wmtree-last-item {
 	background-color: #C8C8C8;
 }
