@@ -1061,7 +1061,7 @@ PhoneGapConfig.widgets = {
                 }, {
                     onchange: "onPermissionsChange"
                 }],
-                permissionsHtml: ["wm.Html", {width: "100%", height: "100%", html: "<p>By default, all permissions are enabled so that while testing, everything will work.  When you ready to start distributing this app, review the above list and remove those permissions that your application does not need.</p><p>On some devices, the lack of a requried permission results in no warnings, it just causes the app to freeze or fail.</p><p>On Android, the camera API requires the file API.</p>"}],
+                permissionsHtml: ["wm.Html", {width: "100%", height: "100%", html: "<p>By default, all permissions are enabled so that while testing, everything will work.  When you ready to start distributing this app, review the above list and remove those permissions that your application does not need.</p><p>On some devices, the lack of a required permission results in no warnings, it just causes the app to freeze or fail.</p><p>On Android, the camera API requires the file API.</p>"}],
                 label3: ["wm.Label",
                 {
                     showing: 0,
