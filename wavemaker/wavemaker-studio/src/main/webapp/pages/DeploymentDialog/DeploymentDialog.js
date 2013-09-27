@@ -1506,7 +1506,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
                   this.cjSignupDialog.hide();
                   app.alert(response);
                   var beforeAlertTitle = app.alertDialog.title;
-                  app.alertDialog.setTitle("Signup Response");
+                  app.alertDialog.setTitle("Sign Up Response");
 
                   app.alertDialog.connectOnce(app.alertDialog, "onClose", function() {
                           app.alertDialog.setTitle(beforeAlertTitle)

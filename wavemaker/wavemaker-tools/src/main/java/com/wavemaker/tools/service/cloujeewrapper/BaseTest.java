@@ -44,28 +44,6 @@ public class BaseTest {
         return UriBuilder.fromUri(uri).build();
     }
 
-    public void authenticate()
-	{		
-		Client client = getClient();
-        client.addFilter(new LoggingFilter(System.out));
-        //to get the auth_cookie we should disable the redirect follow
-        client.setFollowRedirects(false);
-
-		WebResource service = client.resource(getURIFromString(ConfigProperties.AUTH_LOGIN_URI));
-		Form formData = new Form();
-		formData.add("j_username", ConfigProperties.USER_NAME);
-		formData.add("j_password", ConfigProperties.PASSWORD);
-		formData.add("regButton", "Sign In");
-        
-        ClientResponse response = service.header("Host", ConfigProperties.HOST_NAME)
-                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
-                .post(ClientResponse.class, formData);
-        //Assert.(response.getClientResponseStatus().getStatusCode(), 302); // Found
-
-                
-        setAuthCookie(response);
-		client.setFollowRedirects(true);
-	}
 
     public void setAuthCookie(ClientResponse response) {
         //Set-Cookie header contains the auth_cookie value
@@ -177,17 +155,7 @@ public class BaseTest {
 		return jsessionId;
 	}
 
-    public String createGroup(String grpName)
-	{
-		Builder request = buildRequest(ConfigProperties.GROUP_URI,
-				"creategroup", MediaType.APPLICATION_JSON_TYPE,
-				MediaType.APPLICATION_JSON_TYPE, grpName );
-		ClientResponse response = request.post(ClientResponse.class);
-	//	Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-		//System.out.println("---------------Group Created with name "+ grpName +"---------------");
-		return response.getEntity(String.class);
-	}
-	
+
 	
 	protected String readResponse(HttpResponse response) throws IllegalStateException, IOException{
 		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));

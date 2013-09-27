@@ -43,12 +43,6 @@ public class CloudJeeClient extends BaseTest {
 
 	public CloudJeeClient() {
         trustManager();
-	/*	if (authCookie == null) {
-			authenticate();
-		}
-		this.auth = getAuthCookie().getName() + "="
-				+ getAuthCookie().getValue() + "; " + getjsessionId().getName()
-				+ "=" + getjsessionId().getValue();*/
 	}
     public CloudJeeClient(String auth){
         trustManager();
