@@ -81,7 +81,7 @@ public class CloudJeeService {
         String token = client.authenticate(username, password);
         return token;
         }catch (Throwable ex) {
-            throw new WMRuntimeException("CloudJee login failed.", ex);
+            throw new WMRuntimeException("WaveMaker Cloud login failed.", ex);
         }
     }
     public List<CloudJeeApplication> listApps(String token, String target) {
@@ -89,8 +89,28 @@ public class CloudJeeService {
             CloudJeeClient client = new CloudJeeClient(token);
             return client.list();
         }catch (Throwable ex) {
-            throw new WMRuntimeException("CloudJee list apps failed.", ex);
+            throw new WMRuntimeException("WaveMaker Cloud list apps failed.", ex);
         }
+    }
+
+    public String signUp(String email){
+        try{
+            CloudJeeClient client = new CloudJeeClient();
+            return client.signUp(email);
+        }catch (Throwable ex) {
+            throw new WMRuntimeException("WaveMaker Cloud list sign up failed.", ex);
+        }
+
+    }
+
+    public String  loginTarget(){
+        try{
+            CloudJeeClient client = new CloudJeeClient();
+            return client.loginTarget();
+        }catch (Throwable ex) {
+            throw new WMRuntimeException("Fetching Login Target failed.", ex);
+        }
+
     }
 
     public String username(String token){
@@ -98,7 +118,7 @@ public class CloudJeeService {
             CloudJeeClient client = new CloudJeeClient(token);
             return client.accountInfo();
         }catch (Throwable ex) {
-            throw new WMRuntimeException("CloudJee account info failed.", ex);
+            throw new WMRuntimeException("WaveMaker Cloud account info failed.", ex);
         }
     }
     
@@ -107,7 +127,7 @@ public class CloudJeeService {
         try {
             client.stop(applicationName);
         } catch (Exception e) {
-            throw new WMRuntimeException("CloudJee Stop application failed.", e);
+            throw new WMRuntimeException("ClouWaveMaker Stop application failed.", e);
         }
     }
 
@@ -116,7 +136,7 @@ public class CloudJeeService {
         try {
             client.start(applicationName);
         } catch (Exception e) {
-            throw new WMRuntimeException("CloudJee start application failed.", e);
+            throw new WMRuntimeException("WaveMaker Cloud start application failed.", e);
         }
     }
     

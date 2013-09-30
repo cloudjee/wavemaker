@@ -1,7 +1,10 @@
 package com.wavemaker.tools.service.cloujeewrapper;
 
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -40,12 +43,6 @@ public class CloudJeeClient extends BaseTest {
 
 	public CloudJeeClient() {
         trustManager();
-	/*	if (authCookie == null) {
-			authenticate();
-		}
-		this.auth = getAuthCookie().getName() + "="
-				+ getAuthCookie().getValue() + "; " + getjsessionId().getName()
-				+ "=" + getjsessionId().getValue();*/
 	}
     public CloudJeeClient(String auth){
         trustManager();
@@ -107,8 +104,9 @@ public class CloudJeeClient extends BaseTest {
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
                 .post(ClientResponse.class, formData);
         //Assert.(response.getClientResponseStatus().getStatusCode(), 302); // Found
-
-
+        if(response.getClientResponseStatus().getStatusCode() != 302){
+            throw new WMRuntimeException("Invalid Credentials");
+        }
         setAuthCookie(response);
         client.setFollowRedirects(true);
         List<String> cookies = response.getHeaders().get("Set-Cookie");
@@ -140,7 +138,7 @@ public class CloudJeeClient extends BaseTest {
 				+ response.getStatusLine().getStatusCode());
 
         JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(readResponse(response));
-        return getUrl(jsonReq);
+        return getContent(jsonReq, "url");
 
 	}
 	
@@ -194,7 +192,7 @@ public class CloudJeeClient extends BaseTest {
                 + response.getStatusLine().getStatusCode());
         String resultJson  = readResponse(response);
         JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(resultJson);
-        return (String)jsonReq.get("appDomainName");
+        return  getContent(jsonReq, "tenantDomainName") + "." + ConfigProperties.ACCOUNTTARGETSUFFIX;
     }
 
     public String undeploy(String appName) throws Exception{
@@ -209,13 +207,61 @@ public class CloudJeeClient extends BaseTest {
 
     }
 
-    private List<CloudJeeApplication> parseResponse(JSONObject jsonObj){
+    public String signUp(String email) throws Exception {
+        Client client = getClient();
+        client.addFilter(new LoggingFilter(System.out));
+
+        client.setFollowRedirects(false);
+
+        WebResource service = client.resource(getURIFromString(ConfigProperties.SIGNUP));
+        Form formData = new Form();
+        formData.add("emailId", email);
+
+
+        ClientResponse response = service.header("Host", ConfigProperties.HOST_NAME)
+                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
+                .post(ClientResponse.class, formData);
+        //Assert.(response.getClientResponseStatus().getStatusCode(), 302); // Found
+        /*if(response.getClientResponseStatus().getStatusCode() != 302){
+            throw new WMRuntimeException("Invalid Credentials");
+        }*/
+
+        BufferedReader bf = new BufferedReader(new InputStreamReader(response.getEntityInputStream()));
+        String responseVal = "", res="";
+
         try {
-            List<CloudJeeApplication> apps = new ArrayList<CloudJeeApplication>();
+            while(( res = bf.readLine()) !=null){
+                responseVal = responseVal + res;
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        client.setFollowRedirects(true);
+        JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(responseVal);
+        return getContent(jsonReq, "$");
+
+    }
+    public String loginTarget() {
+        return ConfigProperties.LOGINTARGET;
+    }
+
+
+    private List<CloudJeeApplication> parseResponse(JSONObject jsonObj){
+        List<CloudJeeApplication> apps = new ArrayList<CloudJeeApplication>();
+        try {
+
             JSONObject block = (JSONObject) jsonObj.get("success");
             JSONObject body = null;
             if (block != null && (body = (JSONObject) block.get("body")) != null) {
-                JSONArray objects = (JSONArray) body.get("objects");
+                JSONArray objects = new JSONArray();
+
+                if(((JSONArray) body.get("objects")) != null){
+                    objects = (JSONArray) body.get("objects");
+                }
+
                 Class cls = null;
                 cls = Class.forName("com.wavemaker.tools.service.cloujeewrapper.CloudJeeApplication");
 
@@ -245,23 +291,32 @@ public class CloudJeeClient extends BaseTest {
         }
     }
 
-    private String getUrl(JSONObject jsonObj) {
-        String url="";
+    private String getContent(JSONObject jsonObj, String keyName) {
+        String content="";
         try {
-            List<CloudJeeApplication> apps = new ArrayList<CloudJeeApplication>();
             JSONObject block = (JSONObject) jsonObj.get("success");
             JSONObject body = null;
             if (block != null && (body = (JSONObject) block.get("body")) != null) {
-                url = (String) body.get("url");
+                content = (String) body.get(keyName);
             } else if((block=(JSONObject) jsonObj.get("exceptionObject")) != null){
-                 url =  (String) block.get("cause");
+                content =  (String) block.get("cause");
+            }else if((block=(JSONObject) jsonObj.get("errors")) != null){
+                JSONArray errors =  (JSONArray) block.get("error");
+                for(int i=0; i < errors.size(); i++){
+                    JSONObject errObj = (JSONObject)errors.get(i);
+                    String msg = null;
+                    if((msg = (String)errObj.get("message")) != null){
+                        content = content+"\n" + msg;
+                    }
+                }
             }
 
         } catch (Exception e) {
             throw new WMRuntimeException(e);
         }
-        return url;
+        return content;
     }
+
 
 
 }

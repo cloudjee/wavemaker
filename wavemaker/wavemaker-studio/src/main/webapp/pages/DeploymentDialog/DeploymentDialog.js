@@ -31,6 +31,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
     cfDatabaseNameList: [],
     _currentDeploymentIndex: -1,
 	currentPortMappingBox: null,
+	progressDialogMsg: "",
+	alertTitle: "",
 
     /* Extra Widgets */
     hsqldbBox: {
@@ -60,7 +62,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
                 databaseCloudJeeNameEditor1:["wm.Text", {"border":"0","caption":"","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","readonly":true,"width":"100%"}, {}],
 
                 /* Height set from dictionary */
-                databaseCloudJeeTips1: ["wm.Html", {border: "0", margin: "10,0,0,0", width: "100%", height: "60px","showing":false}]/*,
+                databaseCloudJeeTips1: ["wm.Html", {border: "0", margin: "10,0,0,0", width: "100%", height: "60px","showing":true}]/*,
                 databaseCloudJeeWarnings1: ["wm.Html", {border: "0", margin: "10,0,0,0", padding: "5", border: "1", borderColor: "red", width: "100%", height: "60px", showing: false}]*/
             }]
         }]
@@ -112,8 +114,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
         cloudfoundryLayerChildren.databaseCloudJeeType1[1].caption = this.getDictionaryItem("DBBOX_CFTYPE_CAPTION");
         cloudfoundryLayerChildren.databaseCloudJeeNameEditor1[1].caption = this.getDictionaryItem("DBBOX_CFNAME_CAPTION");
         cloudfoundryLayerChildren.databaseCloudJeeNameEditor1[1].helpText = this.getDictionaryItem("DBBOX_CFNAME_HELP");
-        cloudfoundryLayerChildren.databaseCloudJeeTips1[1].html = this.getDictionaryItem("CF_DB_NODATA_WARNING");
-        cloudfoundryLayerChildren.databaseCloudJeeTips1[1].height = this.getDictionaryItem("CF_DB_NODATA_WARNING_HEIGHT");
+        cloudfoundryLayerChildren.databaseCloudJeeTips1[1].html = this.getDictionaryItem("CJ_DB_NODATA_WARNING");
+        cloudfoundryLayerChildren.databaseCloudJeeTips1[1].height = this.getDictionaryItem("CJ_DB_NODATA_WARNING_HEIGHT");
         /*cloudfoundryLayerChildren.databaseCloudJeeWarnings1[1].html = this.getDictionaryItem("CF_MULTIPLE_DB_WARNING");*/
     },
     selectFirst: function() {
@@ -227,6 +229,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         data.name = this.cjDeploymentNameEditor.getDataValue();
         data.target = this.cjHostEditor.getDataValue();
         data.deploymentUrl = this.cjUrlEditor.getDataValue();
+        data.token = this.getTokenCookie(data.target);
 
         /* Delete the old databases and replace it with a new databases structure */
         var databases = data.databases = [];
@@ -237,7 +240,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
                 dbName: box.dataConnection.db,
                 connectionUrl: "jdbc\:mysql\://localhost\:3306/test",//this.getTargetUrl(data),// used to store db type, not because its required
                 username: "root",
-                password: "root",
+                password: "cloudjee123",
                 jndiName: null
             });
         }));
@@ -463,7 +466,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
                       });
                   }
                   /* Was a label, but in order to get the nice tooltips, changed it into a readonly editor */
-                  this._alertLabel = new wm.Text({
+                  /*this._alertLabel = new wm.Text({
                       owner: this,
                       parent: app.confirmDialog.containerWidget.c$[0],
                       showing: showCheckboxes,
@@ -492,7 +495,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
                           name: "confirmUpdateSchemaCheckbox" + inName
                       });
                       this._updateSchemaCheckboxes[inName] = c;
-                  }));
+                  }));  */
                   /*
               this._updateSchemaCheckbox = new wm.Checkbox({owner: this,
                                     parent: app.confirmDialog.containerWidget.c$[0],
@@ -530,13 +533,13 @@ dojo.declare("DeploymentDialog", wm.Page, {
         //this._updateSchema = this._updateSchemaCheckbox ? this._updateSchemaCheckbox.getChecked() : this._updateSchemaCheckboxValue;
 
         var updateSchema = {};
-        wm.forEachProperty(this._updateSchemaCheckboxes, dojo.hitch(this, function(inCheckbox, inName) {
+        /*wm.forEachProperty(this._updateSchemaCheckboxes, dojo.hitch(this, function(inCheckbox, inName) {
             updateSchema[inName] = inCheckbox.getChecked();
         }));
         var d = inData.databases;
         for (var i = 0; i < d.length; i++) {
             d[i].updateSchema = updateSchema[d[i].dataModelId];
-        }
+        }  */
 
         if (!inData.token) inData.token = this.getTokenCookie(inData.target);
         this.confirmToken(inData.token, inData.target, dojo.hitch(this, function(inToken) {
@@ -563,22 +566,74 @@ dojo.declare("DeploymentDialog", wm.Page, {
         if (inTargetUrl) {
             this.loginDialogTargetEditor.setDataValue(inTargetUrl);
             this.loginDialogTargetEditor.setReadonly(true);
+            showLogin(inCallback);
         } else {
-            this.loginDialogTargetEditor.setDataValue("https://apps.wavemaker.com");
-            this.loginDialogTargetEditor.setReadonly(true);
+
+            this.cloudJeeService.requestAsync("loginTarget", [],
+                  dojo.hitch(this, function(inData) {
+                       this.loginDialogTargetEditor.setDataValue(inData);
+                       this.loginDialogTargetEditor.setReadonly(true);
+                       this.showLogin(inCallback);
+                  }),
+                  dojo.hitch(this, function(inData) {
+                      studio.endWait(); // in case beginWait was called before confirmToken was called
+
+                  }));
+
         }
+
+    },
+    showLogin: function(inCallback){
         this.cjLoginDialog.show();
         this.loginDialogUserEditor.focus();
         this.cjLoginDialogSuccessHandler = inCallback;
+
     },
     deploy2: function(inData) {
         this._deployData = inData;
-        studio.beginWait(this.getDictionaryItem("WAIT_DEPLOY", {
-            deploymentName: inData.name
-        }));
+
+        if(inData.deploymentType == this.CJ_DEPLOY){
+            /*studio.beginWait(this.getDictionaryItem("WAIT_CJ_BUILDWAR", {
+                 warName: inData.applicationName + ".war"
+            })); */
+
+            studio.saveDialogProgress.setProgress(0);
+            studio.saveDialogLabel.setCaption(this.getDictionaryItem("WAIT_CJ_BUILDWAR", {
+                  warName: inData.applicationName + ".war"
+            }));
+            progressDialogMsg =   studio.progressDialog.title;
+            studio.progressDialog.setTitle("Deploying...");
+            studio.progressDialog.show();
+
+
+        }else{
+            studio.beginWait(this.getDictionaryItem("WAIT_DEPLOY", {
+                deploymentName: inData.name
+            }));
+        }
+        studio.saveDialogProgress.setProgress(1);
         studio.deploymentService.requestAsync("deploy", [inData], dojo.hitch(this, function(inResult) {
-            this.deploySuccess(inResult, inData);
+            if(inData.deploymentType == this.CJ_DEPLOY){
+
+                 /*studio.beginWait(this.getDictionaryItem("WAIT_CJ_DEPLOY", {
+                    warName: inData.applicationName + ".war"
+                  }));*/
+                  for(var j=2; j<=50;j++){
+                    studio.saveDialogProgress.setProgress(j);
+                  }
+                  studio.saveDialogLabel.setCaption(this.getDictionaryItem("WAIT_CJ_DEPLOY", {
+                                    warName: inData.applicationName + ".war"
+                              }))
+
+                 studio.deploymentService.requestAsync("deployWar", [inData], dojo.hitch(this, function(inResult) {
+                         studio.saveDialogProgress.setProgress(100);
+                          this.deploySuccess(inResult, inData);
+                  }), dojo.hitch(this, "deployFailed"));
+              } else{
+                this.deploySuccess(inResult, inData);
+              }
         }), dojo.hitch(this, "deployFailed"));
+
         var type = inData.deploymentType;
         if (type == this.FILE_DEPLOY) type = inData.archiveType;
         studio.trackerImage.setSource("http://wavemaker.com/img/blank.gif?op=" + type + "&v=" + escape(wm.studioConfig.studioVersion) + "&r=" + String(Math.random(new Date().getTime())).replace(/\D/, "").substring(0, 8));
@@ -594,10 +649,19 @@ dojo.declare("DeploymentDialog", wm.Page, {
                 }));
                 break;
             case this.CJ_DEPLOY:
+                studio.progressDialog.setTitle(progressDialogMsg);
+                studio.progressDialog.hide();
+
                 app.alert(this.getDictionaryItem("ALERT_DEPLOY_SUCCESS", {
                     url: inResult,
                     version: studio.application.getFullVersionNumber()
                 }));
+                alertTitle = app.alertDialog.title;
+                app.alertDialog.setTitle("Successful Deployment");
+
+               app.alertDialog.connectOnce(app.alertDialog, "onClose", function() {
+                         app.alertDialog.setTitle(alertTitle)
+                     });
                 break;
             case this.FILE_DEPLOY:
                 app.alert(this.getDictionaryItem("ALERT_FILE_DEPLOY_SUCCESS", {
@@ -656,6 +720,10 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
     deployFailed: function(inError) {
         studio.endWait();
+        if(progressDialogMsg != ""){
+            studio.progressDialog.setTitle(progressDialogMsg);
+        }
+        studio.progressDialog.hide();
         app.alert(this.getDictionaryItem("TOAST_DEPLOY_FAILED", {
             error: inError.message
         }));
@@ -755,7 +823,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         var target = this.getTargetUrl(inData);
         var type = "";
         if (data.deploymentType == this.CJ_DEPLOY) {
-            type = "CloudJee";
+            type = "WaveMaker Cloud";
         } else if (data.deploymentType == this.TC_DEPLOY) {
             type = "Tomcat";
         } else if (data.deploymentType == this.FILE_DEPLOY) {
@@ -766,7 +834,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         html += "<tr><td style='width:100px;vertical-align:top'>" + this.getDictionaryItem("SYNOPSIS_NAME") + "</td><td>" + name + "</td></tr>";
         if (target) html += "<tr><td>" + this.getDictionaryItem("SYNOPSIS_TARGET") + "</td><td>" + target + "</td></tr>";
         html += "<tr><td>" + this.getDictionaryItem("SYNOPSIS_TYPE") + "</td><td>" + type + "</td></tr>";
-        dojo.forEach(data.databases, dojo.hitch(this, function(database, i) {
+        /*dojo.forEach(data.databases, dojo.hitch(this, function(database, i) {
             var connection;
             if (database.jndiName) {
                 html += "<tr><td>" + database.dataModelId + "</td><td>JNDI:" + database.jndiName + "</td></tr>";
@@ -784,7 +852,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
                     html += "<tr><td>" + database.dataModelId + "</td><td>" + database.dbName + "</td></tr>";
                 }
             }
-        }));
+        }));*/
         return html;
     },
   deleteButtonClick: function(inSender) {
@@ -913,14 +981,17 @@ dojo.declare("DeploymentDialog", wm.Page, {
         switch (groupvalue) {
         case "tc":
             this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
+            this.dbTypeVar.clearData();
             this.newTomcatDeploy();
             break;
         case "cj":
             this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
+            this.dbTypeVar.clearData();
             this.newCloudJeeDeploy();
             break;
         case "files":
             this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
+            this.dbTypeVar.clearData();
             this.newAppFileDeploy();
             break;
         }
@@ -1242,19 +1313,25 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.editLayer.activate();
         this.owner.owner.show();
         this.cloudJeeLayer.activate();
-        var targetName = this.setUniqueDeploymentName("CloudJee 1", this.cjDeploymentNameEditor, this.CJ_DEPLOY);
+        var targetName = this.setUniqueDeploymentName("WaveMaker Cloud 1", this.cjDeploymentNameEditor, this.CJ_DEPLOY);
         this.cjHostEditor.setDataValue("");
         this.cjNameEditor.setDataValue(studio.project.projectName);
         this.cjUrlEditor.setDataValue("");
-        this.cjDeploymentTypeEditor.setDataValue("CloudJee");
+        this.cjDeploymentTypeEditor.setDataValue("WaveMaker Cloud");
 
 		var boxes = this.generateDataModelBoxes();
         dojo.forEach(boxes, dojo.hitch(this, function(b, i) {
             var dataModel = b.dataModel;
             var connection = b.dataConnection;
-            if (connection.dbtype.toLowerCase() != "mysql" && connection.dbtype.toLowerCase() != "postgresql") app.alert(this.getDictionaryItem("ALERT_INVALID_DB_TYPE", {
-                name: connection.dbtype
-            }));
+            if (connection.dbtype.toLowerCase() != "mysql" /*&& connection.dbtype.toLowerCase() != "postgresql"*/){
+                this.dbTypeVar.setValue("dataValue", true);
+
+                /*app.alert(this.getDictionaryItem("ALERT_INVALID_DB_TYPE", {
+                     name: connection.dbtype
+                 }));*/
+                 this["databaseCloudJeeTips" + (i+1)].setHtml(this.getDictionaryItem("CJ_NON_MYSQL_WARNING",{dbName: connection.dbtype}));
+
+            }
             this["databaseLayers" + (i + 1)].setLayerIndex(2);
             if (studio.isCloud()) {
                 this["databaseCloudJeeNameEditor" + (i + 1)].setDataValue(dataModel.dataModelName);
@@ -1265,6 +1342,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
             this["databaseCloudJeeNameEditor" + (i + 1)].setDataValue(connection.db);
             this["databaseCloudJeeType" + (i + 1)].setDataValue(connection.dbtype);
             this["databaseConnectionEditor" + (i + 1)].hide();
+
         }));
         
         if (this.portMappingPanel) this.portMappingPanel.hide();
@@ -1283,7 +1361,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.cloudJeeLayer.activate();
 
         this.cjDeploymentNameEditor.setDataValue(inData.name);
-        this.cjDeploymentTypeEditor.setDataValue("CloudJee");
+        this.cjDeploymentTypeEditor.setDataValue("WaveMaker Cloud");
         this.cjNameEditor.setDataValue(inData.applicationName);
         this.cjHostEditor.setDataValue(inData.target);
         this.cjUrlEditor.setDataValue(inData.deploymentUrl);
@@ -1303,6 +1381,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
                 this["databaseCloudJeeNameEditor" + (i + 1)].setDataValue(dataModel.name);
                 this["databaseConnectionEditor" + (i + 1)].hide();
             }
+            this["databaseCloudJeeType" + (i + 1)].setDataValue(b.dataConnection.dbtype);
         }));
 
         if (this.portMappingPanel) this.portMappingPanel.hide();
@@ -1405,13 +1484,46 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
 
 
-    /* Handling for the cloudfoundry login dialog */
+    /* Handling for the wavemaker cloud login dialog */
     cjLoginCancelClick: function() {
         this.cloudJeeAppListDialog.hide();
         this.cjLoginDialog.hide();
     },
+    signUpDialog: function(){
+         this.cloudJeeAppListDialog.hide();
+         this.cjLoginDialog.hide();
+         this.cjSignupDialog.show();
+    },
+    signupLoginCancelClick: function(){
+        this.cjSignupDialog.clearData();
+        this.cjSignupDialog.hide();
+    },
+    signupLoginOkClick: function(){
+    studio.beginWait(this.getDictionaryItem("WAIT_SINGNING_UP"),false, "wmCJWaitThrobber");
+    this.cloudJeeService.requestAsync("signUp",[this.signupDialogUserEditor.getDataValue().trim()],
+          dojo.hitch(this, function(response){
+                  studio.endWait();
+                  this.cjSignupDialog.hide();
+                  app.alert(response);
+                  var beforeAlertTitle = app.alertDialog.title;
+                  app.alertDialog.setTitle("Sign Up Response");
+
+                  app.alertDialog.connectOnce(app.alertDialog, "onClose", function() {
+                          app.alertDialog.setTitle(beforeAlertTitle)
+                  });
+
+          }),
+          dojo.hitch(this, function(inError) {
+               studio.endWait();
+               this.cjSignupDialog.hide();
+               var message = inError.message;
+               app.toastError(message);
+
+           }));
+
+    },
     cjLoginOkClick: function() {
-    studio.beginWait(this.getDictionaryItem("WAIT_LOGGING_IN"));
+    studio.beginWait(this.getDictionaryItem("WAIT_LOGGING_IN"), false, "wmCJWaitThrobber");
     this.cloudJeeService.requestAsync(
         "login",
         [this.loginDialogUserEditor.getDataValue(), this.loginDialogPasswordEditor.getDataValue(), this._deployData && this._deployData.target ? this._deployData.target : this.loginDialogTargetEditor.getDataValue()],
@@ -1425,10 +1537,10 @@ dojo.declare("DeploymentDialog", wm.Page, {
             var that = this;
             this.cloudJeeService.requestAsync("username",[inData],
               dojo.hitch(this, function(inName){
-                      this.cjHostEditor.setDataValue("https://" + inName + ".apps.mywavemaker.com");
-                      this.cjUrlEditor.setDataValue("https://" + inName + ".apps.mywavemaker.com/" + studio.project.projectName);
+                      this.cjHostEditor.setDataValue("https://" + inName);
+                      this.cjUrlEditor.setDataValue("https://" + inName + "/" + studio.project.projectName);
 
-
+                       this.setTokenCookie(this.cjHostEditor.getDataValue(), inData);
 
               }),
               dojo.hitch(this, function(inError) {
@@ -1514,7 +1626,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
     app.confirm(this.getDictionaryItem("CONFIRM_UNDEPLOY", {projectName:name}), false, dojo.hitch(this, function(inData){this.undeploy(data);}), function(){return;});
     },
     undeploy: function(inData) {
-    studio.beginWait(this.getDictionaryItem("WAIT_UNDEPLOY"));
+    //studio.beginWait(this.getDictionaryItem("WAIT_UNDEPLOY"));
+    studio.beginWait(this.getDictionaryItem("WAIT_UNDEPLOY"), false, "wmCJWaitThrobber");
     this.confirmToken(inData.token, inData.target, dojo.hitch(this, function(inToken) {
         inData.token = inToken;
         studio.deploymentService.requestAsync("undeploy", [inData,false/*this.deleteServicesCheckbox.getChecked()*/],
@@ -1541,7 +1654,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
     this.startApp(data);
     },
     startApp: function(inData) {
-    studio.beginWait(this.getDictionaryItem("WAIT_START"));
+    //studio.beginWait(this.getDictionaryItem("WAIT_START"));
+    studio.beginWait(this.getDictionaryItem("WAIT_START"), false, "wmCJWaitThrobber");
+
     this.confirmToken(inData.token, inData.target, dojo.hitch(this, function(inToken) {
         inData.token = inToken;
         this.cloudJeeService.requestAsync("startApplication", [inData.token, inData.target, inData.applicationName],
@@ -1568,7 +1683,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
     this.stopApp(data);
     },
     stopApp: function(inData) {
-    studio.beginWait(this.getDictionaryItem("WAIT_STOP"));
+    //studio.beginWait(this.getDictionaryItem("WAIT_STOP"));
+    studio.beginWait(this.getDictionaryItem("WAIT_STOP"), false, "wmCJWaitThrobber");
     this.confirmToken(inData.token, inData.target, dojo.hitch(this, function(inToken) {
         inData.token = inToken;
         this.cloudJeeService.requestAsync("stopApplication", [inData.token, inData.target, inData.applicationName],
@@ -1619,11 +1735,11 @@ dojo.declare("DeploymentDialog", wm.Page, {
 
     },
     loadDatabaseServices: function() {
-            this.dataServiceListService.requestAsync("listDatabaseServices", [studio.isCloud() ? "" : this.getTokenCookie(this.loginDialogTargetEditor.getDataValue()),studio.isCloud() ? "" : this.loginDialogTargetEditor.getDataValue()],
+            /*this.dataServiceListService.requestAsync("listDatabaseServices", [studio.isCloud() ? "" : this.getTokenCookie(this.loginDialogTargetEditor.getDataValue()),studio.isCloud() ? "" : this.loginDialogTargetEditor.getDataValue()],
                 dojo.hitch(this, function(inResult) {
                     this.dataServiceListVar.setData(inResult);
                 })
-            );
+            ); */
     },
     CFTOKEN_COOKIE: "Studio.DeploymentDialog.CFTOKEN",
     getTokenCookie: function(inTargetUrl) {

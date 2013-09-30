@@ -94,6 +94,12 @@ public class LocalDeploymentManager extends StageDeploymentManager {
         }
     }
 
+    public   LocalDeploymentManager(){
+    }
+
+    public   LocalDeploymentManager(boolean isCloudjeeWar){
+        this.isCloudJee = isCloudjeeWar;
+    }
     private String testRunStart(LocalFolder projectDir, String deployName) {
 
         Map<String, Object> properties = setProperties(projectDir);

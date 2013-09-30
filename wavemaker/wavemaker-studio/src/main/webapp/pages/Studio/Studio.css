@@ -1052,11 +1052,24 @@ div .StudioGrid td,
 	font-weight: normal;
 	font-size: 12px;
 }
+.wmWaitDialog.cjWaitDialog {
+    background-image:none;
+    background-repeat:no-repeat;
+    background-color: #fff;
+}
 
 .wmWaitDialog .wmWaitThrobber {
 	background: url(images/makewavesani_lg.gif) center no-repeat;
 	height: 40px;
 	padding-bottom: 8px;
+}
+.wmWaitDialog .wmCJWaitThrobber {
+    width: 39px;
+    height: 35px;
+    margin: 0 auto;
+    background-image: url(images/square_gif.gif), url(images/backgroundCloud.png);
+    background-repeat: no-repeat;
+    padding-bottom: 8px;
 }
 
 .Studio-dialog {

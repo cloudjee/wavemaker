@@ -141,9 +141,18 @@ public class CloudJeeDeploymentTarget implements DeploymentTarget {
     @Override
     public String deploy(Project project, DeploymentInfo deploymentInfo, File tempWebAppRoot) throws DeploymentStatusException {
         LocalFile warFile = (LocalFile)project.getRootFolder().getFile(DeploymentManager.DIST_DIR_DEFAULT + project.getProjectName() + ".war");
+        if(deploymentInfo.getApplicationName() != project.getProjectName()){
+            warFile = (LocalFile)warFile.rename(deploymentInfo.getApplicationName()+".war");
+
+        }
         CloudJeeClient client =   getClient(deploymentInfo);
         try {
             String response = client.deploy(warFile.getLocalFile(), deploymentInfo.getApplicationName());
+            /* Changing back to the original name so as to decrease the size of folder */
+            if(deploymentInfo.getApplicationName() != project.getProjectName()){
+                warFile = (LocalFile)warFile.rename(project.getProjectName()+".war");
+            }
+
             return response;
         } catch (Exception e) {
             throw new WMRuntimeException(e);

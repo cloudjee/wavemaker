@@ -7,9 +7,14 @@
  */
 package com.wavemaker.tools.service.cloujeewrapper;
 
+import com.wavemaker.runtime.RuntimeAccess;
 import org.springframework.core.io.ClassPathResource;
 
+import javax.servlet.ServletContext;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 
@@ -18,66 +23,49 @@ import java.util.Properties;
  *
  */
 public class ConfigProperties {
-
-	// Autentication
-	public static final String USER_NAME;
-	public static final String PASSWORD;
-	public static final String USER_NAMES;
-	public static final String HOST_NAME;
-	public static final String AUTH_LOGIN_URI;
-	public static final String BASE_URI;
-	public static final String GROUP_URI;
-	public static final String PROVISION_URI;
-	public static final String ACTIVITY_PROGRESS_URI;
-	public static final String APPLICATION_URI;
-	public static final String CREATE_GROUP_METHOD_NAME;
-	public static final String CREATE_GRP_INVO_CNT;
-	
-	// Application
-	public static final String APP_NAME;
-	public static final String APP_PATH;
-	
 	// deploy urls
+    public static final String AUTH_LOGIN_URI;
 	public static final String DEPLOY;
 	public static final String UNDEPLOY;
 	public static final String START;
 	public static final String STOP;
 	public static final String LIST;
     public static final String ACCOUNTINFO;
-	
-	private static Properties properties = new Properties();
+    public static final String SIGNUP;
+    public static final String ACCOUNTTARGETSUFFIX;
+    public static final String LOGINTARGET;
+    public static final String HOST_NAME;
+    public static final String PROTOCOL;
+    public static final String SERVICE;
+
+
+    private static Properties properties = new Properties();
 
 	static {
 		init();
-		USER_NAME = properties.getProperty("userName");
-		PASSWORD = properties.getProperty("password");
-		USER_NAMES = properties.getProperty("userNames");
-		HOST_NAME = properties.getProperty("hostName");
-		AUTH_LOGIN_URI = properties.getProperty("loginUri");
-		BASE_URI = properties.getProperty("baseUri");
-		GROUP_URI = BASE_URI + properties.getProperty("groupService");
-		PROVISION_URI = BASE_URI + properties.getProperty("provisionService");
-		ACTIVITY_PROGRESS_URI = BASE_URI + properties.getProperty("activityService");
-		APPLICATION_URI = BASE_URI + properties.getProperty("applicationService");
-		CREATE_GROUP_METHOD_NAME = properties.getProperty("createGroupMethod");
-		CREATE_GRP_INVO_CNT = properties.getProperty("createGrpInvocationCount");	
-		
-		APP_NAME = properties.getProperty("appName");
-		APP_PATH = properties.getProperty("appPath");
-		
-		DEPLOY = properties.getProperty("deploy");
-		UNDEPLOY = properties.getProperty("undeploy");
-		START = properties.getProperty("start");
-		STOP = properties.getProperty("stop");
-		LIST = properties.getProperty("list");
-        ACCOUNTINFO = properties.getProperty("accountInfo");
+        PROTOCOL = properties.getProperty("PROTO");
+        HOST_NAME = properties.getProperty("HOSTNAME");
+        SERVICE = properties.getProperty("SERVICE");
+		AUTH_LOGIN_URI = PROTOCOL+ HOST_NAME +"/" + properties.getProperty("loginUri");
+		DEPLOY = PROTOCOL+ HOST_NAME +"/" + SERVICE + "/" + properties.getProperty("deploy");
+		UNDEPLOY = PROTOCOL+ HOST_NAME +"/" + SERVICE + "/" + properties.getProperty("undeploy");
+		START = PROTOCOL+ HOST_NAME +"/" + SERVICE + "/" + properties.getProperty("start");
+		STOP = PROTOCOL+ HOST_NAME +"/" + SERVICE + "/" + properties.getProperty("stop");
+		LIST = PROTOCOL+ HOST_NAME +"/" + SERVICE + "/" + properties.getProperty("list");
+        ACCOUNTINFO = PROTOCOL+ HOST_NAME +"/"  +properties.getProperty("accountInfo");
+        SIGNUP = PROTOCOL+ HOST_NAME +"/" + properties.getProperty("signUp");
+        ACCOUNTTARGETSUFFIX = HOST_NAME;
+        LOGINTARGET = PROTOCOL+ HOST_NAME;
+
 	}
 
 	public static void init() {
 		try {
-
-            ClassPathResource cjProperties=  new ClassPathResource("com/wavemaker/tools/service/cloudjeeconfig.properties");
-			properties.load(cjProperties.getInputStream());
+            //ClassPathResource cjProperties=  new ClassPathResource("com/wavemaker/tools/service/cloudjeeconfig.properties");
+            ServletContext context = RuntimeAccess.getInstance().getSession().getServletContext();
+            String webinf = context.getRealPath("WEB-INF");
+            InputStream is = new FileInputStream(webinf + File.separator + "wavemakercloudconfig.properties");
+			properties.load(is);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
