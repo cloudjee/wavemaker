@@ -149,9 +149,9 @@ public class CloudJeeDeploymentTarget implements DeploymentTarget {
         try {
             String response = client.deploy(warFile.getLocalFile(), deploymentInfo.getApplicationName());
             /* Changing back to the original name so as to decrease the size of folder */
-            if(deploymentInfo.getApplicationName() != project.getProjectName()){
+            /*if(deploymentInfo.getApplicationName() != project.getProjectName()){
                 warFile = (LocalFile)warFile.rename(project.getProjectName()+".war");
-            }
+            } */
 
             return response;
         } catch (Exception e) {
