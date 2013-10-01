@@ -563,7 +563,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     }
     },
     showCFLogin: function(inCallback, inTargetUrl) {
-        if (inTargetUrl) {
+        if (inTargetUrl && this.getTokenCookie(inTargetUrl)) {
             this.loginDialogTargetEditor.setDataValue(inTargetUrl);
             this.loginDialogTargetEditor.setReadonly(true);
             showLogin(inCallback);
@@ -632,15 +632,28 @@ dojo.declare("DeploymentDialog", wm.Page, {
               } else{
                 this.deploySuccess(inResult, inData);
               }
-        }), dojo.hitch(this, "deployFailed"));
+        }), dojo.hitch(this, function(inError){
+            this.deployFailed(inError, inData);
+        }));
 
         var type = inData.deploymentType;
         if (type == this.FILE_DEPLOY) type = inData.archiveType;
         studio.trackerImage.setSource("http://wavemaker.com/img/blank.gif?op=" + type + "&v=" + escape(wm.studioConfig.studioVersion) + "&r=" + String(Math.random(new Date().getTime())).replace(/\D/, "").substring(0, 8));
     },
+    logout:function(){
+        var targetUrl = this.loginDialogTargetEditor.getDataValue();
+        if(targetUrl && targetUrl != '') {
+            var token = this.getTokenCookie(targetUrl);
+            if(token) {
+                this.cloudJeeService.requestAsync("logout",[token]);
+            }
+            this.deleteTokenCookie(targetUrl);
+            this.deleteTokenCookie(this.cjHostEditor.getDataValue());
+        }
+    },
     deploySuccess: function(inResult, inData) {
         studio.endWait();
-        if (inResult == "SUCCESS" || inResult.match(/^OK/) || inResult.match(/http:/)) {
+        if (inResult == "SUCCESS" || inResult.match(/^OK/) || inResult.match(/http:/) || inResult.match(/https:/)) {
             switch (inData.deploymentType) {
             case this.TC_DEPLOY:
                 app.alert(this.getDictionaryItem("ALERT_DEPLOY_SUCCESS", {
@@ -700,7 +713,6 @@ dojo.declare("DeploymentDialog", wm.Page, {
             var src = studio.project.generateApplicationSource();
             studio.project.saveProjectData(studio.project.projectName + ".js", src);
 
-            return;
         } else if (inResult.match(/^ERROR\:.*Not enough memory/)) {
             var memory = inResult.match(/\d+[MG]/);
             this.manageCloudJeeButtonClick();
@@ -717,8 +729,11 @@ dojo.declare("DeploymentDialog", wm.Page, {
                 message: inResult
             });
         }
+        if(inData.deploymentType == this.CJ_DEPLOY) {
+            this.logout();
+        }
     },
-    deployFailed: function(inError) {
+    deployFailed: function(inError, inData) {
         studio.endWait();
         if(progressDialogMsg != ""){
             studio.progressDialog.setTitle(progressDialogMsg);
@@ -727,6 +742,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
         app.alert(this.getDictionaryItem("TOAST_DEPLOY_FAILED", {
             error: inError.message
         }));
+        if(inData && inData.deploymentType == this.CJ_DEPLOY) {
+            this.logout();
+        }
     },
   copyButtonClick: function(inSender) {
       if (this.getIsDirty()) {
@@ -1700,6 +1718,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
     cloudJeeAppListCloseButtonClick: function() {
         this.cloudJeeAppListDialog.hide();
+        this.logout();
     },
     showCloudJeeAppListDialog: function(optionalCallback, optionalTargetUrl) {
         this.cloudJeeAppListDialog.show();
@@ -1747,6 +1766,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
     setTokenCookie: function(inTargetUrl, inToken) {
        dojo.cookie(this.CFTOKEN_COOKIE + ":" + inTargetUrl, inToken, {expires: 1});
+    },
+    deleteTokenCookie: function(inTargetUrl) {
+        dojo.cookie(this.CFTOKEN_COOKIE + ":" + inTargetUrl, null, {expires: -1});
     },
     _end:0
 });

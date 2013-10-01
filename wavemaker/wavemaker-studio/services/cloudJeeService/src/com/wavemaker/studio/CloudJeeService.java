@@ -84,6 +84,16 @@ public class CloudJeeService {
             throw new WMRuntimeException("WaveMaker Cloud login failed.", ex);
         }
     }
+
+    public void logout(String token) {
+        try{
+            CloudJeeClient client = new CloudJeeClient(token);
+            client.logout();
+        }catch (Throwable ex) {
+            throw new WMRuntimeException("WaveMaker Cloud logout failed.", ex);
+        }
+    }
+
     public List<CloudJeeApplication> listApps(String token, String target) {
         try{
             CloudJeeClient client = new CloudJeeClient(token);

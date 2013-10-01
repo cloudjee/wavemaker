@@ -318,5 +318,13 @@ public class CloudJeeClient extends BaseTest {
     }
 
 
-
+    public void logout() throws Exception {
+        DefaultHttpClient httpclient = CreateHttpClient
+                .createHttpClientConnection();
+        HttpGet httpget = new HttpGet(ConfigProperties.AUTH_LOGOUT_URI);
+        httpget.setHeader("Cookie", auth);
+        HttpResponse response = httpclient.execute(httpget);
+        System.out.println("ResponseCode: "
+                + response.getStatusLine().getStatusCode());
+    }
 }

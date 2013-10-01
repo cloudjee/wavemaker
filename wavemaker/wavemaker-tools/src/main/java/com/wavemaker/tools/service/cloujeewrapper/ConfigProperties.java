@@ -25,6 +25,7 @@ import java.util.Properties;
 public class ConfigProperties {
 	// deploy urls
     public static final String AUTH_LOGIN_URI;
+    public static final String AUTH_LOGOUT_URI;
 	public static final String DEPLOY;
 	public static final String UNDEPLOY;
 	public static final String START;
@@ -47,6 +48,7 @@ public class ConfigProperties {
         HOST_NAME = properties.getProperty("HOSTNAME");
         SERVICE = properties.getProperty("SERVICE");
 		AUTH_LOGIN_URI = PROTOCOL+ HOST_NAME +"/" + properties.getProperty("loginUri");
+        AUTH_LOGOUT_URI = PROTOCOL+ HOST_NAME +"/" + properties.getProperty("logoutUri");
 		DEPLOY = PROTOCOL+ HOST_NAME +"/" + SERVICE + "/" + properties.getProperty("deploy");
 		UNDEPLOY = PROTOCOL+ HOST_NAME +"/" + SERVICE + "/" + properties.getProperty("undeploy");
 		START = PROTOCOL+ HOST_NAME +"/" + SERVICE + "/" + properties.getProperty("start");
