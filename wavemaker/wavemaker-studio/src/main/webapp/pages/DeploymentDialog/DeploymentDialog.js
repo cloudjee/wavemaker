@@ -1754,6 +1754,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
         }
     },
     cloudJeeApplicationNameChanged: function() {
+      var projectTarget =  this.cjHostEditor.getDataValue()  + "/" + this.cjNameEditor.getDataValue();
+      this.cjUrlEditor.setDataValue("<a href="+projectTarget+">"+projectTarget+"</a>");
 
     },
     loadDatabaseServices: function() {

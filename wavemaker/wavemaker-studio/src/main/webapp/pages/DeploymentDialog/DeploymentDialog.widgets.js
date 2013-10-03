@@ -161,13 +161,13 @@ DeploymentDialog.widgets = {
 				    cjDeploymentNameEditor: ["wm.Text", {"border":"0","caption":"Deployment name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"New WaveMaker Cloud Deployment","width":"100%", required: true}, {onchange: "deploymentNameChange"}],
 				    cjDeploymentTypeEditor: ["wm.Text", {"border":"0","caption":"Type","captionAlign":"left","captionSize":"140px","readonly":true,"width":"100%"}, {}],
 				    cjHostEditor: ["wm.Text", {"border":"0","caption":"WaveMaker Cloud target","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"https://apps.mywavemaker.com","width":"100%","readonly":true, required: true,"showing":false}, {onchange: "cloudJeeTargetChange"}],
-				    cjNameEditor: ["wm.Text", {"border":"0","caption":"Application name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true,"maxChars":"80"}, {onchange: "cloudJeeApplicationNameChanged"}],
+				    cjNameEditor: ["wm.Text", {"border":"0","caption":"Application name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {onchange: "cloudJeeApplicationNameChanged"}],
 					cjUrlpanel: ["wm.Panel", {"height":"30px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
 				    cjUrlEditor: ["wm.Text", {"border":"0","caption":"Application URL","captionAlign":"left","captionSize":"140px","displayValue":"http://.mywavemaker.com","readonly":true,"width":"100%", required:1}, {}, {
-				        binding: ["wm.Binding", {}, {}, {
-                        	wire: ["wm.Wire", {"expression":" ${cjHostEditor.dataValue}  + \"/\" + ${cjNameEditor.dataValue}","source":false,"targetProperty":"dataValue"}, {}]
+	/*			        binding: ["wm.Binding", {}, {}, {
+                        	wire: ["wm.Wire", {"expression":"\"<a href='#'>\" ${cjHostEditor.dataValue}  + \"/\" + ${cjNameEditor.dataValue} \"</a>\"","source":false,"targetProperty":"dataValue"}, {}]
                       }]
-
+*/
 				    }]//,
 					//cjGetUrlbutton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"hint":"\"Generate a URL using the project name and a random number\"", "caption":"Generate URL","margin":"4,4,4,8", "width": "112px"}, {"onclick":"cjGetUrlbuttonClick"}]
 					}]

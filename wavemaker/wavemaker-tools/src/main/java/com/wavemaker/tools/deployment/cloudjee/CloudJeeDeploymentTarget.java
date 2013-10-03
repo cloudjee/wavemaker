@@ -137,7 +137,7 @@ public class CloudJeeDeploymentTarget implements DeploymentTarget {
     @Override
     public String deploy(Project project, DeploymentInfo deploymentInfo, File tempWebAppRoot) throws DeploymentStatusException {
         LocalFile warFile = (LocalFile)project.getRootFolder().getFile(DeploymentManager.DIST_DIR_DEFAULT + project.getProjectName() + ".war");
-        if(deploymentInfo.getApplicationName() != project.getProjectName()){
+        if(!deploymentInfo.getApplicationName().equals(project.getProjectName())){
             com.wavemaker.tools.io.File file = project.getRootFolder().getFile(DeploymentManager.DIST_DIR_DEFAULT + deploymentInfo.getApplicationName() + ".war");
             if(file.exists()){
                 file.delete();
