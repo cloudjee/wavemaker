@@ -1,4 +1,4 @@
-package com.wavemaker.tools.service.cloujeewrapper;
+package com.wavemaker.tools.service.wavemakercloud;
 
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;

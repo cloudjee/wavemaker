@@ -1,4 +1,4 @@
-package com.wavemaker.tools.service.cloujeewrapper;
+package com.wavemaker.tools.service.wavemakercloud;
 
 /**
  * @author Sowmya D

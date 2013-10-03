@@ -14,36 +14,16 @@
 
 package com.wavemaker.studio;
 
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.security.SecureRandom;
 import java.util.*;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
 
-
-import javax.net.ssl.X509TrustManager;
-import java.security.cert.X509Certificate;
 import javax.servlet.http.Cookie;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.UriBuilder;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.representation.Form;
-import com.wavemaker.json.JSONArray;
-import com.wavemaker.json.JSONObject;
-import com.wavemaker.json.JSONUnmarshaller;
-import com.wavemaker.tools.service.cloujeewrapper.CloudJeeApplication;
-import com.wavemaker.tools.service.cloujeewrapper.CloudJeeClient;
-import org.apache.commons.lang.WordUtils;
+import com.wavemaker.tools.service.wavemakercloud.CloudJeeApplication;
+import com.wavemaker.tools.service.wavemakercloud.CloudJeeClient;
 import org.cloudfoundry.client.lib.CloudApplication;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.cloudfoundry.client.lib.CloudFoundryException;
@@ -65,7 +45,6 @@ import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecretPropag
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
 import com.wavemaker.tools.deployment.DeploymentDB;
 import com.wavemaker.tools.deployment.cloudfoundry.CloudFoundryDeploymentTarget;
-import com.wavemaker.tools.service.cloujeewrapper.CloudJeeApplication;
 
 @ExposeToClient
 public class CloudJeeService {

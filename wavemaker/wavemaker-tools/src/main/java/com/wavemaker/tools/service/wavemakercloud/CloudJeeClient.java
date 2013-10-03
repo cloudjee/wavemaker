@@ -1,27 +1,11 @@
-package com.wavemaker.tools.service.cloujeewrapper;
+package com.wavemaker.tools.service.wavemakercloud;
 
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Method;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.NewCookie;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.api.representation.Form;
 import com.wavemaker.common.WMRuntimeException;
@@ -29,19 +13,45 @@ import com.wavemaker.json.JSONArray;
 import com.wavemaker.json.JSONObject;
 import com.wavemaker.json.JSONUnmarshaller;
 import org.apache.commons.lang.WordUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-public class CloudJeeClient extends BaseTest {
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.NewCookie;
+import javax.ws.rs.core.UriBuilder;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+public class CloudJeeClient {
 
 
 	private String auth;
+    private boolean isLoggingEnabled;
+
     private final String ERROR_TOKEN = "X-WM-Login-ErrorMessage";
+    private static final String EMPTY_BODY = "emptyBody";
+
+    private static final Log log = LogFactory.getLog(CloudJeeClient.class);
 
 	public CloudJeeClient() {
         trustManager();
@@ -74,7 +84,7 @@ public class CloudJeeClient extends BaseTest {
             HttpsURLConnection
                     .setDefaultSSLSocketFactory(sc.getSocketFactory());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn("Failed in trust manager", e);
         }
     }
 
@@ -113,18 +123,18 @@ public class CloudJeeClient extends BaseTest {
             }
             throw new WMRuntimeException("Invalid Credentials");
         }
-        setAuthCookie(response);
         client.setFollowRedirects(true);
         List<String> cookies = response.getHeaders().get("Set-Cookie");
 
-        if (cookies != null) {
-            authCookie = NewCookie.valueOf(cookies.get(0));
-            jsessionId = NewCookie.valueOf(cookies.get(1));
+        if (cookies != null && cookies.size() >=2 ) {
+            NewCookie authCookie = NewCookie.valueOf(cookies.get(0));
+            NewCookie jsessionId = NewCookie.valueOf(cookies.get(1));
+            return authCookie.getName() + "="
+                    + authCookie.getValue() + "; " + jsessionId.getName()
+                    + "=" + jsessionId.getValue();
         }
-        return getAuthCookie().getName() + "="
-                + getAuthCookie().getValue() + "; " + getjsessionId().getName()
-                + "=" + getjsessionId().getValue();
-
+        log.error("Unexpected no. of cookies received as response:" + cookies);
+        throw new WMRuntimeException("Authentication Failed");
     }
 
 	public String deploy(File file, String appName) throws Exception {
@@ -143,7 +153,7 @@ public class CloudJeeClient extends BaseTest {
 		System.out.println("ResponseCode: "
 				+ response.getStatusLine().getStatusCode());
 
-        if((response.getStatusLine().getStatusCode() == 401) && response.getFirstHeader(ERROR_TOKEN).getValue() != null)
+        if((response.getStatusLine().getStatusCode() == 401) && response.getFirstHeader(ERROR_TOKEN) != null)
         {
             throw new WMRuntimeException(response.getFirstHeader(ERROR_TOKEN).getValue());
         }
@@ -161,7 +171,7 @@ public class CloudJeeClient extends BaseTest {
 		HttpResponse response = httpclient.execute(httpget);
 		System.out.println("ResponseCode: "
 				+ response.getStatusLine().getStatusCode());
-        if((response.getStatusLine().getStatusCode() == 401) && response.getFirstHeader(ERROR_TOKEN).getValue() != null)
+        if((response.getStatusLine().getStatusCode() == 401) && response.getFirstHeader(ERROR_TOKEN) != null)
         {
             throw new WMRuntimeException(response.getFirstHeader(ERROR_TOKEN).getValue());
         }
@@ -178,7 +188,7 @@ public class CloudJeeClient extends BaseTest {
 		HttpResponse response = httpclient.execute(httpget);
 		System.out.println("ResponseCode: "
 				+ response.getStatusLine().getStatusCode());
-        if((response.getStatusLine().getStatusCode() == 401) && response.getFirstHeader(ERROR_TOKEN).getValue() != null)
+        if((response.getStatusLine().getStatusCode() == 401) && response.getFirstHeader(ERROR_TOKEN) != null)
         {
             throw new WMRuntimeException(response.getFirstHeader(ERROR_TOKEN).getValue());
         }
@@ -195,7 +205,7 @@ public class CloudJeeClient extends BaseTest {
 		HttpResponse response = httpclient.execute(httpget);
 		System.out.println("ResponseCode: "
 				+ response.getStatusLine().getStatusCode());
-        if((response.getStatusLine().getStatusCode() == 401) && response.getFirstHeader(ERROR_TOKEN).getValue() != null)
+        if((response.getStatusLine().getStatusCode() == 401) && response.getFirstHeader(ERROR_TOKEN) != null)
         {
             throw new WMRuntimeException(response.getFirstHeader(ERROR_TOKEN).getValue());
         }
@@ -212,7 +222,7 @@ public class CloudJeeClient extends BaseTest {
         HttpResponse response = httpclient.execute(httpget);
         System.out.println("ResponseCode: "
                 + response.getStatusLine().getStatusCode());
-        if((response.getStatusLine().getStatusCode() == 401) && response.getFirstHeader(ERROR_TOKEN).getValue() != null)
+        if((response.getStatusLine().getStatusCode() == 401) && response.getFirstHeader(ERROR_TOKEN) != null)
         {
             throw new WMRuntimeException(response.getFirstHeader(ERROR_TOKEN).getValue());
         }
@@ -229,7 +239,7 @@ public class CloudJeeClient extends BaseTest {
 		HttpResponse response = httpclient.execute(httpget);
 		System.out.println("ResponseCode: "
 				+ response.getStatusLine().getStatusCode());
-        if((response.getStatusLine().getStatusCode() == 401) && response.getFirstHeader(ERROR_TOKEN).getValue() != null)
+        if((response.getStatusLine().getStatusCode() == 401) && response.getFirstHeader(ERROR_TOKEN) != null)
         {
             throw new WMRuntimeException(response.getFirstHeader(ERROR_TOKEN).getValue());
         }
@@ -251,10 +261,6 @@ public class CloudJeeClient extends BaseTest {
         ClientResponse response = service.header("Host", ConfigProperties.HOST_NAME)
                 .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
                 .post(ClientResponse.class, formData);
-        //Assert.(response.getClientResponseStatus().getStatusCode(), 302); // Found
-        /*if(response.getClientResponseStatus().getStatusCode() != 302){
-            throw new WMRuntimeException("Invalid Credentials");
-        }*/
         if((response.getClientResponseStatus().getStatusCode() == 401) && response.getHeaders().get(ERROR_TOKEN) != null)
         {
             throw new WMRuntimeException(response.getHeaders().get(ERROR_TOKEN).toString());
@@ -270,7 +276,8 @@ public class CloudJeeClient extends BaseTest {
 
 
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            log.error("Error while streaming the output response", e);
+            throw new RuntimeException("Error while streaming the output response", e);
         }
 
         client.setFollowRedirects(true);
@@ -284,6 +291,9 @@ public class CloudJeeClient extends BaseTest {
 
 
     private List<CloudJeeApplication> parseResponse(JSONObject jsonObj){
+        if(jsonObj == null) {
+            throw new WMRuntimeException("Unable to read response from WaveMaker Cloud");
+        }
         List<CloudJeeApplication> apps = new ArrayList<CloudJeeApplication>();
         try {
 
@@ -297,7 +307,7 @@ public class CloudJeeClient extends BaseTest {
                 }
 
                 Class cls = null;
-                cls = Class.forName("com.wavemaker.tools.service.cloujeewrapper.CloudJeeApplication");
+                cls = Class.forName("com.wavemaker.tools.service.wavemakercloud.CloudJeeApplication");
 
                 for (Object obj : objects) {
                     CloudJeeApplication app = (CloudJeeApplication) cls.newInstance();
@@ -326,6 +336,9 @@ public class CloudJeeClient extends BaseTest {
     }
 
     private String getContent(JSONObject jsonObj, String keyName) {
+        if(jsonObj == null) {
+            throw new WMRuntimeException("Unable to read response from WaveMaker Cloud");
+        }
         String content="";
         try {
             JSONObject block = (JSONObject) jsonObj.get("success");
@@ -360,5 +373,60 @@ public class CloudJeeClient extends BaseTest {
         HttpResponse response = httpclient.execute(httpget);
         System.out.println("ResponseCode: "
                 + response.getStatusLine().getStatusCode());
+    }
+
+    private URI getURIFromString(String uri) {
+        return UriBuilder.fromUri(uri).build();
+    }
+
+
+    private Client getClient() {
+        ClientConfig config = new DefaultClientConfig();
+        Client client = Client.create(config);
+        if(isLoggingEnabled) {
+            client.addFilter(new LoggingFilter(System.out));
+        }
+        return client;
+    }
+
+    private WebResource getResource(String url, String serviceName) {
+        return getClient().resource(url).path(serviceName);
+    }
+
+    private WebResource getResource(String url, String serviceName,
+                                   MultivaluedMap<String, String> queryParams, String... pathParams)
+    {
+        WebResource resource = getResource(url, serviceName);
+        if (pathParams.length == 1) {
+            resource = resource.path(pathParams[0]);
+        } else {
+            for (String param : pathParams) {
+                resource = resource.path(param);
+            }
+        }
+
+        if (queryParams != null) {
+            resource = resource.queryParams(queryParams);
+        }
+        return resource;
+    }
+
+
+    private String readResponse(HttpResponse response) throws IllegalStateException, IOException {
+        BufferedReader rd = null;
+        String responseOutput = "";
+        try {
+            rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+            String line;
+            while ((line = rd.readLine()) != null) {
+                responseOutput = responseOutput + line;
+            }
+
+        } finally {
+            if (rd != null) {
+                rd.close();
+            }
+        }
+        return responseOutput;
     }
 }

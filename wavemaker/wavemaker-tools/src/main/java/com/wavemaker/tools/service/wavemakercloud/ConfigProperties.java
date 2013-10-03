@@ -5,10 +5,9 @@
  * You shall not disclose such Confidential Information and shall use it only in accordance
  * with the terms of the source code license agreement you entered into with CloudJee Inc.
  */
-package com.wavemaker.tools.service.cloujeewrapper;
+package com.wavemaker.tools.service.wavemakercloud;
 
 import com.wavemaker.runtime.RuntimeAccess;
-import org.springframework.core.io.ClassPathResource;
 
 import javax.servlet.ServletContext;
 import java.io.File;

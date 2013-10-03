@@ -39,7 +39,7 @@ import com.wavemaker.tools.deployment.cloudfoundry.archive.StringReplaceContentM
 import com.wavemaker.tools.io.local.LocalFile;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.Project;
-import com.wavemaker.tools.service.cloujeewrapper.CloudJeeClient;
+import com.wavemaker.tools.service.wavemakercloud.CloudJeeClient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cloudfoundry.client.lib.CloudApplication;
@@ -47,8 +47,6 @@ import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.cloudfoundry.client.lib.CloudFoundryException;
 import org.cloudfoundry.client.lib.CloudService;
 import org.cloudfoundry.client.lib.archive.ApplicationArchive;
-import org.cloudfoundry.client.lib.archive.ZipApplicationArchive;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -60,11 +58,9 @@ import org.springframework.web.util.WebUtils;
 import javax.servlet.http.Cookie;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.zip.ZipFile;
 
 public class CloudJeeDeploymentTarget implements DeploymentTarget {
 
