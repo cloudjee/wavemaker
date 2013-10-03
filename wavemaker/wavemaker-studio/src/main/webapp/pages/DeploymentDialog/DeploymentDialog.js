@@ -604,6 +604,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
             progressDialogMsg =   studio.progressDialog.title;
             studio.progressDialog.setTitle("Deploying...");
             studio.progressDialog.show();
+            studio.progressDialog.titleClose.hide();
 
 
         }else{
@@ -663,6 +664,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
                 break;
             case this.CJ_DEPLOY:
                 studio.progressDialog.setTitle(progressDialogMsg);
+                studio.progressDialog.titleClose.show()
                 studio.progressDialog.hide();
 
                 app.alert(this.getDictionaryItem("ALERT_DEPLOY_SUCCESS", {
@@ -1556,7 +1558,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
             this.cloudJeeService.requestAsync("username",[inData],
               dojo.hitch(this, function(inName){
                       this.cjHostEditor.setDataValue("https://" + inName);
-                      this.cjUrlEditor.setDataValue("https://" + inName + "/" + studio.project.projectName);
+                      var projectTarget = "https://" + inName + "/" + studio.project.projectName;
+                      this.cjUrlEditor.setDataValue("<a href="+projectTarget+">"+projectTarget+"</a>");
 
                        this.setTokenCookie(this.cjHostEditor.getDataValue(), inData);
 
