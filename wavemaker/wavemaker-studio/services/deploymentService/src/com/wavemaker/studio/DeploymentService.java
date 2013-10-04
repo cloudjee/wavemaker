@@ -27,6 +27,8 @@ import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.zip.ZipArchive;
 import com.wavemaker.tools.project.StudioConfiguration;
 import com.wavemaker.tools.project.StudioFileSystem;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 import com.wavemaker.runtime.server.Downloadable;
@@ -73,6 +75,8 @@ public class DeploymentService {
     private ServiceDeploymentManager serviceDeploymentManager;
 
     private StudioFileSystem fileSystem;
+
+    private static final Log log = LogFactory.getLog(DeploymentService.class);
 
     public String getRequestId() {
         UUID uuid = UUID.randomUUID();
@@ -195,10 +199,10 @@ public class DeploymentService {
         try {
             ret = this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).deploy(
                     this.serviceDeploymentManager.getProjectManager().getCurrentProject(), deploymentInfo, tempWebAppRoot);
-        } catch (DeploymentStatusException e) {
-            ret = e.getStatusMessage();
+        } catch (Exception e) {
+            log.error(e.getMessage(),e);
+            return "Failed to Deploy Application,Please try again after some time.";
         }
-
         return ret;
     }
 
@@ -233,7 +237,8 @@ public class DeploymentService {
 
             return ret;
         } catch (DeploymentStatusException e) {
-            return e.getStatusMessage();
+            log.error(e.getStatusMessage(),e);
+            return "Failed to Deploy Application,Please try again after some time.";
         } finally {
             if (tempWebAppRoot != null) {
                 try {
