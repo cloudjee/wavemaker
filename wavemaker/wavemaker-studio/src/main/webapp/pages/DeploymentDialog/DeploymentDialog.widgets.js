@@ -161,7 +161,7 @@ DeploymentDialog.widgets = {
 				    cjDeploymentNameEditor: ["wm.Text", {"border":"0","caption":"Deployment name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"New WaveMaker Cloud Deployment","width":"100%", required: true}, {onchange: "deploymentNameChange"}],
 				    cjDeploymentTypeEditor: ["wm.Text", {"border":"0","caption":"Type","captionAlign":"left","captionSize":"140px","readonly":true,"width":"100%"}, {}],
 				    cjHostEditor: ["wm.Text", {"border":"0","caption":"WaveMaker Cloud target","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"https://apps.mywavemaker.com","width":"100%","readonly":true, required: true,"showing":false}, {onchange: "cloudJeeTargetChange"}],
-				    cjNameEditor: ["wm.Text", {"border":"0","caption":"Application name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {onchange: "cloudJeeApplicationNameChanged"}],
+				    cjNameEditor: ["wm.Text", {"border":"0","caption":"Application name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%","maxChars":"80", required: true}, {onchange: "cloudJeeApplicationNameChanged"}],
 					cjUrlpanel: ["wm.Panel", {"height":"30px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
 				    cjUrlEditor: ["wm.Text", {"border":"0","caption":"Application URL","captionAlign":"left","captionSize":"140px","displayValue":"http://.mywavemaker.com","readonly":true,"width":"100%", required:1}, {}, {
 	/*			        binding: ["wm.Binding", {}, {}, {
