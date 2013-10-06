@@ -1478,15 +1478,12 @@ dojo.declare("DeploymentDialog", wm.Page, {
         switch (data.deploymentType) {
         case this.TC_DEPLOY:
             this.populateTomcatDeploy(data);
-            this.manageUndeployButton.hide();
             break;
         case this.CJ_DEPLOY:
             this.populateCloudJeeDeploy(data);
-            this.manageUndeployButton.show();
             break;
         case this.FILE_DEPLOY:
             this.populateAppFileDeploy(data);
-            this.manageUndeployButton.hide();
             break;
         }
         this._openningDeployment = false;
@@ -1558,7 +1555,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
             this.cloudJeeService.requestAsync("username",[inData],
               dojo.hitch(this, function(inName){
                       this.cjHostEditor.setDataValue("https://" + inName);
-                      var projectTarget = "https://" + inName + "/" + studio.project.projectName;
+                      var projectTarget = "https://" + inName + "/" + this.cjNameEditor.getDataValue();
                       this.cjUrlEditor.setDataValue("<a href="+projectTarget+">"+projectTarget+"</a>");
 
                        this.setTokenCookie(this.cjHostEditor.getDataValue(), inData);
@@ -1618,11 +1615,19 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
     populateCloudJeeAppList: function(inResult, optionalCallback) {
     var results = [];
-    for (var i = 0; i < inResult.length; i++) {
+    var i=0;
+    while (i < inResult.length) {
         results.push({id: inResult[i].name, name: "<a href=" + inResult[i].url +" target='_NewWindow'>" + inResult[i].name + "</a>", state: inResult[i].appState/*, services: inResult[i].services ? inResult[i].services.join(", ") : ""*/});
+        i++;
     }
     this.cachedCloudJeeDeploymentList = inResult;
-    this.cloudJeeAppList.renderData(results);
+    if(results && results.size > 0) {
+        this.cloudJeeAppList.renderData(results);
+        this.noCloudJeeAppsMessage.hide();
+    } else {
+        this.cloudJeeAppList.hide();
+        this.noCloudJeeAppsMessage.show();
+    }
     this.deploymentLoadingDialog.hide();
     if (optionalCallback)
         optionalCallback();
@@ -1754,9 +1759,15 @@ dojo.declare("DeploymentDialog", wm.Page, {
         }
     },
     cloudJeeApplicationNameChanged: function() {
-      var projectTarget =  this.cjHostEditor.getDataValue()  + "/" + this.cjNameEditor.getDataValue();
-      this.cjUrlEditor.setDataValue("<a href="+projectTarget+">"+projectTarget+"</a>");
-
+        var hostName = this.cjHostEditor.getDataValue();
+        if(hostName) {
+            var appName = this.cjNameEditor.getDataValue();
+            if (!appName) {
+                appName = '';
+            }
+            var projectTarget =  hostName  + "/" + appName;
+            this.cjUrlEditor.setDataValue("<a href="+projectTarget+">"+projectTarget+"</a>");
+        }
     },
     loadDatabaseServices: function() {
             /*this.dataServiceListService.requestAsync("listDatabaseServices", [studio.isCloud() ? "" : this.getTokenCookie(this.loginDialogTargetEditor.getDataValue()),studio.isCloud() ? "" : this.loginDialogTargetEditor.getDataValue()],

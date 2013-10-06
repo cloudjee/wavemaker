@@ -21,6 +21,7 @@ DeploymentDialog.widgets = {
     cloudJeeAppListDialog: ["wm.DesignableDialog", {"title":"WaveMaker Cloud Applications", _classes: {domNode: ["studiodialog"]}, "height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", containerWidgetId: "mainPanel1", buttonBarId: "buttonBar5", width: "650px", height: "500px"}, {}, {
         mainPanel1: ["wm.studio.DialogMainPanel", {},{}, {
 	    cloudJeeAppList: ["wm.List", {dataFields: "name", headerVisible: true, innerBorder:"1",borderColor:"black","height":"100%","width":"100%", columns:[{field:"name",show:true,title: "App Name", width:"100%"},{field:"state",show:true,title: "Status",width:"80px"}/*,{field:"services",show:true,title: "Services",width:"120%"}*/]}, {}],
+        noCloudJeeAppsMessage : ["wm.Label", {"border":"0","caption":"No WaveMaker Cloud Applications are deployed for this account","padding":"4","width":"100%", "showing":false},{},{}]
 	    //deleteServicesCheckbox: ["wm.Checkbox", {caption: "Delete services too?", width: "220px", captionSize: "100%", startChecked: false, helpText: "Deleting services means deleting database services that were generated for your application.  Typically you should delete these databases unless there is another application listed above that is using the database."}]
 	}],
 	buttonBar5: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
@@ -161,7 +162,7 @@ DeploymentDialog.widgets = {
 				    cjDeploymentNameEditor: ["wm.Text", {"border":"0","caption":"Deployment name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"New WaveMaker Cloud Deployment","width":"100%", required: true}, {onchange: "deploymentNameChange"}],
 				    cjDeploymentTypeEditor: ["wm.Text", {"border":"0","caption":"Type","captionAlign":"left","captionSize":"140px","readonly":true,"width":"100%"}, {}],
 				    cjHostEditor: ["wm.Text", {"border":"0","caption":"WaveMaker Cloud target","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"https://apps.mywavemaker.com","width":"100%","readonly":true, required: true,"showing":false}, {onchange: "cloudJeeTargetChange"}],
-				    cjNameEditor: ["wm.Text", {"border":"0","caption":"Application name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%","maxChars":"80", required: true}, {onchange: "cloudJeeApplicationNameChanged"}],
+				    cjNameEditor: ["wm.Text", {"border":"0","caption":"Application name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%","maxChars":"80", "regExp":"[a-zA-Z0-9_-]*", "invalidMessage":" Application name supports alphanumerics, _, -", required: true}, {onchange: "cloudJeeApplicationNameChanged"}],
 					cjUrlpanel: ["wm.Panel", {"height":"30px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
 				    cjUrlEditor: ["wm.Text", {"border":"0","caption":"Application URL","captionAlign":"left","captionSize":"140px","displayValue":"http://.mywavemaker.com","readonly":true,"width":"100%", required:1}, {}, {
 	/*			        binding: ["wm.Binding", {}, {}, {
@@ -195,7 +196,7 @@ DeploymentDialog.widgets = {
 		    wire: ["wm.Wire", {"expression":"Boolean(${editPanel.invalid} || ${dbTypeVar.dataValue} == true)","targetProperty":"disabled"}, {}]
 		}]
 	    }],
-	    manageUndeployButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Manage WaveMaker Cloud Apps","margin":"4","width":"200px", showing: false}, {"onclick":"manageCloudJeeButtonClick"}],
+	    manageCloudJeeApps: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Manage WaveMaker Cloud Apps","margin":"4","width":"200px"}, {"onclick":"manageCloudJeeButtonClick"}],
 	    buttonBarMarginSpacer1: ["wm.Spacer", {"height":"48px","width":"100%"}, {}],
 	    saveButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Save","margin":"4"}, {"onclick":"saveButtonClick"}, {
 		binding: ["wm.Binding", {}, {}, {
