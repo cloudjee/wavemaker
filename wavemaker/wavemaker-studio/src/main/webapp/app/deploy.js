@@ -370,7 +370,9 @@ Studio.extend({
     /* Methods added here are new for the 6.4 deployment dialog */
     newDeployClick: function() {
         this.project.saveProject(true);
-        this.deploymentDialog.setPage("DeploymentDialog"); // insures the dialog is initialized, but does not show it
+        if(!this.deploymentDialog.page){
+         this.deploymentDialog.setPage("DeploymentDialog"); // insures the dialog is initialized, but does not show it
+        }
         this.deploymentDialog.page.addButtonClick();
     },
 
