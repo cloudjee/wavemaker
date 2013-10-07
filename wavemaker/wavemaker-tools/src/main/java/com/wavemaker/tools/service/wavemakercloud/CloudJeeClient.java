@@ -121,7 +121,7 @@ public class CloudJeeClient {
             {
                 throw new WMRuntimeException(response.getHeaders().get(ERROR_TOKEN).toString());
             }
-            throw new WMRuntimeException("Invalid Credentials");
+            throw new WMRuntimeException("Problem connecting to Server (response message: " + response.getClientResponseStatus().getStatusCode() +" " +response.getClientResponseStatus().getReasonPhrase());
         }
         client.setFollowRedirects(true);
         List<String> cookies = response.getHeaders().get("Set-Cookie");
@@ -152,11 +152,10 @@ public class CloudJeeClient {
 		HttpResponse response = httpclient.execute(httppost);
 		System.out.println("ResponseCode: "
 				+ response.getStatusLine().getStatusCode());
-
-        if((response.getStatusLine().getStatusCode() == 401) && response.getFirstHeader(ERROR_TOKEN) != null)
-        {
-            throw new WMRuntimeException(response.getFirstHeader(ERROR_TOKEN).getValue());
+        if(response.getStatusLine().getStatusCode() != 200){
+            handleException(response);
         }
+
         JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(readResponse(response));
         return getContent(jsonReq, "url");
 
@@ -171,9 +170,9 @@ public class CloudJeeClient {
 		HttpResponse response = httpclient.execute(httpget);
 		System.out.println("ResponseCode: "
 				+ response.getStatusLine().getStatusCode());
-        if((response.getStatusLine().getStatusCode() == 401) && response.getFirstHeader(ERROR_TOKEN) != null)
-        {
-            throw new WMRuntimeException(response.getFirstHeader(ERROR_TOKEN).getValue());
+
+        if(response.getStatusLine().getStatusCode() != 200){
+            handleException(response);
         }
 		return readResponse(response);
 
@@ -188,12 +187,13 @@ public class CloudJeeClient {
 		HttpResponse response = httpclient.execute(httpget);
 		System.out.println("ResponseCode: "
 				+ response.getStatusLine().getStatusCode());
-        if((response.getStatusLine().getStatusCode() == 401) && response.getFirstHeader(ERROR_TOKEN) != null)
-        {
-            throw new WMRuntimeException(response.getFirstHeader(ERROR_TOKEN).getValue());
+
+        if(response.getStatusLine().getStatusCode() != 200){
+            handleException(response);
         }
-		
-		return readResponse(response);
+
+
+        return readResponse(response);
 
 	}
 
@@ -205,10 +205,11 @@ public class CloudJeeClient {
 		HttpResponse response = httpclient.execute(httpget);
 		System.out.println("ResponseCode: "
 				+ response.getStatusLine().getStatusCode());
-        if((response.getStatusLine().getStatusCode() == 401) && response.getFirstHeader(ERROR_TOKEN) != null)
-        {
-            throw new WMRuntimeException(response.getFirstHeader(ERROR_TOKEN).getValue());
+
+        if(response.getStatusLine().getStatusCode() != 200){
+            handleException(response);
         }
+
         String resultJson  = readResponse(response);
         JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(resultJson);
 		return parseResponse(jsonReq);
@@ -222,10 +223,11 @@ public class CloudJeeClient {
         HttpResponse response = httpclient.execute(httpget);
         System.out.println("ResponseCode: "
                 + response.getStatusLine().getStatusCode());
-        if((response.getStatusLine().getStatusCode() == 401) && response.getFirstHeader(ERROR_TOKEN) != null)
-        {
-            throw new WMRuntimeException(response.getFirstHeader(ERROR_TOKEN).getValue());
+
+        if(response.getStatusLine().getStatusCode() != 200){
+            handleException(response);
         }
+
         String resultJson  = readResponse(response);
         JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(resultJson);
         return  getContent(jsonReq, "tenantDomainName") + "." + ConfigProperties.ACCOUNTTARGETSUFFIX;
@@ -239,11 +241,12 @@ public class CloudJeeClient {
 		HttpResponse response = httpclient.execute(httpget);
 		System.out.println("ResponseCode: "
 				+ response.getStatusLine().getStatusCode());
-        if((response.getStatusLine().getStatusCode() == 401) && response.getFirstHeader(ERROR_TOKEN) != null)
-        {
-            throw new WMRuntimeException(response.getFirstHeader(ERROR_TOKEN).getValue());
+
+        if(response.getStatusLine().getStatusCode() != 200){
+            handleException(response);
         }
-		return readResponse(response);
+
+        return readResponse(response);
 
     }
 
@@ -428,5 +431,13 @@ public class CloudJeeClient {
             }
         }
         return responseOutput;
+    }
+
+    private void handleException(HttpResponse response){
+        if((response.getStatusLine().getStatusCode() == 401) && response.getFirstHeader(ERROR_TOKEN) != null)
+        {
+            throw new WMRuntimeException(response.getFirstHeader(ERROR_TOKEN).getValue());
+        }
+        throw new WMRuntimeException("Problem connecting to Server (response message: " + response.getStatusLine().getStatusCode() +" " +response.getStatusLine().getReasonPhrase() + " )");
     }
 }
