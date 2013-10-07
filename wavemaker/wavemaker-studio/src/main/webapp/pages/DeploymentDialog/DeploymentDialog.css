@@ -88,3 +88,7 @@ color: white;
     text-align: center;
     color: white;
 }
+
+div.DeploymentDialog-cjUrlEditor div.wmeditor-readonlyNode a{
+    word-wrap: break-word;
+}
