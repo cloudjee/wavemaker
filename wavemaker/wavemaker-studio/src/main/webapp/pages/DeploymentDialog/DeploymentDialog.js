@@ -1540,7 +1540,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 
     },
     getApplicationUrlContent:function (projectTarget) {
-        return "<a href=" + projectTarget + ">" + projectTarget + "</a>";
+        return "<a href=" + projectTarget + " target='_blank'>" + projectTarget + "</a>";
     },
     cjLoginOkClick: function() {
     studio.beginWait(this.getDictionaryItem("WAIT_LOGGING_IN"), false, "wmCJWaitThrobber");
