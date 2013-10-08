@@ -825,7 +825,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
   },
     getTargetUrl: function(inData) {
         if (inData.deploymentType == this.CJ_DEPLOY) {
-            return inData.deploymentUrl;
+            return '<div style="text-overflow: ellipsis;white-space: nowrap;width: 300px;overflow: hidden;">' + inData.deploymentUrl + '</div>';
         } else if (inData.deploymentType == this.TC_DEPLOY) {
             return "http://" + inData.host + ":" + inData.port + "/" + inData.applicationName;
         } else {
@@ -1539,6 +1539,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
            }));
 
     },
+    getApplicationUrlContent:function (projectTarget) {
+        return "<a href=" + projectTarget + ">" + projectTarget + "</a>";
+    },
     cjLoginOkClick: function() {
     studio.beginWait(this.getDictionaryItem("WAIT_LOGGING_IN"), false, "wmCJWaitThrobber");
     this.cloudJeeService.requestAsync(
@@ -1556,7 +1559,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
               dojo.hitch(this, function(inName){
                       this.cjHostEditor.setDataValue("https://" + inName);
                       var projectTarget = "https://" + inName + "/" + this.cjNameEditor.getDataValue();
-                      this.cjUrlEditor.setDataValue("<a href="+projectTarget+">"+projectTarget+"</a>");
+                      this.cjUrlEditor.setDataValue(this.getApplicationUrlContent(projectTarget));
 
                        this.setTokenCookie(this.cjHostEditor.getDataValue(), inData);
 
@@ -1768,7 +1771,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
                 appName = '';
             }
             var projectTarget =  hostName  + "/" + appName;
-            this.cjUrlEditor.setDataValue("<a href="+projectTarget+">"+projectTarget+"</a>");
+            this.cjUrlEditor.setDataValue(this.getApplicationUrlContent(projectTarget));
         }
     },
     loadDatabaseServices: function() {
