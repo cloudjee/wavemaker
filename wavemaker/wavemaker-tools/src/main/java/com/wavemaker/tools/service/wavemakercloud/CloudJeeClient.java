@@ -119,7 +119,7 @@ public class CloudJeeClient {
         if(response.getClientResponseStatus().getStatusCode() != 302){
             if((response.getClientResponseStatus().getStatusCode() == 401) && response.getHeaders().get(ERROR_TOKEN) != null)
             {
-                throw new WMRuntimeException(response.getHeaders().get(ERROR_TOKEN).toString());
+                throw new WMRuntimeException(getErrorMsg(response.getHeaders().get(ERROR_TOKEN)));
             }
             throw new WMRuntimeException("Problem connecting to Server (response message: " + response.getClientResponseStatus().getStatusCode() +" " +response.getClientResponseStatus().getReasonPhrase());
         }
@@ -266,7 +266,7 @@ public class CloudJeeClient {
                 .post(ClientResponse.class, formData);
         if((response.getClientResponseStatus().getStatusCode() == 401) && response.getHeaders().get(ERROR_TOKEN) != null)
         {
-            throw new WMRuntimeException(response.getHeaders().get(ERROR_TOKEN).toString());
+            throw new WMRuntimeException(getErrorMsg(response.getHeaders().get(ERROR_TOKEN)));
         }
 
         BufferedReader bf = new BufferedReader(new InputStreamReader(response.getEntityInputStream()));
@@ -440,4 +440,15 @@ public class CloudJeeClient {
         }
         throw new WMRuntimeException("Problem connecting to Server (response message: " + response.getStatusLine().getStatusCode() +" " +response.getStatusLine().getReasonPhrase() + " )");
     }
+
+    private String getErrorMsg(List<String> errorList){
+       String msg = "";
+        for(String error : errorList){
+            msg = msg + error + " ";
+        }
+
+        return msg.trim();
+
+    }
 }
+
