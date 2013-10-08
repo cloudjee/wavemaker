@@ -1621,9 +1621,11 @@ dojo.declare("DeploymentDialog", wm.Page, {
         i++;
     }
     this.cachedCloudJeeDeploymentList = inResult;
+    this.cloudJeeAppList.renderData(results);
     if(results && results.length > 0) {
-        this.cloudJeeAppList.renderData(results);
         this.noCloudJeeAppsMessage.hide();
+        this.cloudJeeAppList.show();
+
     } else {
         this.cloudJeeAppList.hide();
         this.noCloudJeeAppsMessage.show();
