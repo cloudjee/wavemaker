@@ -824,8 +824,9 @@ dojo.declare("DeploymentDialog", wm.Page, {
       }
   },
     getTargetUrl: function(inData) {
-        if (inData.deploymentType == this.CJ_DEPLOY) {
-            return '<div style="text-overflow: ellipsis;white-space: nowrap;width: 300px;overflow: hidden;">' + inData.deploymentUrl + '</div>';
+        if (inData.deploymentType == this.CJ_DEPLOY && inData.deploymentUrl) {
+           return '<div style="text-overflow: ellipsis;white-space: nowrap;width: 300px;overflow: hidden;">' + inData.deploymentUrl + '</div>';
+
         } else if (inData.deploymentType == this.TC_DEPLOY) {
             return "http://" + inData.host + ":" + inData.port + "/" + inData.applicationName;
         } else {
