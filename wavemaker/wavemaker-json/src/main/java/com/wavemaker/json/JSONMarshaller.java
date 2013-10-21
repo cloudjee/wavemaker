@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.TreeSet;
 
+import com.wavemaker.json.type.reflect.ObjectReflectTypeDefinition;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.NullArgumentException;
 import org.apache.commons.lang.StringUtils;
@@ -336,8 +337,8 @@ public final class JSONMarshaller {
             }
 
         } else if (fieldDefinition.getTypeDefinition() instanceof ObjectTypeDefinition) {
-            ObjectTypeDefinition otd = (ObjectTypeDefinition) fieldDefinition.getTypeDefinition();
-            if (otd.getTypeName().equals(obj.getClass().getName())) {
+            ObjectReflectTypeDefinition otd = (ObjectReflectTypeDefinition) fieldDefinition.getTypeDefinition();
+            if (otd.getKlass().isAssignableFrom(obj.getClass())) {
                 for (Entry<String, FieldDefinition> entry : otd.getFields().entrySet()) {
                     String name = entry.getKey();
                     fieldDefinition = entry.getValue();
