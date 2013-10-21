@@ -92,6 +92,13 @@ public class CloudJeeApplication {
     public void setUrl(String url) {
         this.url = url;
     }
+    public Long getSize() {
+        return size;
+    }
+
+    public void setSize(Long size) {
+        this.size = size;
+    }
 
     String type;
     String appFileName;
@@ -104,6 +111,7 @@ public class CloudJeeApplication {
     String tenantId;
     String updatedAt;
     String url;
+    Long size;
 
 
 

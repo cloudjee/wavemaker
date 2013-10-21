@@ -454,14 +454,14 @@ dojo.declare("DeploymentDialog", wm.Page, {
                       dojo.forEach(this.currentDatabaseBoxes, function(dataBox) {
                         var id = dataBox.name.match(/(\d+)$/)[1];
                           var databaseEditor = this["databaseCloudJeeNameEditor" + id];
-                          databases[dataBox.dataModel.dataModelName] = {updateSchema: false, /*databaseEditor.selectedItem.isEmpty()*/
+                          databases[dataBox.dataModel.dataModelName] = {updateSchema: true, /*databaseEditor.selectedItem.isEmpty()*/
                                                                         name: databaseEditor.getDataValue()};
                           if (databaseEditor.selectedItem && !databaseEditor.selectedItem.isEmpty()) showCheckboxes = true;
                       }, this);
                   } else if (inData.databases && inData.databases.length) {
                       dojo.forEach(inData.databases, function(d) {
                         showCheckboxes = true;
-                        databases[d.dataModelId] = {updateSchema: false,
+                        databases[d.dataModelId] = {updateSchema: true,
                                                     name: d.dbName};
                       });
                   }
@@ -535,11 +535,11 @@ dojo.declare("DeploymentDialog", wm.Page, {
         var updateSchema = {};
         /*wm.forEachProperty(this._updateSchemaCheckboxes, dojo.hitch(this, function(inCheckbox, inName) {
             updateSchema[inName] = inCheckbox.getChecked();
-        }));
+        })); */
         var d = inData.databases;
         for (var i = 0; i < d.length; i++) {
-            d[i].updateSchema = updateSchema[d[i].dataModelId];
-        }  */
+            d[i].updateSchema = true;
+        }
 
         if (!inData.token) inData.token = this.getTokenCookie(inData.target);
         this.confirmToken(inData.token, inData.target, dojo.hitch(this, function(inToken) {
@@ -1505,10 +1505,12 @@ dojo.declare("DeploymentDialog", wm.Page, {
     /* Handling for the wavemaker cloud login dialog */
     cjLoginCancelClick: function() {
         this.cloudJeeAppListDialog.hide();
+        this.cloudJeeLogsDialog.hide();
         this.cjLoginDialog.hide();
     },
     signUpDialog: function(){
          this.cloudJeeAppListDialog.hide();
+         this.cloudJeeLogsDialog.hide();
          this.cjLoginDialog.hide();
          this.cjSignupDialog.show();
     },
@@ -1595,6 +1597,47 @@ dojo.declare("DeploymentDialog", wm.Page, {
     if (data)
         return data.deploymentType;
     },
+    refreshCloudJeeLogsList: function(optionalCallback, inOptionalTargetUrl) {
+    if (inOptionalTargetUrl) {
+        this.loginDialogTargetEditor.setDataValue(inOptionalTargetUrl);
+    }
+    var token = this.getTokenCookie(this.loginDialogTargetEditor.getDataValue());
+    this.confirmToken(inOptionalTargetUrl ? token : null, inOptionalTargetUrl, dojo.hitch(this, function(inToken) {
+        token = inToken;
+        this.deploymentLoadingDialog.widgetToCover = this.cloudJeeAppList;
+        this.deploymentLoadingDialog.show();
+        this.cloudJeeService.requestAsync("listApps", [token,this.loginDialogTargetEditor.getDataValue()],
+                          dojo.hitch(this, function(inResult) {
+
+                              this.populateCloudJeeLogsList(inResult, optionalCallback);
+                          }),
+                          dojo.hitch(this, function(inError) {
+                              app.alert(inError);
+                              this.deploymentLoadingDialog.hide();
+                          }));
+    }));
+    },
+        populateCloudJeeLogsList: function(inResult, optionalCallback) {
+         var results = [];
+         var i=0;
+         while (i < inResult.length) {
+             results.push({id: inResult[i].name, name: "<a href='#' onClick=studio.downloadInIFrame('https://github.com/cloudjee/WaveMaker-LGPL-Resources/raw/master/repo.zip')>" + inResult[i].name + "</a>", state: "<a href='javascript:void(0)' onClick=studio.downloadInIFrame('https://github.com/cloudjee/WaveMaker-LGPL-Resources/raw/master/repo.zip')>" + "Download" + "</a>" /*, services: inResult[i].services ? inResult[i].services.join(", ") : ""*/});
+             i++;
+         }
+         this.cachedCloudJeeDeploymentList = inResult;
+         this.cloudJeeLogsList.renderData(results);
+         if(results && results.length > 0) {
+             this.noCloudJeeLogsMessage.hide();
+             this.cloudJeeLogsList.show();
+
+         } else {
+             this.cloudJeeLogsList.hide();
+             this.noCloudJeeLogsMessage.show();
+         }
+         this.deploymentLoadingDialog.hide();
+         if (optionalCallback)
+             optionalCallback();
+         },
 
 
     refreshCloudJeeAppList: function(optionalCallback, inOptionalTargetUrl) {
@@ -1734,9 +1777,18 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.cloudJeeAppListDialog.hide();
         this.logout();
     },
+
+    cloudJeeLogsListCloseButtonClick: function() {
+      this.cloudJeeLogsDialog.hide();
+      this.logout();
+    },
     showCloudJeeAppListDialog: function(optionalCallback, optionalTargetUrl) {
         this.cloudJeeAppListDialog.show();
         this.refreshCloudJeeAppList(optionalCallback, optionalTargetUrl);
+    },
+    showCloudJeeLogsDialog: function(optionalCallback, optionalTargetUrl) {
+        this.cloudJeeLogsDialog.show();
+        this.refreshCloudJeeLogsList(optionalCallback, optionalTargetUrl);
     },
     manageCloudJeeButtonClick: function() {
         var data = this.deploymentList.selectedItem.getValue("dataValue");
@@ -1758,6 +1810,27 @@ dojo.declare("DeploymentDialog", wm.Page, {
             }
         }), selectName);
     },
+
+    manageCloudJeeLogsClick: function() {
+        var data = this.deploymentList.selectedItem.getValue("dataValue");
+        var selectName;
+        if (data) {
+            selectName = data.target;
+        } else if (this._deployData) {
+            selectName = this._deployData.target;
+        }
+        this.showCloudJeeLogsDialog(dojo.hitch(this, function() {
+            if (data) {
+                for (var i = 0; i < this.cachedCloudJeeDeploymentList.length; i++) {
+                    if (this.cachedCloudJeeDeploymentList[i].name == data.applicationName) {
+                        var item = this.cloudJeeAppList.getItem(i);
+                        this.cloudJeeAppList.eventSelect(item);
+                        break;
+                    }
+                }
+            }
+        }), selectName);
+        },
     cloudJeeTargetChange: function(inSender, inDisplayValue, inDataValue) {
         if (inDisplayValue.match(/^https\:\/\/api\./)) {
             var hostname = (inDisplayValue||"").substring("https://api.".length);

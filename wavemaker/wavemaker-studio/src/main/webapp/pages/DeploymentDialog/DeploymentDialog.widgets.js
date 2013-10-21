@@ -44,6 +44,17 @@ DeploymentDialog.widgets = {
 	}]
     }],
 
+    cloudJeeLogsDialog: ["wm.DesignableDialog", {"title":"WaveMaker Cloud Server Logs", _classes: {domNode: ["studiodialog"]}, "height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", containerWidgetId: "mainPanel5", buttonBarId: "buttonBar5", width: "650px", height: "500px"}, {}, {
+        mainPanel5: ["wm.studio.DialogMainPanel", {},{}, {
+        cloudJeeLogsList: ["wm.List", {dataFields: "name", headerVisible: true, innerBorder:"1",borderColor:"black","height":"100%","width":"100%", columns:[{field:"name",show:true,title: "App Name", width:"100%"},{field:"state",show:true,title: "Download Link",width:"80px"}/*,{field:"services",show:true,title: "Services",width:"120%"}*/]}, {}],
+        noCloudJeeLogsMessage : ["wm.Label", {"border":"0","caption":"No server logs found for this account","padding":"4","width":"100%", "showing":false},{},{}]
+        //deleteServicesCheckbox: ["wm.Checkbox", {caption: "Delete services too?", width: "220px", captionSize: "100%", startChecked: false, helpText: "Deleting services means deleting database services that were generated for your application.  Typically you should delete these databases unless there is another application listed above that is using the database."}]
+    }],
+  	buttonBar6: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
+   	    cloudJeeAppListDialogCloseButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Close","margin":"4"}, {"onclick":"cloudJeeLogsListCloseButtonClick"}]
+   	}]
+    }],
+
 /*
     deploymentListPopupMenu: ["wm.PopupMenu", {"fullStructure":[{'label':'Deploy', 'onClick':"contextDeploy",'children':[]},
 								{'label':'Delete','onClick':"contextDelete",'children':[]}
@@ -89,7 +100,7 @@ DeploymentDialog.widgets = {
 	    }]
 	}],
 	buttonBar2: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-	    cloudJeeRegisterLink: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Sign Up","margin":"4", "showing":false} /*,{caption: "Sign Up", link: "https://apps.mywavemaker.com/login/signup", width: "100px", height: "100%"}*/,{onclick: "signUpDialog"}],
+	    cloudJeeRegisterLink: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Sign Up","margin":"4", "showing":true} /*,{caption: "Sign Up", link: "https://apps.mywavemaker.com/login/signup", width: "100px", height: "100%"}*/,{onclick: "signUpDialog"}],
 	    loginSpacer: ["wm.Spacer", {width: "100%"}],
 	    cjLoginCancelButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Cancel","margin":"4"}, {onclick: "cjLoginCancelClick"}],
 	    cjLogonOkButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"OK","margin":"4"}, {onclick: "cjLoginOkClick"}, {
@@ -197,6 +208,7 @@ DeploymentDialog.widgets = {
 		}]
 	    }],
 	    manageCloudJeeApps: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Manage WaveMaker Cloud Apps","margin":"4","width":"200px"}, {"onclick":"manageCloudJeeButtonClick"}],
+	    manageCloudJeeLogs: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"View Logs","width":"100px"}, {"onclick":"manageCloudJeeLogsClick"}],
 	    buttonBarMarginSpacer1: ["wm.Spacer", {"height":"48px","width":"100%"}, {}],
 	    saveButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Save","margin":"4"}, {"onclick":"saveButtonClick"}, {
 		binding: ["wm.Binding", {}, {}, {

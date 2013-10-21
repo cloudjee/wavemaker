@@ -317,15 +317,8 @@ public class CloudJeeClient {
                     HashMap<String, Object> map = (HashMap<String, Object>) obj;
                     for (String key : map.keySet()) {
                         Object value = map.get(key);
-                        if(value instanceof Boolean){
-                            Method method = cls.getDeclaredMethod("set" + WordUtils.capitalize(key), Boolean.class);
-                            method.invoke(app, value);
-                        }
-                        else{
-                            Method method = cls.getDeclaredMethod("set" + WordUtils.capitalize(key), String.class);
-                            method.invoke(app, value);
-                        }
-
+                        Method method = cls.getDeclaredMethod("set" + WordUtils.capitalize(key), value.getClass());
+                        method.invoke(app, value);
                     }
                     apps.add(app);
                 }

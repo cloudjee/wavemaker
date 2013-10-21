@@ -14,21 +14,6 @@
 
 package com.wavemaker.tools.data;
 
-import static org.springframework.util.StringUtils.hasText;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
-
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.jndi.JndiObjectFactoryBean;
-
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.SystemUtils;
@@ -39,20 +24,22 @@ import com.wavemaker.runtime.data.sqlserver.SqlServerUserImpersonatingDataSource
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.util.DataServiceUtils;
+import com.wavemaker.tools.deployment.DeploymentType;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.service.FileService;
-import com.wavemaker.tools.spring.beans.Alias;
-import com.wavemaker.tools.spring.beans.Bean;
-import com.wavemaker.tools.spring.beans.Beans;
-import com.wavemaker.tools.spring.beans.ConstructorArg;
-import com.wavemaker.tools.spring.beans.DefaultableBoolean;
-import com.wavemaker.tools.spring.beans.Entry;
+import com.wavemaker.tools.spring.beans.*;
 import com.wavemaker.tools.spring.beans.Map;
-import com.wavemaker.tools.spring.beans.Prop;
-import com.wavemaker.tools.spring.beans.Property;
-import com.wavemaker.tools.spring.beans.Props;
-import com.wavemaker.tools.spring.beans.Value;
-import com.wavemaker.tools.deployment.DeploymentType;
+import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jndi.JndiObjectFactoryBean;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.*;
+import java.util.List;
+
+import static org.springframework.util.StringUtils.hasText;
 
 /**
  * Encapsulates access to the Data Model Spring configuration.
@@ -65,7 +52,7 @@ public class DataServiceSpringConfiguration {
     public static final String JNDI_NAME_PROPERTY = "jndiName";
 
     private static final String HIBERNATE_DIALECT = "hibernate.dialect";
-    private static final String MSSQL_INNODB = "org.hibernate.dialect.MySQLInnoDBDialect";
+    private static final String MSSQL_INNODB = "org.hibernate.dialect.MySQLDialect";
     public static final String MYSQL_DIALECT = "com.wavemaker.runtime.data.dialect.MySQLDialect";
 
     private final String rootPath;
@@ -283,9 +270,9 @@ public class DataServiceSpringConfiguration {
         return this.beans.getBeansByType(type.getName());
     }
 
-    // Add dummy beans used to export table structure when deploying to cloud foundry
+    // Add dummy beans used to export table structure when deploying to cloud
     public void createAuxSessionFactoryBeans(DeploymentType type) {
-        if (type != DeploymentType.CLOUD_FOUNDRY) {
+        if (type != DeploymentType.CLOUD_JEE) {
             return;
         }
 

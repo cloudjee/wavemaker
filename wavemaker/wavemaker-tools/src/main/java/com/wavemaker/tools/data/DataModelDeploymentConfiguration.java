@@ -14,24 +14,23 @@
 
 package com.wavemaker.tools.data;
 
+import com.wavemaker.common.util.CastUtils;
+import com.wavemaker.common.util.XMLUtils;
+import com.wavemaker.common.util.XMLWriter;
+import com.wavemaker.runtime.data.util.DataServiceConstants;
+import com.wavemaker.tools.data.util.DataServiceUtils;
+import com.wavemaker.tools.deployment.DeploymentType;
+import com.wavemaker.tools.deployment.ServiceDeployment;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.service.DesignServiceManager;
+import com.wavemaker.tools.service.FileService;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
-
-import com.wavemaker.common.util.CastUtils;
-import com.wavemaker.common.util.XMLUtils;
-import com.wavemaker.common.util.XMLWriter;
-import com.wavemaker.runtime.data.util.DataServiceConstants;
-import com.wavemaker.tools.data.util.DataServiceUtils;
-import com.wavemaker.tools.deployment.ServiceDeployment;
-import com.wavemaker.tools.deployment.DeploymentType;
-import com.wavemaker.tools.io.File;
-import com.wavemaker.tools.service.DesignServiceManager;
-import com.wavemaker.tools.service.FileService;
-import static org.springframework.util.StringUtils.hasText;
 
 /**
  * @author Simon Toens
@@ -147,9 +146,9 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
         cfg.configureHibernateSchemaUpdate(cfg.getServiceId(), existingProps.getProperty(UPDATE_SCHEMA_PROPERTY));
         cfg.createAuxSessionFactoryBeans(type);
         cfg.write();
-        if (type == DeploymentType.CLOUD_FOUNDRY && dialect != null && dialect.equals(DataServiceSpringConfiguration.MYSQL_DIALECT)) {
+/*        if (type == DeploymentType.CLOUD_FOUNDRY && dialect != null && dialect.equals(DataServiceSpringConfiguration.MYSQL_DIALECT)) {
             addCloudDataSource(mgr, cfg, existingProps.getProperty(UPDATE_SCHEMA_PROPERTY));
-        }
+        }*/
     }
 
     private void addCloudDataSource(DesignServiceManager mgr, DataServiceSpringConfiguration cfg, String dbName) {
