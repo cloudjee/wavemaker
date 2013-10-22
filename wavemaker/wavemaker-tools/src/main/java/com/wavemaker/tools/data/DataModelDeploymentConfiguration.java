@@ -145,6 +145,7 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
         cfg.configureDbAlias(dbName, type, dialect);
         cfg.configureHibernateSchemaUpdate(cfg.getServiceId(), existingProps.getProperty(UPDATE_SCHEMA_PROPERTY));
         cfg.createAuxSessionFactoryBeans(type);
+        cfg.createCJDatabaseBean(type);
         cfg.write();
 /*        if (type == DeploymentType.CLOUD_FOUNDRY && dialect != null && dialect.equals(DataServiceSpringConfiguration.MYSQL_DIALECT)) {
             addCloudDataSource(mgr, cfg, existingProps.getProperty(UPDATE_SCHEMA_PROPERTY));

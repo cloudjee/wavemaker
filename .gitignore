@@ -6,7 +6,7 @@ target/
 *.class
 *#*
 *~
-
+*.iml
 wavemaker/wavemaker-studio/services/*/designtime/
 wavemaker/wavemaker-studio/src/main/webapp/WEB-INF/classes/
 wavemaker/wavemaker-studio/src/main/webapp/WEB-INF/project-managers.xml

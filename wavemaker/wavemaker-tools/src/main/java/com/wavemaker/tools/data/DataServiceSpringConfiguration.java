@@ -54,6 +54,8 @@ public class DataServiceSpringConfiguration {
     private static final String HIBERNATE_DIALECT = "hibernate.dialect";
     private static final String MSSQL_INNODB = "org.hibernate.dialect.MySQLDialect";
     public static final String MYSQL_DIALECT = "com.wavemaker.runtime.data.dialect.MySQLDialect";
+    public static final String WM_CLOUD_MYSQL_INTEGRATION_CLASS = "com.wavemaker.runtime.data.wmcloud.CloudJeeMySqlIntegration";
+    public static final String DB_DATASOURCE_CLASS = "org.springframework.jdbc.datasource.DriverManagerDataSource";
 
     private final String rootPath;
 
@@ -270,6 +272,28 @@ public class DataServiceSpringConfiguration {
         return this.beans.getBeansByType(type.getName());
     }
 
+    //Add bean for db creation in WM Cloud
+    public void createCJDatabaseBean(DeploymentType type){
+        if (type != DeploymentType.CLOUD_JEE) {
+            return;
+        }
+
+        List<Bean> factoryBeans = this.beans.getBeansByType(DB_DATASOURCE_CLASS);
+        if (factoryBeans != null && factoryBeans.size() > 0) {
+            for (Bean bean : factoryBeans) {
+                Bean auxBean = new Bean();
+                auxBean.setId(bean.getId() + "WMCloud");
+                auxBean.setAbstract(bean.getAbstract());
+                auxBean.setClazz(WM_CLOUD_MYSQL_INTEGRATION_CLASS);
+                auxBean.setDescription(bean.getDescription());
+                auxBean.setLazyInit(DefaultableBoolean.FALSE);
+                auxBean.setMetasAndConstructorArgsAndProperties(bean.getMetasAndConstructorArgsAndProperties());
+                this.beans.addBean(auxBean);
+            }
+            this.isDirty = true;
+        }
+
+    }
     // Add dummy beans used to export table structure when deploying to cloud
     public void createAuxSessionFactoryBeans(DeploymentType type) {
         if (type != DeploymentType.CLOUD_JEE) {
