@@ -1558,7 +1558,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
                 this.cjLoginDialogSuccessHandler(inData);
             }
             var that = this;
-            this.cloudJeeService.requestAsync("username",[inData],
+            this.cloudJeeService.requestAsync("username",[inData,true],
               dojo.hitch(this, function(inName){
                       this.cjHostEditor.setDataValue("https://" + inName);
                       var projectTarget = "https://" + inName + "/" + this.cjNameEditor.getDataValue();
@@ -1604,24 +1604,40 @@ dojo.declare("DeploymentDialog", wm.Page, {
     var token = this.getTokenCookie(this.loginDialogTargetEditor.getDataValue());
     this.confirmToken(inOptionalTargetUrl ? token : null, inOptionalTargetUrl, dojo.hitch(this, function(inToken) {
         token = inToken;
-        this.deploymentLoadingDialog.widgetToCover = this.cloudJeeAppList;
+        this.deploymentLoadingDialog.widgetToCover = this.cloudJeeLogsList;
         this.deploymentLoadingDialog.show();
-        this.cloudJeeService.requestAsync("listApps", [token,this.loginDialogTargetEditor.getDataValue()],
-                          dojo.hitch(this, function(inResult) {
+        this.cloudJeeService.requestAsync("username",[token, false],
+          dojo.hitch(this, function(inName){
+                this.cloudJeeService.requestAsync("listLogs", [token,inName],
+                      dojo.hitch(this, function(inResult) {
 
-                              this.populateCloudJeeLogsList(inResult, optionalCallback);
-                          }),
-                          dojo.hitch(this, function(inError) {
-                              app.alert(inError);
-                              this.deploymentLoadingDialog.hide();
-                          }));
+                          this.populateCloudJeeLogsList(inResult, optionalCallback);
+                      }),
+                      dojo.hitch(this, function(inError) {
+                          app.alert(inError);
+                          this.deploymentLoadingDialog.hide();
+                      }));
+
+
+          }),
+          dojo.hitch(this, function(inError) {
+                          studio.endWait();
+                          var message = inError.message;
+                          if (message.match(/^403/)) {
+                              app.toastError(this.getDictionaryItem("INVALID_USER_PASS"));
+                          } else {
+                              app.toastError(message);
+                          }
+           }));
+
     }));
     },
         populateCloudJeeLogsList: function(inResult, optionalCallback) {
          var results = [];
+         var token = this.getTokenCookie(this.loginDialogTargetEditor.getDataValue());
          var i=0;
          while (i < inResult.length) {
-             results.push({id: inResult[i].name, name: "<a href='#' onClick=studio.downloadInIFrame('https://github.com/cloudjee/WaveMaker-LGPL-Resources/raw/master/repo.zip')>" + inResult[i].name + "</a>", state: "<a href='javascript:void(0)' onClick=studio.downloadInIFrame('https://github.com/cloudjee/WaveMaker-LGPL-Resources/raw/master/repo.zip')>" + "Download" + "</a>" /*, services: inResult[i].services ? inResult[i].services.join(", ") : ""*/});
+             results.push({id: inResult[i].fileName, name:  inResult[i].fileName,size: inResult[i].fileSize,  state: "<a href='javascript:void(0)' onClick=studio.downloadInIFrame('services/deploymentService.download?method=downloadLogFile&token="+ encodeURI(token) + "&url="+ inResult[i].url+"&fileName="+inResult[i].fileName + "')>" + "Download" + "</a>" /*, services: inResult[i].services ? inResult[i].services.join(", ") : ""*/});
              i++;
          }
          this.cachedCloudJeeDeploymentList = inResult;

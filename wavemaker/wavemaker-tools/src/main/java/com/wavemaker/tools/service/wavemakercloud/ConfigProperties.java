@@ -37,6 +37,10 @@ public class ConfigProperties {
     public static final String HOST_NAME;
     public static final String PROTOCOL;
     public static final String SERVICE;
+    public static final String LOGFILELIST ;
+    public static final String LOGFILE;
+    public static final String TENANT_NAME = "<tenantName>";
+    public static final String LOG_FILE_NAME = "<fileName>";
 
 
     private static Properties properties = new Properties();
@@ -57,6 +61,9 @@ public class ConfigProperties {
         SIGNUP = PROTOCOL+ HOST_NAME +"/" + properties.getProperty("signUp");
         ACCOUNTTARGETSUFFIX = HOST_NAME;
         LOGINTARGET = PROTOCOL+ HOST_NAME;
+        LOGFILELIST=  PROTOCOL +  HOST_NAME+ "/" + properties.getProperty("LOGSERVICE")+"/" + properties.getProperty("logsList");
+        LOGFILE=  PROTOCOL +  HOST_NAME+ "/" + properties.getProperty("LOGSERVICE")+"/" + properties.getProperty("logFile");
+
 
 	}
 

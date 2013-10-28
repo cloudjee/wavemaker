@@ -30,10 +30,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.UriBuilder;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.security.SecureRandom;
@@ -215,7 +212,26 @@ public class CloudJeeClient {
 		return parseResponse(jsonReq);
 	}
 
-    public String accountInfo() throws Exception {
+    public List<CloudJeeLog> listLogs(String tenantName) throws Exception {
+        DefaultHttpClient httpclient = CreateHttpClient
+                .createHttpClientConnection();
+        String logservice = ConfigProperties.LOGFILELIST.replaceAll(ConfigProperties.TENANT_NAME, tenantName);
+        HttpGet httpget = new HttpGet(logservice);
+        httpget.setHeader("Cookie", auth);
+        HttpResponse response = httpclient.execute(httpget);
+        System.out.println("ResponseCode: "
+                + response.getStatusLine().getStatusCode());
+
+        if(response.getStatusLine().getStatusCode() != 200){
+            handleException(response);
+        }
+
+        String resultJson  = readResponse(response);
+        JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(resultJson);
+        return parseLogsResponse(jsonReq, tenantName);
+    }
+
+    public String accountInfo(boolean isLink) throws Exception {
         DefaultHttpClient httpclient = CreateHttpClient
                 .createHttpClientConnection();
         HttpGet httpget = new HttpGet(ConfigProperties.ACCOUNTINFO);
@@ -230,7 +246,13 @@ public class CloudJeeClient {
 
         String resultJson  = readResponse(response);
         JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(resultJson);
-        return  getContent(jsonReq, "tenantDomainName") + "." + ConfigProperties.ACCOUNTTARGETSUFFIX;
+        String tenantName =  getContent(jsonReq, "tenantDomainName");
+        if(isLink) {
+            return  tenantName + "." + ConfigProperties.ACCOUNTTARGETSUFFIX;
+        }
+        else{
+            return tenantName;
+        }
     }
 
     public String undeploy(String appName) throws Exception{
@@ -247,6 +269,16 @@ public class CloudJeeClient {
         }
 
         return readResponse(response);
+
+    }
+    public InputStream getLogInputStream(String url) throws Exception {
+        DefaultHttpClient httpclient = CreateHttpClient
+                .createHttpClientConnection();
+        HttpGet httpget = new HttpGet(url);
+        httpget.setHeader("Cookie", auth);
+        HttpResponse response = httpclient.execute(httpget);
+        return response.getEntity().getContent();
+
 
     }
 
@@ -331,6 +363,65 @@ public class CloudJeeClient {
         }
     }
 
+    private List<CloudJeeLog> parseLogsResponse(JSONObject jsonObj, String tenantName){
+        if(jsonObj == null) {
+            throw new WMRuntimeException("Unable to read response from WaveMaker Cloud");
+        }
+        List<CloudJeeLog> apps = new ArrayList<CloudJeeLog>();
+        try {
+
+            JSONObject block = (JSONObject) jsonObj.get("success");
+            JSONObject body = null;
+            if (block != null && (body = (JSONObject) block.get("body")) != null) {
+                JSONArray objects = new JSONArray();
+
+                if(((JSONArray) body.get("objects")) != null){
+                    objects = (JSONArray) body.get("objects");
+                }
+
+                Class cls = null;
+                cls = Class.forName("com.wavemaker.tools.service.wavemakercloud.CloudJeeLog");
+
+                for (Object obj : objects) {
+                    CloudJeeLog app = (CloudJeeLog) cls.newInstance();
+                    HashMap<String, Object> map = (HashMap<String, Object>) obj;
+                    for (String key : map.keySet()) {
+                        Object value = map.get(key);
+                        Method method = cls.getDeclaredMethod("set" + WordUtils.capitalize(key), value.getClass());
+                        if(key.equalsIgnoreCase("fileName")){
+                            String logfileUrl = ConfigProperties.LOGFILE.replaceAll(ConfigProperties.TENANT_NAME, tenantName).replaceAll(ConfigProperties.LOG_FILE_NAME, (String) value);
+                            app.setUrl(logfileUrl);
+                        }
+                        method.invoke(app, value);
+                    }
+
+
+                    apps.add(app);
+                }
+            }else if((block=(JSONObject) jsonObj.get("exceptionObject")) != null){
+                throw new WMRuntimeException((String) block.get("cause"));
+            }else if((block=(JSONObject) jsonObj.get("errors")) != null){
+                throw new WMRuntimeException(getErrorMessage(block));
+            }
+
+            return apps;
+        } catch (Exception e) {
+            throw new WMRuntimeException(e);
+        }
+    }
+
+   private String getErrorMessage(JSONObject block){
+       JSONArray errors =  (JSONArray) block.get("error");
+       String content="";
+       for(int i=0; i < errors.size(); i++){
+           JSONObject errObj = (JSONObject)errors.get(i);
+           String msg = null;
+           if((msg = (String)errObj.get("message")) != null){
+               content = content+"\n" + msg;
+           }
+       }
+            return content;
+   }
     private String getContent(JSONObject jsonObj, String keyName) {
         if(jsonObj == null) {
             throw new WMRuntimeException("Unable to read response from WaveMaker Cloud");
@@ -344,14 +435,7 @@ public class CloudJeeClient {
             } else if((block=(JSONObject) jsonObj.get("exceptionObject")) != null){
                 content =  (String) block.get("cause");
             }else if((block=(JSONObject) jsonObj.get("errors")) != null){
-                JSONArray errors =  (JSONArray) block.get("error");
-                for(int i=0; i < errors.size(); i++){
-                    JSONObject errObj = (JSONObject)errors.get(i);
-                    String msg = null;
-                    if((msg = (String)errObj.get("message")) != null){
-                        content = content+"\n" + msg;
-                    }
-                }
+                 content = content + "\n" + getErrorMessage(block);
             }
 
         } catch (Exception e) {

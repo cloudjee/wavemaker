@@ -14,25 +14,6 @@
 
 package com.wavemaker.studio;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.util.*;
-
-
-import javax.servlet.http.Cookie;
-import javax.ws.rs.core.UriBuilder;
-
-import com.wavemaker.tools.service.wavemakercloud.CloudJeeApplication;
-import com.wavemaker.tools.service.wavemakercloud.CloudJeeClient;
-import org.cloudfoundry.client.lib.CloudApplication;
-import org.cloudfoundry.client.lib.CloudFoundryClient;
-import org.cloudfoundry.client.lib.CloudFoundryException;
-import org.cloudfoundry.client.lib.CloudService;
-import org.springframework.http.HttpStatus;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import org.springframework.web.util.WebUtils;
-
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
@@ -45,6 +26,24 @@ import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecretPropag
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
 import com.wavemaker.tools.deployment.DeploymentDB;
 import com.wavemaker.tools.deployment.cloudfoundry.CloudFoundryDeploymentTarget;
+import com.wavemaker.tools.service.wavemakercloud.CloudJeeApplication;
+import com.wavemaker.tools.service.wavemakercloud.CloudJeeClient;
+import com.wavemaker.tools.service.wavemakercloud.CloudJeeLog;
+import org.cloudfoundry.client.lib.CloudApplication;
+import org.cloudfoundry.client.lib.CloudFoundryClient;
+import org.cloudfoundry.client.lib.CloudFoundryException;
+import org.cloudfoundry.client.lib.CloudService;
+import org.springframework.http.HttpStatus;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+import org.springframework.web.util.WebUtils;
+
+import javax.servlet.http.Cookie;
+import javax.ws.rs.core.UriBuilder;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.util.*;
 
 @ExposeToClient
 public class CloudJeeService {
@@ -82,6 +81,15 @@ public class CloudJeeService {
         }
     }
 
+    public List<CloudJeeLog> listLogs(String token, String tenantName) {
+        try{
+            CloudJeeClient client = new CloudJeeClient(token);
+            return client.listLogs(tenantName);
+        }catch (Throwable ex) {
+            throw new WMRuntimeException("WaveMaker Cloud list logs failed.", ex);
+        }
+    }
+
     public String signUp(String email){
         try{
             CloudJeeClient client = new CloudJeeClient();
@@ -102,10 +110,10 @@ public class CloudJeeService {
 
     }
 
-    public String username(String token){
+    public String username(String token, boolean isLink){
         try{
             CloudJeeClient client = new CloudJeeClient(token);
-            return client.accountInfo();
+            return client.accountInfo(isLink);
         }catch (Throwable ex) {
             throw new WMRuntimeException("WaveMaker Cloud account info failed.", ex);
         }
@@ -126,6 +134,14 @@ public class CloudJeeService {
             client.start(applicationName);
         } catch (Exception e) {
             throw new WMRuntimeException("WaveMaker Cloud start application failed.", e);
+        }
+    }
+    public InputStream getLogInputStream(String token, String url) {
+        CloudJeeClient client = new CloudJeeClient(token);
+        try {
+            return client.getLogInputStream(url);
+        } catch (Exception e) {
+            throw new WMRuntimeException("Failed fetching log file.", e);
         }
     }
     
@@ -287,6 +303,8 @@ public class CloudJeeService {
     private URI getURIFromString(String uri) {
         return UriBuilder.fromUri(uri).build();
     }
+
+
 
 
     private static interface CloudFoundryCallable<V> {

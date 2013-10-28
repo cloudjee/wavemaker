@@ -640,6 +640,17 @@ public class DeploymentService {
 	return deploymentManager.exportMultiFile(zipFileName, buildProject, buildProjectTemplate, templateJson, themeList, componentList);
     }
 
+    public DownloadResponse downloadLogFile(String token, String url, String fileName){
+
+        InputStream is=  new CloudJeeService().getLogInputStream(token, url);
+        DownloadResponse ret = new DownloadResponse();
+
+        ret.setContents(is);
+        ret.setContentType("application/unknown");
+        ret.setFileName(fileName);
+        return ret;
+    }
+
     public DownloadResponse downloadClientComponent(String file) {
 	Folder common = this.fileSystem.getCommonFolder();
 	Folder packages = common.getFolder("packages");
