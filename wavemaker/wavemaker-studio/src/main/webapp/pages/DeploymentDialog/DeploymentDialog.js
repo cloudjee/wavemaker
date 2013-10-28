@@ -1003,16 +1003,20 @@ dojo.declare("DeploymentDialog", wm.Page, {
         case "tc":
             this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
             this.dbTypeVar.clearData();
+            this.manageCloudJeeLogs.hide();
+
             this.newTomcatDeploy();
             break;
         case "cj":
             this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
             this.dbTypeVar.clearData();
+            this.manageCloudJeeLogs.show();
             this.newCloudJeeDeploy();
             break;
         case "files":
             this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
             this.dbTypeVar.clearData();
+            this.manageCloudJeeLogs.hide();
             this.newAppFileDeploy();
             break;
         }
@@ -1479,12 +1483,15 @@ dojo.declare("DeploymentDialog", wm.Page, {
         switch (data.deploymentType) {
         case this.TC_DEPLOY:
             this.populateTomcatDeploy(data);
+            this.manageCloudJeeLogs.hide();
             break;
         case this.CJ_DEPLOY:
             this.populateCloudJeeDeploy(data);
+            this.manageCloudJeeLogs.show();
             break;
         case this.FILE_DEPLOY:
             this.populateAppFileDeploy(data);
+            this.manageCloudJeeLogs.hide();
             break;
         }
         this._openningDeployment = false;
@@ -1543,7 +1550,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
 
     },
     getApplicationUrlContent:function (projectTarget) {
-        return "<a href=" + projectTarget + " target='_blank'>" + projectTarget + "</a>";
+       // return "<a href=" + projectTarget + " target='_blank'>" + projectTarget + "</a>";
+        return projectTarget;
     },
     cjLoginOkClick: function() {
     studio.beginWait(this.getDictionaryItem("WAIT_LOGGING_IN"), false, "wmCJWaitThrobber");

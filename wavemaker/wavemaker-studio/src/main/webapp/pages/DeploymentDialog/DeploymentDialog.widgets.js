@@ -208,7 +208,7 @@ DeploymentDialog.widgets = {
 		}]
 	    }],
 	    manageCloudJeeApps: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Manage WaveMaker Cloud Apps","margin":"4","width":"200px"}, {"onclick":"manageCloudJeeButtonClick"}],
-	    manageCloudJeeLogs: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"View Logs","width":"100px"}, {"onclick":"manageCloudJeeLogsClick"}],
+	    manageCloudJeeLogs: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"View Logs","width":"100px", "showing":false}, {"onclick":"manageCloudJeeLogsClick"}],
 	    buttonBarMarginSpacer1: ["wm.Spacer", {"height":"48px","width":"100%"}, {}],
 	    saveButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Save","margin":"4"}, {"onclick":"saveButtonClick"}, {
 		binding: ["wm.Binding", {}, {}, {
