@@ -1004,19 +1004,21 @@ dojo.declare("DeploymentDialog", wm.Page, {
             this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
             this.dbTypeVar.clearData();
             this.manageCloudJeeLogs.hide();
-
+            this.manageCloudJeeApps.hide();
             this.newTomcatDeploy();
             break;
         case "cj":
             this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
             this.dbTypeVar.clearData();
             this.manageCloudJeeLogs.show();
+            this.manageCloudJeeApps.show();
             this.newCloudJeeDeploy();
             break;
         case "files":
             this.editPanel.clearData(); // insures that even hidden editors no longer flag as invalid or dirty
             this.dbTypeVar.clearData();
             this.manageCloudJeeLogs.hide();
+            this.manageCloudJeeApps.hide();
             this.newAppFileDeploy();
             break;
         }
@@ -1484,14 +1486,17 @@ dojo.declare("DeploymentDialog", wm.Page, {
         case this.TC_DEPLOY:
             this.populateTomcatDeploy(data);
             this.manageCloudJeeLogs.hide();
+            this.manageCloudJeeApps.hide();
             break;
         case this.CJ_DEPLOY:
             this.populateCloudJeeDeploy(data);
             this.manageCloudJeeLogs.show();
+            this.manageCloudJeeApps.show();
             break;
         case this.FILE_DEPLOY:
             this.populateAppFileDeploy(data);
             this.manageCloudJeeLogs.hide();
+            this.manageCloudJeeApps.hide();
             break;
         }
         this._openningDeployment = false;

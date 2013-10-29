@@ -207,7 +207,7 @@ DeploymentDialog.widgets = {
 		    wire: ["wm.Wire", {"expression":"Boolean(${editPanel.invalid} || ${dbTypeVar.dataValue} == true)","targetProperty":"disabled"}, {}]
 		}]
 	    }],
-	    manageCloudJeeApps: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Manage WaveMaker Cloud Apps","margin":"4","width":"200px"}, {"onclick":"manageCloudJeeButtonClick"}],
+	    manageCloudJeeApps: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Manage WaveMaker Cloud Apps","margin":"4","width":"200px", "showing":false}, {"onclick":"manageCloudJeeButtonClick"}],
 	    manageCloudJeeLogs: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"View Logs","width":"100px", "showing":false}, {"onclick":"manageCloudJeeLogsClick"}],
 	    buttonBarMarginSpacer1: ["wm.Spacer", {"height":"48px","width":"100%"}, {}],
 	    saveButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Save","margin":"4"}, {"onclick":"saveButtonClick"}, {
