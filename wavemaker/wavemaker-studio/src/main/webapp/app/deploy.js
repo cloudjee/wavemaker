@@ -382,7 +382,9 @@ Studio.extend({
         this.deploymentDialog.page.selectFirst();
     },
     cloudJeeDeploymentsClick: function() {
-        this.deploymentDialog.setPage("DeploymentDialog"); // insures the dialog is initialized, but does not show it
+        if(!this.deploymentDialog.page){
+          this.deploymentDialog.setPage("DeploymentDialog"); // insures the dialog is initialized, but does not show it
+        }
         this.deploymentDialog.page.showCloudJeeAppListDialog();
     },
     deploymentHelp: function() {
