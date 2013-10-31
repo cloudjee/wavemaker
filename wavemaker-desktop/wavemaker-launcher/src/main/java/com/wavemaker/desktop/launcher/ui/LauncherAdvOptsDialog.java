@@ -25,15 +25,13 @@
 
 package com.wavemaker.desktop.launcher.ui;
 
+import com.wavemaker.desktop.launcher.Main;
+
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ResourceBundle;
-
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-
-import com.wavemaker.desktop.launcher.Main;
 
 /**
  * 
@@ -711,7 +709,7 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog {
             chooser.setCurrentDirectory(new File(this.folder));
         }
 
-        if (chooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
+        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             this.tfBrowser.setText(chooser.getSelectedFile().getAbsolutePath());
             this.folder = chooser.getCurrentDirectory().getAbsolutePath();
         }
