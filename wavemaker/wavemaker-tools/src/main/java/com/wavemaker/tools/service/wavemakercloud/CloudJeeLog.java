@@ -9,6 +9,15 @@ public class CloudJeeLog {
     String fileSize;
     String lastModifiedTime;
     String url;
+    Long fileSizeInBytes;
+
+    public Long getFileSizeInBytes() {
+        return fileSizeInBytes;
+    }
+
+    public void setFileSizeInBytes(Long fileSizeInBytes) {
+        this.fileSizeInBytes = fileSizeInBytes;
+    }
 
     public String getFileName() {
         return fileName;
