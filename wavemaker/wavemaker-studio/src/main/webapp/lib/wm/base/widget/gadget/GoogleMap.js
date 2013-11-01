@@ -50,7 +50,7 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 	    var script = document.createElement("script");
 	    script.type = "text/javascript";
 	    script.id = "GoogleMapsScript";
-	    script.src = "http://maps.google.com/maps/api/js?sensor=false&callback=wm.gadget.GoogleMap.initialize";
+	    script.src = "https://maps.google.com/maps/api/js?sensor=false&callback=wm.gadget.GoogleMap.initialize";
 	    document.body.appendChild(script);
 	}
 	this._markers = [];

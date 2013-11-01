@@ -17,7 +17,7 @@ dojo.require("wm.base.widget.gadget.Gadget");
 
 
 dojo.declare("wm.gadget.YouTube", wm.Gadget, {
-    videoId: "http://youtu.be/Zmqu39fzPxY",
+    videoId: "https://youtu.be/Zmqu39fzPxY",
     autoScroll: true,
     build: function() {
 	this.inherited(arguments);
@@ -30,7 +30,7 @@ dojo.declare("wm.gadget.YouTube", wm.Gadget, {
 	var id = this.videoId || "";
 	id = id.replace(/^.*\//,"");
 	id = id.replace(/^watch\?v\=/,"");
-	return "http://www.youtube.com/embed/" + id;
+	return "https://www.youtube.com/embed/" + id;
     },
     setVideoId: function(inId) {
 	this.videoId = inId;

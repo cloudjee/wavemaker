@@ -34,7 +34,7 @@ dojo.declare("wm.gadget.TwitterFollowButton", wm.Gadget, {
 	dojo.attr(this.domNode, "allowtransparency", "true");
     },
     getSource: function() {
-	return "http://platform.twitter.com/widgets/follow_button.html?" +
+	return "https://platform.twitter.com/widgets/follow_button.html?" +
 	    "screen_name=" + this.screenName +
 	    "&button=" + this.buttonColor +
 	    (this.linkColor ? "&link_color=" + this.linkColor.substring(1) : "") +
@@ -90,7 +90,7 @@ dojo.declare("wm.gadget.TwitterTweetButton", wm.Gadget, {
 	dojo.attr(this.domNode, "allowtransparency", "true");
     },
     getSource: function() {
-	return "http://platform.twitter.com/widgets/tweet_button.html?" +
+	return "https://platform.twitter.com/widgets/tweet_button.html?" +
 	    "url=" + escape(this.url) +
 	    "&count=" + this.countPosition +
 	    (this.via ? "&via=" + this.via : "");
