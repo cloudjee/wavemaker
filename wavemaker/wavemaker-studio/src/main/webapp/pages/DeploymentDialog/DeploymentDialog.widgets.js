@@ -100,7 +100,7 @@ DeploymentDialog.widgets = {
 	    }]
 	}],
 	buttonBar2: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-	    cloudJeeRegisterLink: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Sign Up","margin":"4", "showing":false} /*,{caption: "Sign Up", link: "https://apps.mywavemaker.com/login/signup", width: "100px", height: "100%"}*/,{onclick: "signUpDialog"}],
+	    cloudJeeRegisterLink: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Sign Up","margin":"4", "showing":true} /*,{caption: "Sign Up", link: "https://apps.mywavemaker.com/login/signup", width: "100px", height: "100%"}*/,{onclick: "signUpDialog"}],
 	    loginSpacer: ["wm.Spacer", {width: "100%"}],
 	    cjLoginCancelButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Cancel","margin":"4"}, {onclick: "cjLoginCancelClick"}],
 	    cjLogonOkButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"OK","margin":"4"}, {onclick: "cjLoginOkClick"}, {

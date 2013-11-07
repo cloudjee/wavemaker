@@ -566,7 +566,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         if (inTargetUrl && this.getTokenCookie(inTargetUrl)) {
             this.loginDialogTargetEditor.setDataValue(inTargetUrl);
             this.loginDialogTargetEditor.setReadonly(true);
-            showLogin(inCallback);
+            this.showLogin(inCallback);
         } else {
 
             this.cloudJeeService.requestAsync("loginTarget", [],

@@ -58,7 +58,7 @@ DBBOX_URL_CAPTION: "Connection URL",
 DBBOX_JNDINAME_CAPTION: "JNDI Name",
 DBBOX_CFTYPE_CAPTION: "Type",
 DBBOX_CFNAME_CAPTION: "Database Name",
-CJ_DB_NODATA_WARNING: "NOTE:  Your database will be available but empty of data.  If your using database security, this will mean nobody can login.  To copy data into your database, go to <a target='docs' href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.4/Deploying#HPopulatingCloudFoundryDatabase'>Deployment Documentation</a>.",
+CJ_DB_NODATA_WARNING: "NOTE:  Your database will be available but empty of data.  If your using database security, this will mean nobody can login.  To copy data into your database, go to <a target='docs' href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.7/WMCloudTutorial#HAutomaticallyInitializeMySQLDatabase28Advanced29'>Deployment Documentation</a>.",
 CJ_NON_MYSQL_WARNING: "<p style='color:red''>NOTE: WaveMaker Cloud doesn't support application deployments using ${dbName} database. Hence, application deployment would not be allowed.</p>",
 CJ_DB_NODATA_WARNING_HEIGHT: "60px"/*,
 "CF_MULTIPLE_DB_WARNING": "<div class='DeploymentWarning'>WARNING: Multiple databases may not work reliably on Cloud Foundry</div>"*/

@@ -12,6 +12,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.JSONArray;
 import com.wavemaker.json.JSONObject;
 import com.wavemaker.json.JSONUnmarshaller;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -171,7 +172,10 @@ public class CloudJeeClient {
         if(response.getStatusLine().getStatusCode() != 200){
             handleException(response);
         }
-		return readResponse(response);
+        String content = readResponse(response);
+        JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(content);
+        handleErrors(jsonReq);
+		return content;
 
 	}
 
@@ -189,9 +193,10 @@ public class CloudJeeClient {
             handleException(response);
         }
 
-
-        return readResponse(response);
-
+        String content = readResponse(response);
+        JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(content);
+        handleErrors(jsonReq);
+        return content;
 	}
 
     public List<CloudJeeApplication> list() throws Exception {
@@ -268,7 +273,10 @@ public class CloudJeeClient {
             handleException(response);
         }
 
-        return readResponse(response);
+        String content = readResponse(response);
+        JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(content);
+        handleErrors(jsonReq);
+        return content;
 
     }
     public InputStream getLogInputStream(String url) throws Exception {
@@ -355,6 +363,10 @@ public class CloudJeeClient {
                     apps.add(app);
                 }
 
+            } else if((block=(JSONObject) jsonObj.get("exceptionObject")) != null){
+                throw new WMRuntimeException((String) block.get("cause"));
+            }else if((block=(JSONObject) jsonObj.get("errors")) != null){
+                throw new WMRuntimeException(getErrorMessage(block));
             }
 
             return apps;
@@ -430,7 +442,7 @@ public class CloudJeeClient {
         try {
             JSONObject block = (JSONObject) jsonObj.get("success");
             JSONObject body = null;
-            if (block != null && (body = (JSONObject) block.get("body")) != null) {
+            if (block != null && (body = (JSONObject) block.get("body")) != null && keyName != null) {
                 content = (String) body.get(keyName);
             } else if((block=(JSONObject) jsonObj.get("exceptionObject")) != null){
                 content =  (String) block.get("cause");
@@ -443,6 +455,28 @@ public class CloudJeeClient {
         }
         return content;
     }
+    private void handleErrors(JSONObject jsonObj) {
+        if(jsonObj == null) {
+            throw new WMRuntimeException("Unable to read response from WaveMaker Cloud");
+        }
+        String content="";
+        try {
+            JSONObject block = (JSONObject) jsonObj.get("success");
+            if((block=(JSONObject) jsonObj.get("exceptionObject")) != null){
+                content =  (String) block.get("cause");
+            }else if((block=(JSONObject) jsonObj.get("errors")) != null){
+                content = content + "\n" + getErrorMessage(block);
+            }
+           if(!StringUtils.isEmpty(content)){
+               throw new WMRuntimeException(content);
+           }
+
+        } catch (Exception e) {
+            throw new WMRuntimeException(e);
+        }
+
+    }
+
 
 
     public void logout() throws Exception {
