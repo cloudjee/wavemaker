@@ -387,6 +387,14 @@ Studio.extend({
         }
         this.deploymentDialog.page.showCloudJeeAppListDialog();
     },
+    downloadLogFile: function(url, token, targetUrl){
+        if(!this.deploymentDialog.page){
+              this.deploymentDialog.setPage("DeploymentDialog"); // insures the dialog is initialized, but does not show it
+         }
+        this.deploymentDialog.page.confirmToken(decodeURI(token), decodeURI(targetUrl),  dojo.hitch(this, function(){
+             studio.downloadInIFrame(url);
+        }));
+    },
     deploymentHelp: function() {
         window.open(studio.getDictionaryItem("URL_DOCS", {
             studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/, "$1")

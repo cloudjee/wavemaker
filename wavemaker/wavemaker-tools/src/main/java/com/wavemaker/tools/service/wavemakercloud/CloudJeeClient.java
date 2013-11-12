@@ -17,11 +17,13 @@ import org.apache.commons.lang.WordUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -291,40 +293,27 @@ public class CloudJeeClient {
     }
 
     public String signUp(String email) throws Exception {
-        Client client = getClient();
-        client.addFilter(new LoggingFilter(System.out));
-
-        client.setFollowRedirects(false);
-
-        WebResource service = client.resource(getURIFromString(ConfigProperties.SIGNUP));
-        Form formData = new Form();
-        formData.add("emailId", email);
 
 
-        ClientResponse response = service.header("Host", ConfigProperties.HOST_NAME)
-                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).accept(MediaType.APPLICATION_JSON_TYPE)
-                .post(ClientResponse.class, formData);
-        if((response.getClientResponseStatus().getStatusCode() == 401) && response.getHeaders().get(ERROR_TOKEN) != null)
-        {
-            throw new WMRuntimeException(getErrorMsg(response.getHeaders().get(ERROR_TOKEN)));
+
+        DefaultHttpClient httpclient = CreateHttpClient
+                .createHttpClientConnection();
+        HttpPost httppost = new HttpPost(ConfigProperties.SIGNUP);
+        httppost.setHeader("Cookie", auth);
+        List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>();
+        nameValuePairs.add(new BasicNameValuePair("emailId",email));
+
+
+        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+        HttpResponse response = httpclient.execute(httppost);
+        System.out.println("ResponseCode: "
+                + response.getStatusLine().getStatusCode());
+        if(response.getStatusLine().getStatusCode() != 200){
+            handleException(response);
         }
 
-        BufferedReader bf = new BufferedReader(new InputStreamReader(response.getEntityInputStream()));
-        String responseVal = "", res="";
-
-        try {
-            while(( res = bf.readLine()) !=null){
-                responseVal = responseVal + res;
-            }
-
-
-        } catch (IOException e) {
-            log.error("Error while streaming the output response", e);
-            throw new RuntimeException("Error while streaming the output response", e);
-        }
-
-        client.setFollowRedirects(true);
-        JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(responseVal);
+        JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(readResponse(response));
         return getContent(jsonReq, "$");
 
     }

@@ -1650,7 +1650,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
          var token = this.getTokenCookie(this.loginDialogTargetEditor.getDataValue());
          var i=0;
          while (i < inResult.length) {
-             results.push({id: inResult[i].fileName, name:  inResult[i].fileName,size: inResult[i].fileSize,  state: "<a href='javascript:void(0)' onClick=studio.downloadInIFrame('services/deploymentService.download?method=downloadLogFile&token="+ encodeURI(token) + "&url="+ inResult[i].url+"&fileName="+inResult[i].fileName + "')>" + "Download" + "</a>" /*, services: inResult[i].services ? inResult[i].services.join(", ") : ""*/});
+             //results.push({id: inResult[i].fileName, name:  inResult[i].fileName,size: inResult[i].fileSize,  state: "<a href='javascript:void(0)' onClick=studio.downloadInIFrame('services/deploymentService.download?method=downloadLogFile&token="+ encodeURI(token) + "&url="+ inResult[i].url+"&fileName="+inResult[i].fileName + "')>" + "Download" + "</a>" /*, services: inResult[i].services ? inResult[i].services.join(", ") : ""*/});
+             results.push({id: inResult[i].fileName, name:  inResult[i].fileName,size: inResult[i].fileSize,  state: "<a href='javascript:void(0)' onClick=studio.downloadLogFile('services/deploymentService.download?method=downloadLogFile&token="+ encodeURI(token) + "&url="+ inResult[i].url+"&fileName="+inResult[i].fileName + "','"+encodeURI(token)+"','"+encodeURI(this.cjHostEditor.getDataValue())+"')>" + "Download" + "</a>" /*, services: inResult[i].services ? inResult[i].services.join(", ") : ""*/});
              i++;
          }
          this.cachedCloudJeeDeploymentList = inResult;
