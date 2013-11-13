@@ -347,7 +347,7 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 // Lookup Editor
 //===========================================================================
 dojo.declare("wm.Lookup", wm.SelectMenu, {
-    datatype: "",
+    dataType: "",
     dataField: "",
     autoDataSet: true,
     startUpdate: true,
@@ -358,7 +358,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
             this.createDataSet();
         } else if (!this.autoDataSet) {
             this.startUpdate = false;
-        }
+         }
         this.inherited(arguments);
     },
     createDataSet: function() {
