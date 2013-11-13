@@ -294,8 +294,6 @@ public class CloudJeeClient {
 
     public String signUp(String email) throws Exception {
 
-
-
         DefaultHttpClient httpclient = CreateHttpClient
                 .createHttpClientConnection();
         HttpPost httppost = new HttpPost(ConfigProperties.SIGNUP);
@@ -312,7 +310,6 @@ public class CloudJeeClient {
         if(response.getStatusLine().getStatusCode() != 200){
             handleException(response);
         }
-
         JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(readResponse(response));
         return getContent(jsonReq, "$");
 
@@ -346,8 +343,11 @@ public class CloudJeeClient {
                     HashMap<String, Object> map = (HashMap<String, Object>) obj;
                     for (String key : map.keySet()) {
                         Object value = map.get(key);
-                        Method method = cls.getDeclaredMethod("set" + WordUtils.capitalize(key), value.getClass());
-                        method.invoke(app, value);
+                        for (Method method : cls.getDeclaredMethods()) {
+                            if (method.getName().equals("set" + WordUtils.capitalize(key))) {
+                                method.invoke(app, value);
+                            }
+                        }
                     }
                     apps.add(app);
                 }
@@ -388,12 +388,17 @@ public class CloudJeeClient {
                     HashMap<String, Object> map = (HashMap<String, Object>) obj;
                     for (String key : map.keySet()) {
                         Object value = map.get(key);
-                        Method method = cls.getDeclaredMethod("set" + WordUtils.capitalize(key), value.getClass());
-                        if(key.equalsIgnoreCase("fileName")){
-                            String logfileUrl = ConfigProperties.LOGFILE.replaceAll(ConfigProperties.TENANT_NAME, tenantName).replaceAll(ConfigProperties.LOG_FILE_NAME, (String) value);
-                            app.setUrl(logfileUrl);
+                        for (Method method : cls.getDeclaredMethods()) {
+                            if (method.getName().equals("set" + WordUtils.capitalize(key))) {
+                                if(key.equalsIgnoreCase("fileName")){
+                                    String logfileUrl = ConfigProperties.LOGFILE.replaceAll(ConfigProperties.TENANT_NAME, tenantName).replaceAll(ConfigProperties.LOG_FILE_NAME, (String) value);
+                                    app.setUrl(logfileUrl);
+                                }
+                                method.invoke(app, value);
+                            }
                         }
-                        method.invoke(app, value);
+
+
                     }
 
 

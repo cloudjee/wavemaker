@@ -98,6 +98,9 @@ public class CloudJeeMySqlIntegration extends LocalSessionFactoryBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        if(!this.getDriverClassName().contains("mysql")){
+            return;
+        }
         String schemaNameExtract = JDBCUtils.getMySQLDatabaseName(this.getUrl());
         setSchemaName(schemaNameExtract);
         ensureDBNameExists();
