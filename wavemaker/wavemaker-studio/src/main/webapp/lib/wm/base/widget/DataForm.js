@@ -1280,6 +1280,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 	var deleteFunc = dojo.hitch(this,function() {
 	    return this.doOperation("delete");
 	});
+	this.operation = "delete";
 
 	if (!this.deleteConfirmation) {
 	    deleteFunc();
