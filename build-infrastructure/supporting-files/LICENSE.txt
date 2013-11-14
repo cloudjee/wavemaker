@@ -202,13 +202,19 @@
 
 =======================================================================
 
-CloudJee WAVEMAKER 6.6.1 M3 SUBCOMPONENTS:
+CloudJee WaveMaker 6.7.0 M2 SUBCOMPONENTS:
 
-CloudJee WaveMaker 6.6.0 M2 includes a number of subcomponents with
+CloudJee WaveMaker 6.7.0 M2 includes a number of subcomponents with
 separate copyright notices and license terms.  The product that
 includes this file does not necessarily use all the open source
 subcomponents referred to below. Your use of these subcomponents
 is subject to the terms andconditions of the following licenses.
+
+We may also use web beacons to track your specific activity.
+We use the information that we collect through web beacons as statistics
+to measure the effectiveness of our product.
+The information we collect through web beacons does not include
+those that an individual can be identified.
 
 =============== TABLE OF CONTENTS =============================
 
@@ -8399,4 +8405,4 @@ years from the date you acquired this Software product. Alternatively,
 the Source Files may accompany the CloudJee product.
 
 
-[WAVEMAKER670M2SC111213]
+[WAVEMAKER670M2SC111413]
