@@ -15,7 +15,8 @@
 dojo.declare("Start", wm.Page, {
     i18n: true,
 	start: function() {
-	    this.copyright.setHtml(this.copyright.html + wm.studioConfig.studioVersion);
+	    //this.copyright.setHtml(this.copyright.html + wm.studioConfig.studioVersion);
+	    this.copyright.setHtml(this.copyright.html + "6.7.0M2");
 		this.subscribe("wm-project-changed", this, "update");
 		this.existingProjectList.connect(this.existingProjectList, "onformat", this, "existingProjectListFormatCell");
 		this.update();
