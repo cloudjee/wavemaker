@@ -235,7 +235,7 @@
 								<exec executable="git" outputproperty="version.revision" failifexecutionfails="false">
 									<arg line="rev-parse --verify HEAD"/>
 								</exec>
-						        <replaceregexp file="${basedir}/src/main/webapp/app/config.js" match="studioVersion\: '(.*)'," replace="studioVersion: '${project.version}'," />
+						        <!--<replaceregexp file="${basedir}/src/main/webapp/app/config.js" match="studioVersion\: '(.*)'," replace="studioVersion: '${project.version}'," />-->
 								<replaceregexp file="${basedir}/src/main/webapp/lib/boot/boot.js" match="wm\.version \= '(.*)';" replace="wm.version = '${project.version}';" />
 								<echo file="${basedir}/src/main/webapp/lib/wm/WMVersion.txt">WaveMaker ${project.version} at commit:
 								</echo>
