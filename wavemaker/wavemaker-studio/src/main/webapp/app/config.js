@@ -31,7 +31,7 @@ if (djConfig.isDebug) {
 wm = {};
 
 wm.studioConfig = {
-        studioVersion: '6.7.0M2',
+        studioVersion: '6.6.0M2',
 	preventUnloadWarning: true,
 	previewPopup: false,
 	preventLiveData: (location.search.indexOf("nolive") >= 0),
