@@ -446,8 +446,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                     autoUpdate: false,
                     startUpdate: false});
     this.connect(lvar, "onSuccess", this, "_onLiveEditSuccess");
-    this.connect(lvar, "onSuccess", this, "_onLiveEditError");
-    this.connect(lvar, "onSuccess", this, "_onLiveEditResult");
+    this.connect(lvar, "onError", this, "_onLiveEditError");
+    this.connect(lvar, "onResult", this, "_onLiveEditResult");
     return lvar;
     },
     isEmptyLiveType: function(inType, inValue) {
