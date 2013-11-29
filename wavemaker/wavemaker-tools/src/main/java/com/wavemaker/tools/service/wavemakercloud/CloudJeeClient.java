@@ -12,6 +12,8 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.JSONArray;
 import com.wavemaker.json.JSONObject;
 import com.wavemaker.json.JSONUnmarshaller;
+import com.wavemaker.tools.project.LocalStudioConfiguration;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.logging.Log;
@@ -143,6 +145,8 @@ public class CloudJeeClient {
 				.createHttpClientConnection();
 		HttpPost httppost = new HttpPost(ConfigProperties.DEPLOY + appName);
 		httppost.setHeader("Cookie", auth);
+        httppost.setHeader("X-WMStudio-Version", LocalStudioConfiguration.getCurrentVersionInfo().toString());
+        httppost.setHeader("X-WMStudio-CopyLibs", String.valueOf(true));
 
 		FileBody uploadFilePart = new FileBody(file);
 		MultipartEntity reqEntity = new MultipartEntity();

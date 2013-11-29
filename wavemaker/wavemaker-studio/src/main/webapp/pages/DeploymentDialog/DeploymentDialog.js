@@ -228,7 +228,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
         data.applicationName = this.cjNameEditor.getDataValue();
         data.name = this.cjDeploymentNameEditor.getDataValue();
         data.target = this.cjHostEditor.getDataValue();
-        data.deploymentUrl = this.cjUrlEditor.getDataValue();
+        data.deploymentUrl = this.cjUrl;
         data.token = this.getTokenCookie(data.target);
 
         /* Delete the old databases and replace it with a new databases structure */
@@ -276,29 +276,6 @@ dojo.declare("DeploymentDialog", wm.Page, {
 
         }));
         return databases;
-    },
-    /*cjGetUrlbuttonClick: function(inSender){
-        try{
-        this.cjUrlEditor.clear();
-        var data = this.generateCloudJeeDeploymentStruct();
-        studio.beginWait(this.getDictionaryItem("WAIT_GENERATE"));
-        studio.deploymentService.requestAsync("getDeploymentURL", [data],
-                        dojo.hitch(this, function(inResult) {
-                            this.cjGetUrlSuccess(inResult,false);
-                        }),
-                        dojo.hitch(this, "cjGetUrlFailed"));
-        } catch(e) {
-          console.error('ERROR IN cjGetUrlbuttonClick: ' + e);
-      }
-      },   */
-    cjGetUrlSuccess: function(inResult){
-        this.cjUrlEditor.setDataValue(inResult.replace(/^https/,"http"));
-        studio.endWait();
-    },
-
-    cjGetUrlFailed: function(inResult){
-        studio.endWait();
-        app.toastError(this.getDictionaryItem("TOAST_GENERATE_FAIL"));
     },
     saveButtonClick: function(inSender) {
       try {
@@ -725,7 +702,6 @@ dojo.declare("DeploymentDialog", wm.Page, {
             app.alert(this.getDictionaryItem("ALERT_CF_NAME_TAKEN", {
                 name: inData.deploymentUrl
             }));
-            this.cjUrlEditor.setInvalid();
         } else {
             this.deployFailed({
                 message: inResult
@@ -1343,7 +1319,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
         var targetName = this.setUniqueDeploymentName("WaveMaker Cloud 1", this.cjDeploymentNameEditor, this.CJ_DEPLOY);
         this.cjHostEditor.setDataValue("");
         this.cjNameEditor.setDataValue(studio.project.projectName);
-        this.cjUrlEditor.setDataValue("");
+        this.cjUrl = "";
+        this.cjMsgEditor.setDataValue(this.getDeploymentMsgContent(this.cjUrl));
         this.cjDeploymentTypeEditor.setDataValue("WaveMaker Cloud");
 
 		var boxes = this.generateDataModelBoxes();
@@ -1391,7 +1368,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
         this.cjDeploymentTypeEditor.setDataValue("WaveMaker Cloud");
         this.cjNameEditor.setDataValue(inData.applicationName);
         this.cjHostEditor.setDataValue(inData.target);
-        this.cjUrlEditor.setDataValue(inData.deploymentUrl);
+        this.cjUrl = inData.deploymentUrl;
+        this.cjMsgEditor.setDataValue(this.getDeploymentMsgContent(this.cjUrl));
         var boxes = this.generateDataModelBoxes();
 
         dojo.forEach(boxes, dojo.hitch(this, function(b, i) {
@@ -1558,6 +1536,13 @@ dojo.declare("DeploymentDialog", wm.Page, {
        // return "<a href=" + projectTarget + " target='_blank'>" + projectTarget + "</a>";
         return projectTarget;
     },
+    getDeploymentMsgContent:function (projectTarget) {
+        if(this.cjNameEditor.isValid() && projectTarget && projectTarget != '') {
+            return 'The application will be hosted at ' + projectTarget + ' after the deployment to WaveMaker Cloud';
+        } else {
+            return '';
+        }
+    },
     cjLoginOkClick: function() {
     studio.beginWait(this.getDictionaryItem("WAIT_LOGGING_IN"), false, "wmCJWaitThrobber");
     this.cloudJeeService.requestAsync(
@@ -1573,9 +1558,10 @@ dojo.declare("DeploymentDialog", wm.Page, {
             var that = this;
             this.cloudJeeService.requestAsync("username",[inData,true],
               dojo.hitch(this, function(inName){
-                      this.cjHostEditor.setDataValue("https://" + inName);
-                      var projectTarget = "https://" + inName + "/" + this.cjNameEditor.getDataValue();
-                      this.cjUrlEditor.setDataValue(this.getApplicationUrlContent(projectTarget));
+                      this.cjHostEditor.setDataValue("http://" + inName);
+                      var projectTarget = "http://" + inName + "/" + this.cjNameEditor.getDataValue();
+                      this.cjUrl = projectTarget;
+                      this.cjMsgEditor.setDataValue(this.getDeploymentMsgContent(this.cjUrl));
 
                        this.setTokenCookie(this.cjHostEditor.getDataValue(), inData);
 
@@ -1864,7 +1850,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
     cloudJeeTargetChange: function(inSender, inDisplayValue, inDataValue) {
         if (inDisplayValue.match(/^https\:\/\/api\./)) {
             var hostname = (inDisplayValue||"").substring("https://api.".length);
-            this.cjUrlEditor.setDataValue((this.cjUrlEditor.getDataValue() || "").replace(/\..*$/,"." + hostname));
+			this.cjUrl = (this.cjUrl || "").replace(/\..*$/,"." + hostname);
+            this.cjMsgEditor.setDataValue(this.getDeploymentMsgContent(this.cjUrl));
         }
     },
     cloudJeeApplicationNameChanged: function() {
@@ -1875,7 +1862,8 @@ dojo.declare("DeploymentDialog", wm.Page, {
                 appName = '';
             }
             var projectTarget =  hostName  + "/" + appName;
-            this.cjUrlEditor.setDataValue(this.getApplicationUrlContent(projectTarget));
+            this.cjUrl = projectTarget;
+            this.cjMsgEditor.setDataValue(this.getDeploymentMsgContent(this.cjUrl));
         }
     },
     loadDatabaseServices: function() {
