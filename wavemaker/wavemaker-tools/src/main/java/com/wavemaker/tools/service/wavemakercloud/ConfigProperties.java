@@ -41,6 +41,7 @@ public class ConfigProperties {
     public static final String LOGFILE;
     public static final String TENANT_NAME = "<tenantName>";
     public static final String LOG_FILE_NAME = "<fileName>";
+    public static final String DISABLE_CLIENT_LIB;
 
 
     private static Properties properties = new Properties();
@@ -63,6 +64,7 @@ public class ConfigProperties {
         LOGINTARGET = PROTOCOL+ HOST_NAME;
         LOGFILELIST=  PROTOCOL +  HOST_NAME+ "/" + properties.getProperty("LOGSERVICE")+"/" + properties.getProperty("logsList");
         LOGFILE=  PROTOCOL +  HOST_NAME+ "/" + properties.getProperty("LOGSERVICE")+"/" + properties.getProperty("logFile");
+        DISABLE_CLIENT_LIB = properties.getProperty("DISABLE_CLIENT_LIB");
 
 
 	}

@@ -15,6 +15,23 @@
 
 package com.wavemaker.tools.project;
 
+import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.util.ClassLoaderUtils;
+import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.tools.ant.ConfigurationCompilerTask;
+import com.wavemaker.tools.ant.MergeUserWebXmlTask;
+import com.wavemaker.tools.ant.NewCopyRuntimeJarsTask;
+import com.wavemaker.tools.ant.ServiceCompilerTask;
+import com.wavemaker.tools.io.*;
+import com.wavemaker.tools.io.ResourceFilter;
+import com.wavemaker.tools.io.local.LocalFile;
+import com.wavemaker.tools.io.local.LocalFolder;
+import com.wavemaker.tools.io.zip.ZipArchive;
+import com.wavemaker.tools.service.wavemakercloud.ConfigProperties;
+import org.apache.catalina.ant.DeployTask;
+import org.apache.catalina.ant.UndeployTask;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -22,27 +39,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import com.wavemaker.runtime.RuntimeAccess;
-import org.apache.catalina.ant.DeployTask;
-import org.apache.catalina.ant.UndeployTask;
-
-import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.util.ClassLoaderUtils;
-import com.wavemaker.common.util.IOUtils;
-import com.wavemaker.tools.ant.ConfigurationCompilerTask;
-import com.wavemaker.tools.ant.MergeUserWebXmlTask;
-import com.wavemaker.tools.ant.NewCopyRuntimeJarsTask;
-import com.wavemaker.tools.ant.ServiceCompilerTask;
-import com.wavemaker.tools.io.File;
-import com.wavemaker.tools.io.FilterOn;
-import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.ResourceFilter;
-import com.wavemaker.tools.io.ResourceOperation;
-import com.wavemaker.tools.io.Resources;
-import com.wavemaker.tools.io.local.LocalFile;
-import com.wavemaker.tools.io.local.LocalFolder;
-import com.wavemaker.tools.io.zip.ZipArchive;
 
 /**
  * Replaces ant script tasks that generate war and ear file
@@ -142,11 +138,17 @@ public abstract class StageDeploymentManager extends AbstractDeploymentManager {
         webAppRoot.getFile("config.js").performOperation(new Replace("\"/wavemaker/", "\""));
     }
 
-    public static void copyCustomFiles(Folder webAppRoot, StudioFileSystem fileSystem, String customDir) throws IOException {
+    public void copyCustomFiles(Folder webAppRoot, StudioFileSystem fileSystem, String customDir) throws IOException {
 
-        Folder studioWebAppRoot = fileSystem.getStudioWebAppRootFolder();
         com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("wm/" + customDir + "/**", "dojo/util/**", "dojo/**/tests/**");
-        studioWebAppRoot.getFolder("lib").find().exclude(excluded).exclude(DEFAULT_EXCLUDES).files().copyTo(webAppRoot.getFolder("lib"));
+
+        if(!isCloudJee || !(ConfigProperties.DISABLE_CLIENT_LIB != null && ConfigProperties.DISABLE_CLIENT_LIB.trim().equalsIgnoreCase("true"))){
+            /* Bypassing the webaapp root client libs */
+
+            Folder studioWebAppRoot = fileSystem.getStudioWebAppRootFolder();
+            //com.wavemaker.tools.io.ResourceFilter excluded = FilterOn.antPattern("wm/" + customDir + "/**", "dojo/util/**", "dojo/**/tests/**");
+            studioWebAppRoot.getFolder("lib").find().exclude(excluded).exclude(DEFAULT_EXCLUDES).files().copyTo(webAppRoot.getFolder("lib"));
+        }
 
         Folder wavemakerHome = fileSystem.getWaveMakerHomeFolder();
         com.wavemaker.tools.io.ResourceFilter included = FilterOn.antPattern(customDir + "/**");

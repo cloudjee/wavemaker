@@ -14,11 +14,12 @@
 
 package com.wavemaker.tools.data;
 
+import com.wavemaker.runtime.data.util.DataServiceConstants;
+import com.wavemaker.runtime.data.util.JDBCUtils;
+import com.wavemaker.tools.data.util.DataServiceUtils;
+
 import java.util.Collection;
 import java.util.Properties;
-
-import com.wavemaker.runtime.data.util.DataServiceConstants;
-import com.wavemaker.tools.data.util.DataServiceUtils;
 
 /**
  * @author Simon Toens
@@ -53,7 +54,14 @@ public class SpringCfgGenerator extends BaseDataModelSetup {
 
         p.setProperty(this.serviceName + DataServiceConstants.DB_USERNAME, getUsername() == null ? "" : getUsername());
         p.setProperty(this.serviceName + DataServiceConstants.DB_PASS, getPassword() == null ? "" : getPassword());
-        p.setProperty(this.serviceName + DataServiceConstants.DB_URL, getConnectionUrl() == null ? "" : getConnectionUrl().toString());
+        String connectionUrl = "";
+        if(getConnectionUrl() != null){
+               connectionUrl = getConnectionUrl().toString();
+             if(JDBCUtils.getMySQLDatabaseName(connectionUrl) == null){
+                 connectionUrl = connectionUrl + "/" + this.serviceName;
+             }
+        }
+        p.setProperty(this.serviceName + DataServiceConstants.DB_URL, getConnectionUrl() == null ? "" : connectionUrl);
         p.setProperty(this.serviceName + DataServiceConstants.DB_DRIVER_CLASS_NAME, getDriverClassName() == null ? "" : getDriverClassName());
         p.setProperty(this.serviceName + DataServiceConstants.DB_DIALECT, getDialect() == null ? "" : getDialect());
 

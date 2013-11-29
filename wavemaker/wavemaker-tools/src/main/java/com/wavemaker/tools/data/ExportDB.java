@@ -14,27 +14,6 @@
 
 package com.wavemaker.tools.data;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Properties;
-import java.util.concurrent.Callable;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.dialect.Dialect;
-import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
-import org.hibernate.tool.hbm2ddl.SchemaExport;
-import org.hibernate.tool.hbm2ddl.SchemaUpdate;
-import org.springframework.util.ReflectionUtils;
-
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.common.util.IOUtils;
@@ -50,6 +29,26 @@ import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceOperation;
 import com.wavemaker.tools.io.local.LocalFolder;
 import com.wavemaker.tools.util.ResourceClassLoaderUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.dialect.Dialect;
+import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
+import org.hibernate.tool.hbm2ddl.SchemaUpdate;
+import org.springframework.util.ReflectionUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.Callable;
 
 /**
  * @author Simon Toens
@@ -294,7 +293,11 @@ public class ExportDB extends BaseDataModelSetup {
         // database types.
 
         Tuple.Two<String, String> t = getMappedSchemaAndCatalog();
-        String schemaName = t.v1, catalogName = t.v2;
+        String schemaName = null, catalogName = null;
+        if(t != null){
+            schemaName = t.v1;
+            catalogName = t.v2;
+        }
 
         String connectionUrl = this.connectionUrl.toString();
         String url;
