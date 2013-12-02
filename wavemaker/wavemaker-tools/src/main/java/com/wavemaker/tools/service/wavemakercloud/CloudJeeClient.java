@@ -146,7 +146,7 @@ public class CloudJeeClient {
 		HttpPost httppost = new HttpPost(ConfigProperties.DEPLOY + appName);
 		httppost.setHeader("Cookie", auth);
         httppost.setHeader("X-WMStudio-Version", LocalStudioConfiguration.getCurrentVersionInfo().toString());
-        httppost.setHeader("X-WMStudio-CopyLibs", String.valueOf(true));
+        httppost.setHeader("X-WMStudio-CopyLibs", ConfigProperties.DISABLE_CLIENT_LIB);
 
 		FileBody uploadFilePart = new FileBody(file);
 		MultipartEntity reqEntity = new MultipartEntity();
