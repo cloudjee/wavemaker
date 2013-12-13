@@ -221,9 +221,9 @@ dojo.declare("wm.PropTask", wm.ComponentTaskMixin, {
             for (var i = 0; i < components.length; i++) {
                 var c = components[i];
                 if (this.propertyName == "bounds") {
-                    c.designResize(this.oldValues[i], true);
+                    c.designResize(this.oldValue, true);
                 } else {
-                    c.setProp(this.propertyName, this.oldValues[i] instanceof wm.Component ? this.oldValues[i].getId() : this.oldValues[i]);
+                    c.setProp(this.propertyName, this.oldValue instanceof wm.Component ? this.oldValue.getId() : this.oldValue);
                 }
                 if (studio.selected && studio.selected.indexOf(c) != -1) {
                     studio.inspector.reinspect();
