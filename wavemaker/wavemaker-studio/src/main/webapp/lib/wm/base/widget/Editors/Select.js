@@ -401,7 +401,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
                 startUpdate: false,
                 _rootField: view ? ff : null,
                 liveView: view,
-                liveSource: view ? undefined : currentType,
+                liveSource: currentType,
                 maxResults: this.maxResults,
                 ignoreCase: this.ignoreCase,
                 refireOnDbChange: true,
