@@ -75,7 +75,7 @@ wm.expandNode = function(n, step, accel, interval) {
 dojo.declare("wm.TreeNode", null, {
     images: { none: "tree_blank.gif", leaf: "tree_leaf.gif", closed: "tree_closed.gif", open: "tree_open.gif" },
         touchimages: { none: "tree_blank.gif", leaf: "tree_leaf.gif", closed: "touch_tree_closed.png", open: "touch_tree_open.png" },
-	classes: { leaf: "wmtree-leaf", lastLeaf: "wmtree-last-leaf", lastItem: "wmtree-last-item", content: "wmtree-content", selected: "wmtree-selected", rootLeaf: "wmtree-root-leaf", rootLastLeaf: "wmtree-root-last-leaf", open: "wmtree-open" },
+	classes: { leaf: "wmtree-leaf", lastLeaf: "wmtree-last-leaf", lastItem: "wmtree-last-item", content: "wmtree-content", selected: "wmtree-selected", rootLeaf: "wmtree-root-leaf", rootLastLeaf: "wmtree-root-last-leaf", open: "wmtree-open", branch:"wmtree-branch" },
 	closed: false,
 	canSelect: true,
 	constructor: function(inParent, inProps) {
@@ -199,13 +199,14 @@ dojo.declare("wm.TreeNode", null, {
 		if (!n)
 			return;
 		// img class (check if last or root)
-		var ic = (isLast ? this.classes.lastLeaf : this.classes.leaf);
+		//var ic = (isLast ? this.classes.lastLeaf : this.classes.leaf);
+		var ic = this.classes.leaf; //check not required 
 		if (isRoot)
-			ic = (isLast ? this.classes.rootLastLeaf : this.classes.rootLeaf);
+			ic = (isRoot ? this.classes.rootLastLeaf : this.classes.rootLeaf);
 		if (i && i.className != ic)
 			i.className = ic;
-		// node class
-		var nc = (isLast ? this.classes.lastItem : "") + (this.closed ? "" : " " + this.classes.open);
+		// node class added branch to all.
+		var nc = (isLast ? this.classes.lastItem : this.classes.branch) + (this.closed ? "" : " " + this.classes.open);
 		if (n.className != nc)
 			n.className = nc;
 		// FIXME: not a good check for if we have unrendered children (might be lazy)
