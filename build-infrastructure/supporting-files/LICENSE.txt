@@ -202,9 +202,9 @@
 
 =======================================================================
 
-CloudJee WaveMaker 6.7.0 M2 SUBCOMPONENTS:
+CloudJee WaveMaker 6.7.0.RELEASE SUBCOMPONENTS:
 
-CloudJee WaveMaker 6.7.0 M2 includes a number of subcomponents with
+CloudJee WaveMaker 6.7.0.RELEASE includes a number of subcomponents with
 separate copyright notices and license terms.  The product that
 includes this file does not necessarily use all the open source
 subcomponents referred to below. Your use of these subcomponents
@@ -8405,4 +8405,4 @@ years from the date you acquired this Software product. Alternatively,
 the Source Files may accompany the CloudJee product.
 
 
-[WAVEMAKER670M3SC120213]
+[WAVEMAKER670RELEASESC022514]
