@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.wavemaker</groupId>
 	<artifactId>wavemaker-parent</artifactId>
-	<version>6.7.0M3</version>
+	<version>6.7.0.RELEASE</version>
 	<packaging>pom</packaging>
 
 	<properties>
