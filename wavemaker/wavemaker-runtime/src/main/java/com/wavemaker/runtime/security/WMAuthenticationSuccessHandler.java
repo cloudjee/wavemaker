@@ -77,12 +77,14 @@ public class WMAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
 			}
 
 			clearAuthenticationAttributes(request);
-
-			if (redirectURL == null || redirectURL.isEmpty()){
+			if (redirectURL == null){
 				System.out.println("No redirectUrl, throw");
 				throw new IOException("Unable to determine a redirect URL");
 			}
-			System.out.println("redirect URL IS: " + redirectURL);
+                        if(redirectURL.isEmpty()){
+                            redirectURL="/";
+                        }
+                        System.out.println("redirect URL IS: " + redirectURL);
 			RedirectStrategy rs = getRedirectStrategy();
 			if(rs instanceof WMHashAwareRedirectStrategy){
 				redirectURL = ((WMHashAwareRedirectStrategy)rs).getHashAwareRedirectUrl(request,redirectURL);
@@ -106,4 +108,3 @@ public class WMAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
 		return "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
 	}
 }
-
