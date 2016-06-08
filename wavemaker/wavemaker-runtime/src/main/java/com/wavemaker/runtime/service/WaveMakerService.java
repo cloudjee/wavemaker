@@ -134,14 +134,18 @@ public class WaveMakerService {
     }
 
     public DownloadResponse echo(String contents, String contentType, String fileName) {
-        InputStream is;
-        try {
-            is = new ByteArrayInputStream(contents.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new WMRuntimeException(e);
-        }
-        return new DownloadResponse(is, contentType, fileName);
-    }
+        DownloadResponse rv = null;
+		if (fileName != null) {
+			InputStream is;
+			try {
+				is = new ByteArrayInputStream(contents.getBytes("UTF-8"));
+			} catch (final UnsupportedEncodingException e) {
+				throw new WMRuntimeException(e);
+			}
+			rv = new DownloadResponse(is, contentType, fileName);	
+		}
+		return rv;
+	}
 
     /*
      * Forward a request to a remote service
